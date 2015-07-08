@@ -1,9 +1,9 @@
 Package: gpg
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Bindings to the GNU privacy guard system
 Version: 0.1
 Date: 2015-07-08
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
-LazyData: TRUE
+Authors@R: person("Jeroen", "Ooms", email = "jeroen.ooms@stat.ucla.edu", role = c("aut", "cre"))
+Description: An R interface to GPG via the 'gpgme' library. Unfortunately this
+    is not a standalone library; it requires a GPG to be installed on the system.
+License: GPL-2
