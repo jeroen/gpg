@@ -1,9 +1,11 @@
 Package: gpg
 Type: Package
-Title: Bindings to the GNU privacy guard system
+Title: Bindings to the GNU Privacy Guard System
 Version: 0.1
 Date: 2015-07-08
 Authors@R: person("Jeroen", "Ooms", email = "jeroen.ooms@stat.ucla.edu", role = c("aut", "cre"))
-Description: An R interface to GPG via the 'gpgme' library. Unfortunately this
-    is not a standalone library; it requires a GPG to be installed on the system.
+Description: An R interface to GPG using the 'gpgme' library. Unfortunately
+    this is not a standalone library; it requires a GPG to be installed on
+    the system.
 License: GPL-2
+SystemRequirements: libgpgme11-dev or similar
