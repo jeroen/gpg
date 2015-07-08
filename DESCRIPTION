@@ -8,4 +8,4 @@ Description: An R interface to GPG using the 'gpgme' library. Unfortunately
     this is not a standalone library; it requires a GPG to be installed on
     the system.
 License: GPL-2
-SystemRequirements: libgpgme11-dev or similar
+SystemRequirements: gpgme-devel (rpm) or libgpgme11-dev (deb) or gpgme (brew)
