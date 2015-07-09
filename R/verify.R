@@ -46,6 +46,8 @@ gpg_import <- function(pubkey){
 gpg_keylist <- function(filter = ""){
   stopifnot(is.character(filter))
   out <- .Call(R_gpg_keylist, filter)
-  names(out) <- c("keyid", "name", "email")
+  names(out) <- c("keyid", "fingerprint", "name", "email", "algo", "timestamp", "expires")
+  out$timestamp <- structure(out$timestamp, class=c("POSIXct", "POSIXt"))
+  out$expires <- structure(out$expires, class=c("POSIXct", "POSIXt"))
   data.frame(out, stringsAsFactors = FALSE)
 }

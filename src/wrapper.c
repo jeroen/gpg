@@ -85,26 +85,44 @@ SEXP R_gpg_keylist(SEXP filter) {
 
   /* convert the linked list into vectors */
   SEXP keyid = PROTECT(allocVector(STRSXP, count));
+  SEXP fpr = PROTECT(allocVector(STRSXP, count));
   SEXP name = PROTECT(allocVector(STRSXP, count));
   SEXP email = PROTECT(allocVector(STRSXP, count));
-  SEXP result = PROTECT(allocVector(VECSXP, 3));
+  SEXP algo = PROTECT(allocVector(STRSXP, count));
+  SEXP timestamp = PROTECT(allocVector(INTSXP, count));
+  SEXP expires = PROTECT(allocVector(INTSXP, count));
 
   gpgme_key_t key;
   for(int i = 0; i < count; i++){
     key = head->key;
     SET_STRING_ELT(keyid, i, mkChar(key->subkeys->keyid));
+    SET_STRING_ELT(fpr, i, mkChar(key->subkeys->fpr));
+    SET_STRING_ELT(algo, i, mkChar(gpgme_pubkey_algo_name(key->subkeys->pubkey_algo)));
+
+    if(key->issuer_name)
+      SET_STRING_ELT(fpr, i, mkChar(key->issuer_name));
     if(key->uids && key->uids->name)
       SET_STRING_ELT(name, i, mkChar(key->uids->name));
     if(key->uids && key->uids->email)
       SET_STRING_ELT(email, i, mkChar(key->uids->email));
+
+    INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
+    INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
+
     keys = head;
     head = head->next;
     free(keys);
   }
 
+
+  SEXP result = PROTECT(allocVector(VECSXP, 7));
   SET_VECTOR_ELT(result, 0, keyid);
-  SET_VECTOR_ELT(result, 1, name);
-  SET_VECTOR_ELT(result, 2, email);
-  UNPROTECT(4);
+  SET_VECTOR_ELT(result, 1, fpr);
+  SET_VECTOR_ELT(result, 2, name);
+  SET_VECTOR_ELT(result, 3, email);
+  SET_VECTOR_ELT(result, 4, algo);
+  SET_VECTOR_ELT(result, 5, timestamp);
+  SET_VECTOR_ELT(result, 6, expires);
+  UNPROTECT(8);
   return result;
 }
