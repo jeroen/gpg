@@ -20,10 +20,42 @@ void R_init_gpg(DllInfo *info) {
 
 SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   gpgme_data_t SIG, MSG;
-  assert(gpgme_data_new_from_mem(&SIG, (const char*) RAW(sig), LENGTH(sig), 0), "creating buffer");
-  assert(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating buffer");
+  assert(gpgme_data_new_from_mem(&SIG, (const char*) RAW(sig), LENGTH(sig), 0), "creating sig buffer");
+  assert(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
   assert(gpgme_op_verify(ctx, SIG, MSG, NULL), "verification");
   gpgme_verify_result_t result = gpgme_op_verify_result(ctx);
-  gpgme_signature_t out = result->signatures;
-  return ScalarLogical(out->status == GPG_ERR_NO_ERROR);
+  gpgme_signature_t cur1 = result->signatures;
+  int n = 0;
+  while(cur1) {
+    cur1 = cur1->next;
+    n++;
+  }
+  gpgme_signature_t cur2 = result->signatures;
+  SEXP out = PROTECT(allocVector(VECSXP, n));
+  for(int i = 0; i < n; i++) {
+    SEXP el = PROTECT(allocVector(VECSXP, 5));
+    SET_VECTOR_ELT(el, 0, mkString(cur2->fpr));
+    SET_VECTOR_ELT(el, 1, ScalarInteger(cur2->timestamp));
+    SET_VECTOR_ELT(el, 2, mkString(gpgme_hash_algo_name(cur2->hash_algo)));
+    SET_VECTOR_ELT(el, 3, mkString(gpgme_pubkey_algo_name(cur2->pubkey_algo)));
+    SET_VECTOR_ELT(el, 4, ScalarLogical(cur2->status == GPG_ERR_NO_ERROR));
+    cur2 = cur2->next;
+    SET_VECTOR_ELT(out, i, el);
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  return out;
+}
+
+SEXP R_gpg_import(SEXP pubkey) {
+  gpgme_data_t KEY;
+  assert(gpgme_data_new_from_mem(&KEY, (const char*) RAW(pubkey), LENGTH(pubkey), 0), "creating key buffer");
+  assert(gpgme_op_import(ctx, KEY), "importing pubkey");
+  gpgme_import_result_t result = gpgme_op_import_result(ctx);
+  SEXP out = PROTECT(allocVector(INTSXP, 3));
+  INTEGER(out)[0] = result->considered;
+  INTEGER(out)[1] = result->imported;
+  INTEGER(out)[2] = result->unchanged;
+  UNPROTECT(1);
+  return out;
 }

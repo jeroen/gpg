@@ -12,6 +12,8 @@ gpg_verify(sigfile, datafile)
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
 
 \item{datafile}{path to the file containing the message to be verified.}
+
+\item{pubkey}{path to a file with the public key}
 }
 \description{
 Utilities to create and verify PGP signatures.
