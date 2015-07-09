@@ -1,0 +1,10 @@
+PKG_CPPFLAGS= -I../windows/gpgme-1.5.4/include
+PKG_LIBS= -L../windows/gpgme-1.5.4/lib${R_ARCH} -lgpgme -lgpg-error -lassuan -lws2_32
+OBJECTS= wrapper.o win/mkstemp.o
+PKG_CFLAGS= -DDEBUG
+
+all: clean
+
+clean:
+	rm -f $(OBJECTS)
+	rm -f gpg.dll

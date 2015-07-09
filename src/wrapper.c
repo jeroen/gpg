@@ -4,6 +4,8 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#define GPG4WIN "C:\\Program Files (x86)\\GNU\\GnuPG\\gpg2.exe"
+
 gpgme_ctx_t ctx;
 
 struct keylist {
@@ -17,8 +19,12 @@ void assert(gpgme_error_t err, const char * msg){
 }
 
 void R_init_gpg(DllInfo *info) {
+#ifdef DEBUG
+  gpgme_set_global_flag("debug", "9");
+#endif
   gpgme_check_version (NULL);
   gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
+  assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, GPG4WIN, NULL), "setting engine");
   assert(gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP), "engine init");
   assert(gpgme_new(&ctx), "context creation");
   gpgme_set_armor(ctx, 1);
@@ -125,4 +131,8 @@ SEXP R_gpg_keylist(SEXP filter) {
   SET_VECTOR_ELT(result, 6, expires);
   UNPROTECT(8);
   return result;
+}
+
+SEXP R_gpg_dirinfo(SEXP what){
+  return mkString(gpgme_get_dirinfo(CHAR(STRING_ELT(what, 0))));
 }

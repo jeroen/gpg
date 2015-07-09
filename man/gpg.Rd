@@ -3,6 +3,7 @@
 \name{gpg utilities}
 \alias{gpg}
 \alias{gpg utilities}
+\alias{gpg_dirinfo}
 \alias{gpg_import}
 \alias{gpg_keylist}
 \alias{gpg_verify}
@@ -13,6 +14,8 @@ gpg_verify(sigfile, datafile)
 gpg_import(pubkey)
 
 gpg_keylist(filter = "")
+
+gpg_dirinfo(what)
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
