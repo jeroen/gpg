@@ -51,10 +51,3 @@ gpg_keylist <- function(filter = ""){
   out$expires <- structure(out$expires, class=c("POSIXct", "POSIXt"))
   data.frame(out, stringsAsFactors = FALSE)
 }
-
-#' @useDynLib gpg R_gpg_dirinfo
-#' @export
-#' @rdname gpg
-gpg_dirinfo <- function(what = "homedir"){
-  .Call(R_gpg_dirinfo, what)
-}

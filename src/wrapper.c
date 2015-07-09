@@ -134,7 +134,3 @@ SEXP R_gpg_keylist(SEXP filter) {
   UNPROTECT(8);
   return result;
 }
-
-SEXP R_gpg_dirinfo(SEXP what){
-  return mkString(gpgme_get_dirinfo(CHAR(STRING_ELT(what, 0))));
-}
