@@ -24,7 +24,9 @@ void R_init_gpg(DllInfo *info) {
 #endif
   gpgme_check_version (NULL);
   gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
+#ifdef _WIN32
   assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, GPG4WIN, NULL), "setting engine");
+#endif
   assert(gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP), "engine init");
   assert(gpgme_new(&ctx), "context creation");
   gpgme_set_armor(ctx, 1);

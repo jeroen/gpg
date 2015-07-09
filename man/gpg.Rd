@@ -15,7 +15,7 @@ gpg_import(pubkey)
 
 gpg_keylist(filter = "")
 
-gpg_dirinfo(what)
+gpg_dirinfo(what = "homedir")
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
