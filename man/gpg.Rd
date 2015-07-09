@@ -3,17 +3,23 @@
 \name{gpg utilities}
 \alias{gpg}
 \alias{gpg utilities}
+\alias{gpg_import}
+\alias{gpg_keylist}
 \alias{gpg_verify}
 \title{PGP tools}
 \usage{
 gpg_verify(sigfile, datafile)
+
+gpg_import(pubkey)
+
+gpg_keylist(filter = "")
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
 
 \item{datafile}{path to the file containing the message to be verified.}
 
-\item{pubkey}{path to a file with the public key}
+\item{pubkey}{path to a file with a trusted public key}
 }
 \description{
 Utilities to create and verify PGP signatures.

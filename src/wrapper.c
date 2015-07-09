@@ -2,8 +2,14 @@
 #include <R_ext/Rdynload.h>
 #include <gpgme.h>
 #include <locale.h>
+#include <stdlib.h>
 
 gpgme_ctx_t ctx;
+
+struct keylist {
+  gpgme_key_t key;
+  struct keylist *next;
+};
 
 void assert(gpgme_error_t err, const char * msg){
   if(err)
@@ -58,4 +64,47 @@ SEXP R_gpg_import(SEXP pubkey) {
   INTEGER(out)[2] = result->unchanged;
   UNPROTECT(1);
   return out;
+}
+
+SEXP R_gpg_keylist(SEXP filter) {
+  assert(gpgme_op_keylist_start (ctx, CHAR(STRING_ELT(filter, 0)), 0), "starting keylist");
+  struct keylist *keys = (struct keylist *)  malloc(sizeof(struct keylist));
+  struct keylist *head = keys;
+
+  gpgme_error_t err;
+  int count = 0;
+  while(1){
+    err = gpgme_op_keylist_next (ctx, &(keys->key));
+    if(gpg_err_code (err) == GPG_ERR_EOF)
+      break;
+    assert(err, "getting next key");
+    keys->next = (struct keylist *)  malloc(sizeof(struct keylist));
+    keys = keys->next;
+    count++;
+  }
+
+  /* convert the linked list into vectors */
+  SEXP keyid = PROTECT(allocVector(STRSXP, count));
+  SEXP name = PROTECT(allocVector(STRSXP, count));
+  SEXP email = PROTECT(allocVector(STRSXP, count));
+  SEXP result = PROTECT(allocVector(VECSXP, 3));
+
+  gpgme_key_t key;
+  for(int i = 0; i < count; i++){
+    key = head->key;
+    SET_STRING_ELT(keyid, i, mkChar(key->subkeys->keyid));
+    if(key->uids && key->uids->name)
+      SET_STRING_ELT(name, i, mkChar(key->uids->name));
+    if(key->uids && key->uids->email)
+      SET_STRING_ELT(email, i, mkChar(key->uids->email));
+    keys = head;
+    head = head->next;
+    free(keys);
+  }
+
+  SET_VECTOR_ELT(result, 0, keyid);
+  SET_VECTOR_ELT(result, 1, name);
+  SET_VECTOR_ELT(result, 2, email);
+  UNPROTECT(4);
+  return result;
 }

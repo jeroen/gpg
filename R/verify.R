@@ -9,7 +9,7 @@
 #' @useDynLib gpg R_gpgme_verify
 #' @param sigfile path to the gpg file containing the \code{PGP SIGNATURE} block.
 #' @param datafile path to the file containing the message to be verified.
-#' @param pubkey path to a file with the public key
+#' @param pubkey path to a file with a trusted public key
 #' @examples # This requires you have the Debian master key in your keyring
 #' # See https://lists.debian.org/debian-devel-announce/2014/11/msg00017.html
 #' # gpg --keyserver pgp.mit.edu --recv 0x7638d0442b90d010
@@ -32,9 +32,20 @@ gpg_verify <- function(sigfile, datafile){
 
 #' @useDynLib gpg R_gpg_import
 #' @export
+#' @rdname gpg
 gpg_import <- function(pubkey){
   stopifnot(file.exists(pubkey))
   key <- readBin(pubkey, raw(), file.info(pubkey)$size)
   out <- .Call(R_gpg_import, key)
   structure(as.list(out), names = c("considered", "imported", "unchanged"))
+}
+
+#' @useDynLib gpg R_gpg_keylist
+#' @export
+#' @rdname gpg
+gpg_keylist <- function(filter = ""){
+  stopifnot(is.character(filter))
+  out <- .Call(R_gpg_keylist, filter)
+  names(out) <- c("keyid", "name", "email")
+  data.frame(out, stringsAsFactors = FALSE)
 }
