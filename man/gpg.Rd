@@ -20,6 +20,8 @@ gpg_keylist(filter = "")
 \item{datafile}{path to the file containing the message to be verified.}
 
 \item{pubkey}{path to a file with a trusted public key}
+
+\item{filter}{find a key name}
 }
 \description{
 Utilities to create and verify PGP signatures.

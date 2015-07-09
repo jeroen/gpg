@@ -10,6 +10,7 @@
 #' @param sigfile path to the gpg file containing the \code{PGP SIGNATURE} block.
 #' @param datafile path to the file containing the message to be verified.
 #' @param pubkey path to a file with a trusted public key
+#' @param filter find a key name
 #' @examples # This requires you have the Debian master key in your keyring
 #' # See https://lists.debian.org/debian-devel-announce/2014/11/msg00017.html
 #' # gpg --keyserver pgp.mit.edu --recv 0x7638d0442b90d010
