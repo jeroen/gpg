@@ -109,8 +109,8 @@ SEXP R_gpg_import(SEXP pubkey) {
   return out;
 }
 
-SEXP R_gpg_keylist(SEXP filter) {
-  assert(gpgme_op_keylist_start (ctx, CHAR(STRING_ELT(filter, 0)), 0), "starting keylist");
+SEXP R_gpg_keylist(SEXP filter, SEXP secret_only) {
+  assert(gpgme_op_keylist_start (ctx, CHAR(STRING_ELT(filter, 0)), asLogical(secret_only)), "starting keylist");
   struct keylist *keys = (struct keylist *)  malloc(sizeof(struct keylist));
   struct keylist *head = keys;
 
@@ -134,7 +134,6 @@ SEXP R_gpg_keylist(SEXP filter) {
   SEXP algo = PROTECT(allocVector(STRSXP, count));
   SEXP timestamp = PROTECT(allocVector(INTSXP, count));
   SEXP expires = PROTECT(allocVector(INTSXP, count));
-  SEXP secret = PROTECT(allocVector(LGLSXP, count));
 
   gpgme_key_t key;
   for(int i = 0; i < count; i++){
@@ -152,14 +151,13 @@ SEXP R_gpg_keylist(SEXP filter) {
 
     INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
     INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
-    LOGICAL(secret)[i] = key->subkeys->secret;
 
     keys = head;
     head = head->next;
     free(keys);
   }
 
-  SEXP result = PROTECT(allocVector(VECSXP, 8));
+  SEXP result = PROTECT(allocVector(VECSXP, 7));
   SET_VECTOR_ELT(result, 0, keyid);
   SET_VECTOR_ELT(result, 1, fpr);
   SET_VECTOR_ELT(result, 2, name);
@@ -167,8 +165,7 @@ SEXP R_gpg_keylist(SEXP filter) {
   SET_VECTOR_ELT(result, 4, algo);
   SET_VECTOR_ELT(result, 5, timestamp);
   SET_VECTOR_ELT(result, 6, expires);
-  SET_VECTOR_ELT(result, 7, secret);
-  UNPROTECT(9);
+  UNPROTECT(8);
   return result;
 }
 

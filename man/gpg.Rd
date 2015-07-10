@@ -15,16 +15,20 @@ gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
 
 gpg_import(pubkey)
 
-gpg_keylist(filter = "")
+gpg_keylist(name = "", secret_only = FALSE)
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
 
 \item{datafile}{path to the file containing the message to be verified.}
 
+\item{name}{find a key that matches a particular name}
+
+\item{password}{a string or expression callback to read a passphrase when needed}
+
 \item{pubkey}{path to a file with a trusted public key}
 
-\item{filter}{find a key name}
+\item{secret_only}{only list keys for which we have the secret (private key)}
 }
 \description{
 Utilities to create and verify PGP signatures.
