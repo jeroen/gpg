@@ -2,7 +2,9 @@
 
 export(gpg_import)
 export(gpg_keylist)
+export(gpg_sign)
 export(gpg_verify)
 useDynLib(gpg,R_gpg_import)
 useDynLib(gpg,R_gpg_keylist)
+useDynLib(gpg,R_gpg_sign)
 useDynLib(gpg,R_gpgme_verify)

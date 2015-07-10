@@ -5,10 +5,13 @@
 \alias{gpg utilities}
 \alias{gpg_import}
 \alias{gpg_keylist}
+\alias{gpg_sign}
 \alias{gpg_verify}
 \title{PGP tools}
 \usage{
 gpg_verify(sigfile, datafile)
+
+gpg_sign(datafile, name = "")
 
 gpg_import(pubkey)
 

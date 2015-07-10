@@ -15,7 +15,12 @@ struct keylist {
 
 void assert(gpgme_error_t err, const char * msg){
   if(err)
-    Rf_error("GPG %s error: %s", msg, gpgme_strerror(err));
+    Rf_errorcall(R_NilValue, "GPG %s error: %s", msg, gpgme_strerror(err));
+}
+
+gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_info, int prev_was_bad, int fd){
+  Rf_warningcall(NULL, "Password required for %s (not implemented)", uid_hint);
+  return 0;
 }
 
 void R_init_gpg(DllInfo *info) {
@@ -99,6 +104,7 @@ SEXP R_gpg_keylist(SEXP filter) {
   SEXP algo = PROTECT(allocVector(STRSXP, count));
   SEXP timestamp = PROTECT(allocVector(INTSXP, count));
   SEXP expires = PROTECT(allocVector(INTSXP, count));
+  SEXP secret = PROTECT(allocVector(LGLSXP, count));
 
   gpgme_key_t key;
   for(int i = 0; i < count; i++){
@@ -116,14 +122,14 @@ SEXP R_gpg_keylist(SEXP filter) {
 
     INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
     INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
+    LOGICAL(secret)[i] = key->subkeys->secret;
 
     keys = head;
     head = head->next;
     free(keys);
   }
 
-
-  SEXP result = PROTECT(allocVector(VECSXP, 7));
+  SEXP result = PROTECT(allocVector(VECSXP, 8));
   SET_VECTOR_ELT(result, 0, keyid);
   SET_VECTOR_ELT(result, 1, fpr);
   SET_VECTOR_ELT(result, 2, name);
@@ -131,6 +137,37 @@ SEXP R_gpg_keylist(SEXP filter) {
   SET_VECTOR_ELT(result, 4, algo);
   SET_VECTOR_ELT(result, 5, timestamp);
   SET_VECTOR_ELT(result, 6, expires);
-  UNPROTECT(8);
+  SET_VECTOR_ELT(result, 7, secret);
+  UNPROTECT(9);
   return result;
+}
+
+SEXP R_gpg_sign(SEXP msg, SEXP name){
+  gpgme_data_t SIG, MSG;
+  gpgme_key_t key = NULL;
+  assert(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
+
+  // get the key of the signer
+  gpgme_signers_clear(ctx);
+  assert(gpgme_op_keylist_start(ctx, CHAR(STRING_ELT(name, 0)), 1), "searching keys");
+
+  gpgme_error_t err = gpgme_op_keylist_next(ctx, &key);
+  if(gpg_err_code (err) == GPG_ERR_EOF)
+    Rf_errorcall(R_NilValue, "No secret key found for '%s'", CHAR(STRING_ELT(name, 0)));
+  assert(err, "selecting first matched key");
+  assert(gpgme_op_keylist_end(ctx), "done listing keys");
+
+  // debug
+  Rprintf("Using key: %s (%s)\n", key->subkeys->_keyid, key->uids->name);
+
+  gpgme_signers_add(ctx, key);
+  assert(gpgme_data_new(&SIG), "memory to hold signature");
+  assert(gpgme_op_sign(ctx, MSG, SIG, GPGME_SIG_MODE_DETACH), "signing");
+
+  size_t len;
+  char * sig = gpgme_data_release_and_get_mem(SIG, &len);
+  SEXP out = PROTECT(allocVector(STRSXP, 1));
+  SET_STRING_ELT(out, 0, mkCharLen(sig, len));
+  UNPROTECT(1);
+  return out;
 }
