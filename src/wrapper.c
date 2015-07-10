@@ -34,6 +34,7 @@ void R_init_gpg(DllInfo *info) {
 #endif
   assert(gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP), "engine init");
   assert(gpgme_new(&ctx), "context creation");
+  gpgme_set_passphrase_cb(ctx, pwprompt, NULL);
   gpgme_set_armor(ctx, 1);
 }
 
