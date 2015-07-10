@@ -18,9 +18,37 @@ void assert(gpgme_error_t err, const char * msg){
     Rf_errorcall(R_NilValue, "GPG %s error: %s", msg, gpgme_strerror(err));
 }
 
+/* password prompt only supported in gpg1, not in gpg2 which uses the 'pinentry' program */
 gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_info, int prev_was_bad, int fd){
-  Rf_warningcall(NULL, "Password required for %s (not implemented)", uid_hint);
-  return 0;
+
+  /* hardcoded password */
+  SEXP cb = (SEXP) hook;
+  if(isString(cb)){
+    gpgme_io_write(fd, CHAR(STRING_ELT(cb, 0)), LENGTH(STRING_ELT(cb, 0)));
+    gpgme_io_write(fd, "\n", 1);
+    return 0;
+  }
+
+  /* expression to call */
+  if(TYPEOF(cb) == LANGSXP){
+    //Rprintf("Enter password for %s (attempt %d)\n", uid_hint, prev_was_bad+1);
+
+    int err;
+    SEXP res = PROTECT(R_tryEval(cb, R_GlobalEnv, &err));
+
+    if(err || !isString(res)){
+      UNPROTECT(1);
+      Rf_errorcall(R_NilValue, "Password expression must return a string.");
+    }
+
+    gpgme_io_write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0)));
+    gpgme_io_write(fd, "\n", 1);
+    UNPROTECT(1);
+    return 0;
+  }
+
+  Rf_errorcall(R_NilValue, "Invalid ");
+  return 1;
 }
 
 void R_init_gpg(DllInfo *info) {
@@ -31,10 +59,11 @@ void R_init_gpg(DllInfo *info) {
   gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
 #ifdef _WIN32
   assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, GPG4WIN, NULL), "setting engine");
+#elif __APPLE__
+  assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg", NULL), "setting engine");
 #endif
   assert(gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP), "engine init");
   assert(gpgme_new(&ctx), "context creation");
-  gpgme_set_passphrase_cb(ctx, pwprompt, NULL);
   gpgme_set_armor(ctx, 1);
 }
 
@@ -143,7 +172,7 @@ SEXP R_gpg_keylist(SEXP filter) {
   return result;
 }
 
-SEXP R_gpg_sign(SEXP msg, SEXP name){
+SEXP R_gpg_sign(SEXP msg, SEXP name, SEXP fun){
   gpgme_data_t SIG, MSG;
   gpgme_key_t key = NULL;
   assert(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
@@ -160,6 +189,9 @@ SEXP R_gpg_sign(SEXP msg, SEXP name){
 
   // debug
   Rprintf("Using key: %s (%s)\n", key->subkeys->_keyid, key->uids->name);
+
+  // set passwd callback
+  gpgme_set_passphrase_cb(ctx, pwprompt, fun);
 
   gpgme_signers_add(ctx, key);
   assert(gpgme_data_new(&SIG), "memory to hold signature");

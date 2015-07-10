@@ -11,7 +11,7 @@
 \usage{
 gpg_verify(sigfile, datafile)
 
-gpg_sign(datafile, name = "")
+gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
 
 gpg_import(pubkey)
 

@@ -34,10 +34,12 @@ gpg_verify <- function(sigfile, datafile){
 #' @useDynLib gpg R_gpg_sign
 #' @export
 #' @rdname gpg
-gpg_sign <- function(datafile, name = ""){
+gpg_sign <- function(datafile, name = "", password = readline("ENTER PASSWORD: ")){
   stopifnot(file.exists(datafile))
+  password = substitute(password)
+  stopifnot(is.character(password) || is.call(password))
   msg <- readBin(datafile, raw(), file.info(datafile)$size)
-  .Call(R_gpg_sign, msg, name)
+  .Call(R_gpg_sign, msg, name, password)
 }
 
 #' @useDynLib gpg R_gpg_import
