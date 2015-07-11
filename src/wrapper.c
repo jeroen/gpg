@@ -58,8 +58,8 @@ void R_init_gpg(DllInfo *info) {
   gpgme_check_version (NULL);
   gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
 #ifdef _WIN32
-  gpgme_set_global_flag("gpgconf-name", "C:\\GPG\\GnuPG\\gpgconf");
-  gpgme_set_global_flag("gpg-name", "C:\\GPG\\GnuPG\\gpg2");
+  gpgme_set_global_flag("gpgconf-name", "C:\\GNU\\GnuPG\\gpgconf");
+  gpgme_set_global_flag("gpg-name", "C:\\GNU\\GnuPG\\gpg2");
   assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, GPG4WIN, NULL), "setting engine");
 #elif __APPLE__
   assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg", NULL), "setting engine");
