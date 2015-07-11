@@ -4,7 +4,8 @@ Title: Bindings to the GNU Privacy Guard
 Version: 0.1
 Date: 2015-07-08
 Authors@R: person("Jeroen", "Ooms", email = "jeroen.ooms@stat.ucla.edu", role = c("aut", "cre"))
-Description: An R interface to GPG using the 'gpgme' C library. Note that
-    this is not a standalone library; GPG needs to be installed on the system.
+Description: Tools for creating and verifying OpenGPG (RFC4880) signatures
+    using the 'gpgme' C library. This is not a standaline library; GPG needs
+    to be installed on the system.
 License: GPL-2
 SystemRequirements: gpgme-devel (rpm) or libgpgme11-dev (deb) or gpgme (brew)
