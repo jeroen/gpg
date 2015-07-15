@@ -196,10 +196,15 @@ SEXP R_gpg_sign(SEXP msg, SEXP name, SEXP fun){
   assert(gpgme_data_new(&SIG), "memory to hold signature");
   assert(gpgme_op_sign(ctx, MSG, SIG, GPGME_SIG_MODE_DETACH), "signing");
 
+  //do something with result
+  //gpgme_sign_result_t result = gpgme_op_sign_result(ctx);
+  //gpgme_new_signature_t res = result->signatures;
+
   size_t len;
-  char * sig = gpgme_data_release_and_get_mem(SIG, &len);
+  char *sig = gpgme_data_release_and_get_mem(SIG, &len);
   SEXP out = PROTECT(allocVector(STRSXP, 1));
   SET_STRING_ELT(out, 0, mkCharLen(sig, len));
   UNPROTECT(1);
+  gpgme_free(sig);
   return out;
 }
