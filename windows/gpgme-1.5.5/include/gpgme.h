@@ -18,7 +18,7 @@
    You should have received a copy of the GNU Lesser General Public
    License along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-   Generated from gpgme.h.in for x86_64-pc-msys.  */
+   Generated from gpgme.h.in for i686-pc-mingw32.  */
 
 #ifndef GPGME_H
 #define GPGME_H
@@ -44,9 +44,14 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#include <sys/types.h>
-typedef off_t   gpgme_off_t;
-typedef ssize_t gpgme_ssize_t;
+#ifdef _WIN64
+# include <stdint.h>
+  typedef int64_t gpgme_off_t;
+  typedef int64_t gpgme_ssize_t;
+#else /* _WIN32 */
+  typedef long gpgme_off_t;
+  typedef long gpgme_ssize_t;
+#endif /* _WIN32 */
 
 
 /* Check for compiler features.  */
@@ -78,11 +83,11 @@ typedef ssize_t gpgme_ssize_t;
    instead.  The purpose of this macro is to let autoconf (using the
    AM_PATH_GPGME macro) check that this header matches the installed
    library.  */
-#define GPGME_VERSION "1.5.4"
+#define GPGME_VERSION "1.5.5"
 
 /* The version number of this header.  It may be used to handle minor
    API incompatibilities.  */
-#define GPGME_VERSION_NUMBER 0x010504
+#define GPGME_VERSION_NUMBER 0x010505
 
 /* Check for a matching _FILE_OFFSET_BITS definition.  */
 #if 0
@@ -1077,8 +1082,8 @@ void gpgme_get_io_cbs (gpgme_ctx_t ctx, gpgme_io_cbs_t io_cbs);
 
 /* Wrappers around the internal I/O functions for use with
    gpgme_passphrase_cb_t and gpgme_edit_cb_t.  */
-ssize_t gpgme_io_read (int fd, void *buffer, size_t count);
-ssize_t gpgme_io_write (int fd, const void *buffer, size_t count);
+gpgme_ssize_t gpgme_io_read (int fd, void *buffer, size_t count);
+gpgme_ssize_t gpgme_io_write (int fd, const void *buffer, size_t count);
 int     gpgme_io_writen (int fd, const void *buffer, size_t count);
 
 /* Process the pending operation and, if HANG is non-zero, wait for
@@ -1094,20 +1099,20 @@ gpgme_ctx_t gpgme_wait_ext (gpgme_ctx_t ctx, gpgme_error_t *status,
 /* Read up to SIZE bytes into buffer BUFFER from the data object with
    the handle HANDLE.  Return the number of characters read, 0 on EOF
    and -1 on error.  If an error occurs, errno is set.  */
-typedef ssize_t (*gpgme_data_read_cb_t) (void *handle, void *buffer,
+typedef gpgme_ssize_t (*gpgme_data_read_cb_t) (void *handle, void *buffer,
 					 size_t size);
 
 /* Write up to SIZE bytes from buffer BUFFER to the data object with
    the handle HANDLE.  Return the number of characters written, or -1
    on error.  If an error occurs, errno is set.  */
-typedef ssize_t (*gpgme_data_write_cb_t) (void *handle, const void *buffer,
+typedef gpgme_ssize_t (*gpgme_data_write_cb_t) (void *handle, const void *buffer,
 					  size_t size);
 
 /* Set the current position from where the next read or write starts
    in the data object with the handle HANDLE to OFFSET, relativ to
    WHENCE.  */
-typedef off_t (*gpgme_data_seek_cb_t) (void *handle,
-                                       off_t offset, int whence);
+typedef gpgme_off_t (*gpgme_data_seek_cb_t) (void *handle,
+                                       gpgme_off_t offset, int whence);
 
 /* Close the data object with the handle DL.  */
 typedef void (*gpgme_data_release_cb_t) (void *handle);
@@ -1124,17 +1129,17 @@ typedef struct gpgme_data_cbs *gpgme_data_cbs_t;
 /* Read up to SIZE bytes into buffer BUFFER from the data object with
    the handle DH.  Return the number of characters read, 0 on EOF and
    -1 on error.  If an error occurs, errno is set.  */
-ssize_t gpgme_data_read (gpgme_data_t dh, void *buffer, size_t size);
+gpgme_ssize_t gpgme_data_read (gpgme_data_t dh, void *buffer, size_t size);
 
 /* Write up to SIZE bytes from buffer BUFFER to the data object with
    the handle DH.  Return the number of characters written, or -1 on
    error.  If an error occurs, errno is set.  */
-ssize_t gpgme_data_write (gpgme_data_t dh, const void *buffer, size_t size);
+gpgme_ssize_t gpgme_data_write (gpgme_data_t dh, const void *buffer, size_t size);
 
 /* Set the current position from where the next read or write starts
    in the data object with the handle DH to OFFSET, relativ to
    WHENCE.  */
-off_t gpgme_data_seek (gpgme_data_t dh, off_t offset, int whence);
+gpgme_off_t gpgme_data_seek (gpgme_data_t dh, gpgme_off_t offset, int whence);
 
 /* Create a new data buffer and return it in R_DH.  */
 gpgme_error_t gpgme_data_new (gpgme_data_t *r_dh);
@@ -1206,7 +1211,7 @@ gpgme_error_t gpgme_data_new_from_file (gpgme_data_t *r_dh,
    non-zero).  */
 gpgme_error_t gpgme_data_new_from_filepart (gpgme_data_t *r_dh,
 					    const char *fname, FILE *fp,
-					    off_t offset, size_t length);
+					    gpgme_off_t offset, size_t length);
 
 /* Reset the read pointer in DH.  Deprecated, please use
    gpgme_data_seek instead.  */
