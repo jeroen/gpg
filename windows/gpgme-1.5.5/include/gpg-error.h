@@ -17,7 +17,7 @@
    License along with this program; if not, see <http://www.gnu.org/licenses/>.
 
    Do not edit.  Generated from gpg-error.h.in for:
-                 x86_64-pc-msys
+                 i686-pc-mingw32
  */
 
 
@@ -822,10 +822,47 @@ const char *gpg_error_check_version (const char *req_version);
 #define GPG_ERROR_VERSION_NUMBER 0x011300
 
 /* System specific type definitions.  */
-#include <sys/types.h>
-typedef ssize_t gpgrt_ssize_t;
+typedef long    gpgrt_ssize_t;
 
-typedef long gpgrt_off_t;
+#include <stdint.h>
+
+typedef int64_t gpgrt_off_t;
+
+
+
+/* Decide whether to use the format_arg attribute.  */
+#if _GPG_ERR_GCC_VERSION > 20800
+# define _GPG_ERR_ATTR_FORMAT_ARG(a)  __attribute__ ((__format_arg__ (a)))
+#else
+# define _GPG_ERR_ATTR_FORMAT_ARG(a)
+#endif
+
+/* A lean gettext implementation based on GNU style mo files which are
+   required to be encoded in UTF-8.  There is a limit on 65534 entries
+   to save some RAM.  Only Germanic plural rules are supported.  */
+const char *_gpg_w32_bindtextdomain (const char *domainname,
+                                     const char *dirname);
+const char *_gpg_w32_textdomain (const char *domainname);
+const char *_gpg_w32_gettext (const char *msgid)
+            _GPG_ERR_ATTR_FORMAT_ARG (1);
+const char *_gpg_w32_dgettext (const char *domainname, const char *msgid)
+            _GPG_ERR_ATTR_FORMAT_ARG (2);
+const char *_gpg_w32_dngettext (const char *domainname, const char *msgid1,
+                                const char *msgid2, unsigned long int n)
+            _GPG_ERR_ATTR_FORMAT_ARG (2) _GPG_ERR_ATTR_FORMAT_ARG (3);
+const char *_gpg_w32_gettext_localename (void);
+int _gpg_w32_gettext_use_utf8 (int value);
+
+#ifdef GPG_ERR_ENABLE_GETTEXT_MACROS
+# define bindtextdomain(a,b) _gpg_w32_bindtextdomain ((a), (b))
+# define textdomain(a)       _gpg_w32_textdomain ((a))
+# define gettext(a)          _gpg_w32_gettext ((a))
+# define dgettext(a,b)       _gpg_w32_dgettext ((a), (b))
+# define ngettext(a,b,c)     _gpg_w32_dngettext (NULL, (a), (b), (c))
+# define dngettext(a,b,c,d)  _gpg_w32_dngettext ((a), (b), (c), (d))
+# define gettext_localename() _gpg_w32_gettext_localename ()
+# define gettext_use_utf8(a) _gpg_w32_gettext_use_utf8 (a)
+#endif /*GPG_ERR_ENABLE_GETTEXT_MACROS*/
 
 
 
@@ -856,17 +893,33 @@ gpg_error_from_syserror (void)
 /* Lock functions.  */
 
 
+#ifdef _WIN64
+
+#pragma pack(push, 8)
 typedef struct
 {
-  long _vers;
-  union {
-    volatile char _priv[8];
-    long _x_align;
-    long *_xp_align;
-  } u;
+  volatile char priv[56];
 } gpgrt_lock_t;
+#pragma pack(pop)
 
-#define GPGRT_LOCK_INITIALIZER {1,{{19,0,0,0,0,0,0,0}}}
+#define GPGRT_LOCK_INITIALIZER {{1,0,0,0,0,0,0,0,255,255,255,255, \
+                                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, \
+                                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, \
+                                 0,0,0,0,0,0,0,0,0,0,0,0}}
+
+#else
+
+#pragma pack(push, 8)
+typedef struct
+{
+  volatile char priv[36];
+} gpgrt_lock_t;
+#pragma pack(pop)
+
+#define GPGRT_LOCK_INITIALIZER {{1,0,0,0,0,0,0,0,255,255,255,255, \
+                                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, \
+                                 0,0,0,0,0,0,0,0}}
+#endif
 
 
 #define GPGRT_LOCK_DEFINE(name) \
@@ -939,9 +992,9 @@ typedef struct _gpgrt__stream *gpgrt_stream_t;
 typedef struct _gpgrt__stream *estream_t;
 #endif
 
-typedef ssize_t (*gpgrt_cookie_read_function_t) (void *cookie,
+typedef gpgrt_ssize_t (*gpgrt_cookie_read_function_t) (void *cookie,
                                                  void *buffer, size_t size);
-typedef ssize_t (*gpgrt_cookie_write_function_t) (void *cookie,
+typedef gpgrt_ssize_t (*gpgrt_cookie_write_function_t) (void *cookie,
                                                   const void *buffer,
                                                   size_t size);
 typedef int (*gpgrt_cookie_seek_function_t) (void *cookie,
@@ -1117,10 +1170,10 @@ int gpgrt_fputs (const char *_GPGRT__RESTRICT s,
 int gpgrt_fputs_unlocked (const char *_GPGRT__RESTRICT s,
                           gpgrt_stream_t _GPGRT__RESTRICT stream);
 
-ssize_t gpgrt_getline (char *_GPGRT__RESTRICT *_GPGRT__RESTRICT lineptr,
+gpgrt_ssize_t gpgrt_getline (char *_GPGRT__RESTRICT *_GPGRT__RESTRICT lineptr,
                        size_t *_GPGRT__RESTRICT n,
                        gpgrt_stream_t stream);
-ssize_t gpgrt_read_line (gpgrt_stream_t stream,
+gpgrt_ssize_t gpgrt_read_line (gpgrt_stream_t stream,
                          char **addr_of_buffer, size_t *length_of_buffer,
                          size_t *max_length);
 void gpgrt_free (void *a);
