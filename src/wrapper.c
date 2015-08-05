@@ -4,7 +4,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
-#define GPG4WIN "C:\\Program Files (x86)\\GNU\\GnuPG\\gpg2.exe"
+#define GPG4WIN "C:/Program Files (x86)/GNU/GnuPG/gpg2.exe"
 
 gpgme_ctx_t ctx;
 
@@ -58,9 +58,9 @@ void R_init_gpg(DllInfo *info) {
   gpgme_check_version (NULL);
   gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
 #ifdef _WIN32
-  gpgme_set_global_flag("gpgconf-name", "C:\\GNU\\GnuPG\\gpgconf");
-  gpgme_set_global_flag("gpg-name", "C:\\GNU\\GnuPG\\gpg2");
-  assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, GPG4WIN, NULL), "setting engine");
+  //gpgme_set_global_flag("gpgconf-name", "C:/Program Files (x86)/GNU/GnuPG/gpgconf");
+  //gpgme_set_global_flag("gpg-name", "C:/Program Files (x86)/GNU/GnuPG/gpg2");
+  //assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, GPG4WIN, NULL), "setting engine");
 #elif __APPLE__
   assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg", NULL), "setting engine");
 #endif
