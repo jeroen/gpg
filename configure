@@ -33,6 +33,7 @@ elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if [ $(command -v brew) ]; then
     BREWDIR=$(brew --prefix)
+    PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
   else
     echo "Auto-brewing $PKG_BREW_NAME..."
     BREWDIR="/tmp/homebrew"
@@ -40,10 +41,12 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
        mkdir -p $BREWDIR && curl -fsSL https://github.com/Homebrew/homebrew/tarball/master | tar xz --strip 1 -C $BREWDIR
     fi
     HOMEBREW_CACHE="/tmp" $BREWDIR/bin/brew install $AUTOBREW 2>&1 | sed 's/Warning/Note/g'
-    rm -f $BREWDIR/opt/$PKG_BREW_NAME/lib/*.dylib
+    rm -f $BREWDIR/opt/gpgme/lib/*.dylib
+    rm -f $BREWDIR/opt/libassuan/lib/*.dylib
+    rm -f $BREWDIR/opt/libgpg-error/lib/*.dylib
+    PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
+    PKG_LIBS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --libs)
   fi
-  PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
-  PKG_LIBS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --libs)
 fi
 
 # For debugging
