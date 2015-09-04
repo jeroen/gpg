@@ -1,6 +1,7 @@
 PKG_LIBS= -L../windows/gpgme-1.6.0/lib${R_ARCH} -lgpgme -lgpg-error -lassuan -lws2_32
 PKG_CPPFLAGS= -I../windows/gpgme-1.6.0/include
-PKG_CFLAGS= -DDEBUG
+
+#PKG_CFLAGS= -DDEBUG
 
 all: clean
 
