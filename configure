@@ -37,9 +37,9 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   else
     echo "Auto-brewing $PKG_BREW_NAME..."
     BREWDIR="/tmp/homebrew"
-    if [ ! -r "$BREWDIR/bin/brew" ]; then
-       mkdir -p $BREWDIR && curl -fsSL https://github.com/Homebrew/homebrew/tarball/master | tar xz --strip 1 -C $BREWDIR
-    fi
+    rm -Rf $BREWDIR
+    mkdir -p $BREWDIR
+    curl -fsSL https://github.com/Homebrew/homebrew/tarball/master | tar xz --strip 1 -C $BREWDIR
     HOMEBREW_CACHE="/tmp" $BREWDIR/bin/brew install $AUTOBREW 2>&1 | sed 's/Warning/Note/g'
     rm -f $BREWDIR/opt/gpgme/lib/*.dylib
     rm -f $BREWDIR/opt/libassuan/lib/*.dylib
