@@ -5,6 +5,7 @@
 \alias{gpg utilities}
 \alias{gpg_import}
 \alias{gpg_keylist}
+\alias{gpg_keysearch}
 \alias{gpg_sign}
 \alias{gpg_verify}
 \title{PGP tools}
@@ -15,7 +16,9 @@ gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
 
 gpg_import(pubkey)
 
-gpg_keylist(name = "", secret_only = FALSE)
+gpg_keylist(secret_only = FALSE)
+
+gpg_keysearch(name = "")
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}

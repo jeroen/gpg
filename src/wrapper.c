@@ -63,7 +63,7 @@ void R_init_gpg(DllInfo *info) {
   //Rprintf("setting windows settings\n");
   //assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "gpgconf.exe", "C:/Program Files (x86)/GNU/GnuPG/"), "setting engine");
 #elif __APPLE__
-  assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg", NULL), "setting engine");
+  //assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg", "~/.gnupg/"), "setting engine");
 #endif
   assert(gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP), "engine init");
   assert(gpgme_new(&ctx), "context creation");
@@ -112,7 +112,20 @@ SEXP R_gpg_import(SEXP pubkey) {
   return out;
 }
 
-SEXP R_gpg_keylist(SEXP filter, SEXP secret_only) {
+SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
+  gpgme_keylist_mode_t mode = 0;
+  if(asLogical(local)){
+    mode |= GPGME_KEYLIST_MODE_LOCAL;
+  } else {
+    mode |= GPGME_KEYLIST_MODE_EXTERN;
+  }
+  mode |= GPGME_KEYLIST_MODE_SIGS;
+  mode |= GPGME_KEYLIST_MODE_SIG_NOTATIONS;
+  gpgme_set_keylist_mode (ctx, mode);
+  gpgme_set_protocol (ctx, GPGME_PROTOCOL_OpenPGP);
+
+  //gpgme_set_global_flag("auto-key-locate", "hkp://pgp.mit.edu");
+
   assert(gpgme_op_keylist_start (ctx, CHAR(STRING_ELT(filter, 0)), asLogical(secret_only)), "starting keylist");
   struct keylist *keys = (struct keylist *)  malloc(sizeof(struct keylist));
   struct keylist *head = keys;
@@ -137,6 +150,7 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only) {
   SEXP algo = PROTECT(allocVector(STRSXP, count));
   SEXP timestamp = PROTECT(allocVector(INTSXP, count));
   SEXP expires = PROTECT(allocVector(INTSXP, count));
+  SEXP keydata = PROTECT(allocVector(STRSXP, count));
 
   gpgme_key_t key;
   for(int i = 0; i < count; i++){
@@ -152,15 +166,30 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only) {
     if(key->uids && key->uids->email)
       SET_STRING_ELT(email, i, mkChar(key->uids->email));
 
+    /* export the public key */
+    gpgme_data_t dh = NULL;
+    assert(gpgme_data_new (&dh), "initiating data buffer");
+    gpgme_export_mode_t mode = 0;
+    gpgme_key_t keyarray[2] = {key, NULL};
+    gpgme_set_armor (ctx, 1);
+    gpgme_op_export_keys(ctx, keyarray, mode, dh);
+
+    char buf[100000];
+    assert(gpgme_data_seek (dh, 0, SEEK_SET), "data seek");
+    size_t size = gpgme_data_read (dh, buf, 99999);
+    assert(size > -1, "data read");
+    SET_STRING_ELT(keydata, i, mkCharLen(buf, size));
+
     INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
     INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
 
     keys = head;
     head = head->next;
+    gpgme_key_unref (key);
     free(keys);
   }
 
-  SEXP result = PROTECT(allocVector(VECSXP, 7));
+  SEXP result = PROTECT(allocVector(VECSXP, 8));
   SET_VECTOR_ELT(result, 0, keyid);
   SET_VECTOR_ELT(result, 1, fpr);
   SET_VECTOR_ELT(result, 2, name);
@@ -168,7 +197,8 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only) {
   SET_VECTOR_ELT(result, 4, algo);
   SET_VECTOR_ELT(result, 5, timestamp);
   SET_VECTOR_ELT(result, 6, expires);
-  UNPROTECT(8);
+  SET_VECTOR_ELT(result, 7, keydata);
+  UNPROTECT(9);
   return result;
 }
 
