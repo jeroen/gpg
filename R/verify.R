@@ -72,7 +72,7 @@ gpg_keylist_internal <- function(name = "", secret_only = FALSE, local = FALSE){
   stopifnot(is.character(name))
   stopifnot(is.logical(secret_only))
   out <- .Call(R_gpg_keylist, name, secret_only, local)
-  names(out) <- c("keyid", "fingerprint", "name", "email", "algo", "timestamp", "expires")
+  names(out) <- c("keyid", "fingerprint", "name", "email", "algo", "timestamp", "expires", "pubkey")
   out$timestamp <- structure(out$timestamp, class=c("POSIXct", "POSIXt"))
   out$expires <- structure(out$expires, class=c("POSIXct", "POSIXt"))
   data.frame(out, stringsAsFactors = FALSE)
