@@ -6,6 +6,9 @@
 
 #define GPG4WIN "C:/Program Files (x86)/GNU/GnuPG/gpg2.exe"
 
+#undef mkChar
+#define mkChar(x) x == NULL ? Rf_mkChar("") : Rf_mkChar(x)
+
 gpgme_ctx_t ctx;
 
 struct keylist {
