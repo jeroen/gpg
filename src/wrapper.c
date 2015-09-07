@@ -6,8 +6,11 @@
 
 #define GPG4WIN "C:/Program Files (x86)/GNU/GnuPG/gpg2.exe"
 
+/* gpgme sometimes returns NULL strings */
 #undef mkChar
+#undef mkString
 #define mkChar(x) x == NULL ? Rf_mkChar("") : Rf_mkChar(x)
+#define mkString(x) x == NULL ? Rf_mkString("") : Rf_mkString(x)
 
 gpgme_ctx_t ctx;
 
