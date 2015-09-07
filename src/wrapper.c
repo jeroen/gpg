@@ -172,21 +172,19 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
     if(key->uids && key->uids->email)
       SET_STRING_ELT(email, i, mkChar(key->uids->email));
 
-    if(asLogical(local)){
-      /* export the public key */
-      gpgme_data_t dh = NULL;
-      assert(gpgme_data_new (&dh), "initiating data buffer");
-      gpgme_export_mode_t mode = 0;
-      gpgme_key_t keyarray[2] = {key, NULL};
-      gpgme_set_armor (ctx, 1);
-      gpgme_op_export_keys(ctx, keyarray, mode, dh);
+    /* export the public key */
+    gpgme_data_t dh = NULL;
+    assert(gpgme_data_new (&dh), "initiating data buffer");
+    gpgme_export_mode_t mode = 0;
+    gpgme_key_t keyarray[2] = {key, NULL};
+    gpgme_set_armor (ctx, 1);
+    gpgme_op_export_keys(ctx, keyarray, mode, dh);
 
-      char buf[100000];
-      assert(gpgme_data_seek (dh, 0, SEEK_SET), "data seek");
-      size_t size = gpgme_data_read (dh, buf, 99999);
-      assert(size > -1, "data read");
-      SET_STRING_ELT(keydata, i, mkCharLen(buf, size));
-    }
+    char buf[100000];
+    assert(gpgme_data_seek (dh, 0, SEEK_SET), "data seek");
+    size_t size = gpgme_data_read (dh, buf, 99999);
+    assert(size > -1, "data read");
+    SET_STRING_ELT(keydata, i, mkCharLen(buf, size));
 
     INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
     INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
