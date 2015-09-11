@@ -77,3 +77,14 @@ gpg_keylist_internal <- function(name = "", secret_only = FALSE, local = FALSE){
   out$expires <- structure(out$expires, class=c("POSIXct", "POSIXt"))
   data.frame(out, stringsAsFactors = FALSE)
 }
+
+#' @export
+#' @useDynLib gpg R_gpg_options R_gpg_list_options
+gpg_options <- function(...){
+  opts <- list(...)
+  if(length(opts)){
+    .Call(R_gpg_options, opts)
+  } else {
+    .Call(R_gpg_list_options)
+  }
+}
