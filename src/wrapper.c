@@ -158,7 +158,6 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
   SEXP algo = PROTECT(allocVector(STRSXP, count));
   SEXP timestamp = PROTECT(allocVector(INTSXP, count));
   SEXP expires = PROTECT(allocVector(INTSXP, count));
-  SEXP keydata = PROTECT(allocVector(STRSXP, count));
 
   gpgme_key_t key;
   for(int i = 0; i < count; i++){
@@ -174,20 +173,6 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
     if(key->uids && key->uids->email)
       SET_STRING_ELT(email, i, mkChar(key->uids->email));
 
-    /* export the public key */
-    gpgme_data_t dh = NULL;
-    assert(gpgme_data_new (&dh), "initiating data buffer");
-    gpgme_export_mode_t mode = 0;
-    gpgme_key_t keyarray[2] = {key, NULL};
-    gpgme_set_armor (ctx, 1);
-    gpgme_op_export_keys(ctx, keyarray, mode, dh);
-
-    char buf[100000];
-    assert(gpgme_data_seek (dh, 0, SEEK_SET), "data seek");
-    size_t size = gpgme_data_read (dh, buf, 99999);
-    assert(size > -1, "data read");
-    SET_STRING_ELT(keydata, i, mkCharLen(buf, size));
-
     INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
     INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
 
@@ -197,7 +182,7 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
     free(keys);
   }
 
-  SEXP result = PROTECT(allocVector(VECSXP, 8));
+  SEXP result = PROTECT(allocVector(VECSXP, 7));
   SET_VECTOR_ELT(result, 0, keyid);
   SET_VECTOR_ELT(result, 1, fpr);
   SET_VECTOR_ELT(result, 2, name);
@@ -205,8 +190,7 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
   SET_VECTOR_ELT(result, 4, algo);
   SET_VECTOR_ELT(result, 5, timestamp);
   SET_VECTOR_ELT(result, 6, expires);
-  SET_VECTOR_ELT(result, 7, keydata);
-  UNPROTECT(9);
+  UNPROTECT(8);
   return result;
 }
 
@@ -361,4 +345,50 @@ SEXP R_gpg_options(SEXP input){
   //save config
   assert(gpgme_op_conf_save (ctx, comp), "conf save");
   return res;
+}
+
+
+SEXP R_gpg_download(SEXP filter) {
+  gpgme_keylist_mode_t mode = 0;
+  mode |= GPGME_KEYLIST_MODE_EXTERN;
+  mode |= GPGME_KEYLIST_MODE_SIGS;
+  mode |= GPGME_KEYLIST_MODE_SIG_NOTATIONS;
+  gpgme_set_keylist_mode (ctx, mode);
+  gpgme_set_protocol (ctx, GPGME_PROTOCOL_OpenPGP);
+
+  //init search
+  assert(gpgme_op_keylist_start (ctx, CHAR(STRING_ELT(filter, 0)), 0), "starting keylist");
+
+  //load key
+  gpgme_key_t key;
+  gpgme_error_t err = gpgme_op_keylist_next (ctx, &key);
+  if(gpg_err_code (err) == GPG_ERR_EOF){
+    Rf_error("Key not found.");
+  }
+  assert(err, "getting key");
+  if(gpg_err_code(gpgme_op_keylist_next (ctx, NULL)) == GPG_ERR_EOF){
+    gpgme_op_keylist_end(ctx);
+    Rf_error("Multiple keys found! Please be more specific.");
+  }
+
+  //output block
+  SEXP result = PROTECT(allocVector(STRSXP, 1));
+  setAttrib(result, install("keyid"), mkString(key->subkeys->keyid));
+  setAttrib(result, install("fingerprint"), mkString(key->subkeys->keyid));
+
+  /* export the public key */
+  gpgme_data_t dh = NULL;
+  assert(gpgme_data_new (&dh), "initiating data buffer");
+  gpgme_export_mode_t emode = 0;
+  gpgme_key_t keyarray[2] = {key, NULL};
+  gpgme_set_armor (ctx, 1);
+  gpgme_op_export_keys(ctx, keyarray, emode, dh);
+
+  char buf[100000];
+  assert(gpgme_data_seek (dh, 0, SEEK_SET), "data seek");
+  size_t size = gpgme_data_read (dh, buf, 99999);
+  assert(size > -1, "data read");
+  SET_STRING_ELT(result, 0, mkCharLen(buf, size));
+  UNPROTECT(1);
+  return result;
 }
