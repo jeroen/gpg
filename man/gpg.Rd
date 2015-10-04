@@ -3,10 +3,8 @@
 \name{gpg utilities}
 \alias{gpg}
 \alias{gpg utilities}
-\alias{gpg_download}
 \alias{gpg_import}
 \alias{gpg_list}
-\alias{gpg_search}
 \alias{gpg_sign}
 \alias{gpg_verify}
 \title{PGP tools}
@@ -18,10 +16,6 @@ gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
 gpg_import(pubkey)
 
 gpg_list(secret_only = FALSE)
-
-gpg_search(name = "")
-
-gpg_download(id = "")
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
@@ -48,5 +42,8 @@ sig <- tempfile()
 download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
 gpg_verify(sig, msg)
+}
+\seealso{
+Other gpg: \code{\link{gpg_options}}
 }
 

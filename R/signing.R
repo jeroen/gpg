@@ -5,6 +5,7 @@
 #' @export
 #' @name gpg utilities
 #' @rdname gpg
+#' @family gpg
 #' @aliases gpg
 #' @useDynLib gpg R_gpgme_verify
 #' @param sigfile path to the gpg file containing the \code{PGP SIGNATURE} block.
@@ -42,63 +43,4 @@ gpg_sign <- function(datafile, name = "", password = readline("ENTER PASSWORD: "
   stopifnot(is.character(password) || is.call(password))
   msg <- readBin(datafile, raw(), file.info(datafile)$size)
   .Call(R_gpg_sign, msg, name, password)
-}
-
-#' @useDynLib gpg R_gpg_import
-#' @export
-#' @rdname gpg
-gpg_import <- function(pubkey){
-  stopifnot(file.exists(pubkey))
-  key <- readBin(pubkey, raw(), file.info(pubkey)$size)
-  out <- .Call(R_gpg_import, key)
-  structure(as.list(out), names = c("considered", "imported", "unchanged"))
-}
-
-#' @export
-#' @rdname gpg
-gpg_list <- function(secret_only = FALSE){
-  gpg_keylist_internal("", secret_only, local = TRUE)
-}
-
-#' @export
-#' @rdname gpg
-gpg_search <- function(name = ""){
-  gpg_keylist_internal(name, secret_only = FALSE, local = FALSE)
-}
-
-#' @export
-#' @useDynLib gpg R_gpg_download
-#' @rdname gpg
-gpg_download <- function(id = ""){
-  if(!identical(substring(id, 1, 2), "0x")){
-    filter <- paste0("0x", id);
-  }
-  .Call(R_gpg_download, filter)
-}
-
-#' @useDynLib gpg R_gpg_keylist
-gpg_keylist_internal <- function(name = "", secret_only = FALSE, local = FALSE){
-  stopifnot(is.character(name))
-  stopifnot(is.logical(secret_only))
-  out <- .Call(R_gpg_keylist, name, secret_only, local)
-  names(out) <- c("keyid", "fingerprint", "name", "email", "algo", "timestamp", "expires")
-  out$timestamp <- structure(out$timestamp, class=c("POSIXct", "POSIXt"))
-  out$expires <- structure(out$expires, class=c("POSIXct", "POSIXt"))
-  data.frame(out, stringsAsFactors = FALSE)
-}
-
-#' @export
-#' @useDynLib gpg R_gpg_options R_gpg_list_options
-gpg_options <- function(...){
-  opts <- list(...)
-  if(length(names(opts))){
-    .Call(R_gpg_options, opts)
-  } else {
-    out <- .Call(R_gpg_list_options)
-    args <- c(...);
-    if(is.character(args) && length(args) == 1L){
-      out <- out[[args]]
-    }
-    out
-  }
 }
