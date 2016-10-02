@@ -1,11 +1,12 @@
 Package: gpg
 Type: Package
-Title: Bindings to the GNU Privacy Guard
+Title: GNU Privacy Guard for R
 Version: 0.1
-Date: 2015-07-08
 Authors@R: person("Jeroen", "Ooms", email = "jeroen.ooms@stat.ucla.edu", role = c("aut", "cre"))
-Description: Tools for creating and verifying OpenGPG (RFC4880) signatures
-    using the 'gpgme' C library. This is not a standaline library; GPG needs
-    to be installed on the system.
-License: GPL-2
-SystemRequirements: gpgme-devel (rpm) or libgpgme11-dev (deb) or gpgme (brew)
+Description: Bindings to GPG for creating and verifying OpenGPG (RFC4880)
+    signatures. This is not a standaline library; GPG needs to be installed
+    on the system. On Windows you need GPG4Win or similar, on other systems
+    use the GPGME library.
+License: MIT + file LICENSE
+SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm)
+    gpgme (brew) or GPG4Win (Windows)

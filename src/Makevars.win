@@ -1,10 +1,13 @@
-PKG_LIBS= -L../windows/gpgme-1.6.0/lib${R_ARCH} -lgpgme -lgpg-error -lassuan -lws2_32
-PKG_CPPFLAGS= -I../windows/gpgme-1.6.0/include
+PKG_LIBS= -L../windows/gpgme-1.7.0/lib${R_ARCH} \
+	-lgpgme -lassuan -lgpg-error -lws2_32
 
-#PKG_CFLAGS= -DDEBUG
+PKG_CPPFLAGS= -I../windows/gpgme-1.7.0/include
 
-all: clean
+
+all: clean winlibs
+
+winlibs:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
 
 clean:
-	rm -f *.dll *.o
-
+	rm -f $(SHLIB) $(OBJECTS)

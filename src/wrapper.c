@@ -1,18 +1,14 @@
 #include <Rinternals.h>
-#include <R_ext/Rdynload.h>
 #include <gpgme.h>
+
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
-#define GPG4WIN "C:/Program Files (x86)/GNU/GnuPG/gpg2.exe"
+#define make_string(x) x ? Rf_mkString(x) : ScalarString(NA_STRING)
+#define make_char(x) x ? Rf_mkChar(x) : NA_STRING
 #define ALT(x,y) (x != NULL ? x : y)
-
-/* gpgme sometimes returns NULL strings */
-#undef mkChar
-#undef mkString
-#define mkChar(x) x == NULL ? Rf_mkChar("") : Rf_mkChar(x)
-#define mkString(x) x == NULL ? Rf_mkString("") : Rf_mkString(x)
 
 gpgme_ctx_t ctx;
 
@@ -59,20 +55,26 @@ gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_
   return 1;
 }
 
-void R_init_gpg(DllInfo *info) {
+void R_init_gpg(void *info) {
 #ifdef DEBUG
   gpgme_set_global_flag("debug", "9");
 #endif
-  gpgme_check_version (NULL);
-  gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
+
+/* Hardcode some paths of common GPG installations */
 #ifdef _WIN32
-  //gpgme_set_global_flag("gpgconf-name", "GNU/GnuPG/gpgconf");
-  //gpgme_set_global_flag("gpg-name", "GNU/GnuPG/gpg2");
-  //Rprintf("setting windows settings\n");
-  //assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "gpgconf.exe", "C:/Program Files (x86)/GNU/GnuPG/"), "setting engine");
+  if (!access("C://Program Files (x86)//GnuPG/bin", F_OK)){
+    gpgme_set_global_flag("w32-inst-dir", "C://Program Files (x86)//GnuPG/bin");
+  } else if(!access("C://Program Files (x86)//GNU/GnuPG", F_OK)){
+    gpgme_set_global_flag("w32-inst-dir", "C://Program Files (x86)//GnuPG/bin");
+  } else {
+    Rf_warningcall(R_NilValue, "GPG not found! Please install GPG4Win or similar.");
+  }
 #elif __APPLE__
   //assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg", "~/.gnupg/"), "setting engine");
 #endif
+  gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
+  const char * version = gpgme_check_version (NULL);
+  Rprintf("GPGME version %s\n", version);
   assert(gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP), "engine init");
   assert(gpgme_new(&ctx), "context creation");
   gpgme_set_armor(ctx, 1);
@@ -94,10 +96,10 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   SEXP out = PROTECT(allocVector(VECSXP, n));
   for(int i = 0; i < n; i++) {
     SEXP el = PROTECT(allocVector(VECSXP, 5));
-    SET_VECTOR_ELT(el, 0, mkString(cur2->fpr));
+    SET_VECTOR_ELT(el, 0, make_string(cur2->fpr));
     SET_VECTOR_ELT(el, 1, ScalarInteger(cur2->timestamp));
-    SET_VECTOR_ELT(el, 2, mkString(gpgme_hash_algo_name(cur2->hash_algo)));
-    SET_VECTOR_ELT(el, 3, mkString(gpgme_pubkey_algo_name(cur2->pubkey_algo)));
+    SET_VECTOR_ELT(el, 2, make_string(gpgme_hash_algo_name(cur2->hash_algo)));
+    SET_VECTOR_ELT(el, 3, make_string(gpgme_pubkey_algo_name(cur2->pubkey_algo)));
     SET_VECTOR_ELT(el, 4, ScalarLogical(cur2->status == GPG_ERR_NO_ERROR));
     cur2 = cur2->next;
     SET_VECTOR_ELT(out, i, el);
@@ -162,16 +164,16 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
   gpgme_key_t key;
   for(int i = 0; i < count; i++){
     key = head->key;
-    SET_STRING_ELT(keyid, i, mkChar(key->subkeys->keyid));
-    SET_STRING_ELT(fpr, i, mkChar(key->subkeys->fpr));
-    SET_STRING_ELT(algo, i, mkChar(gpgme_pubkey_algo_name(key->subkeys->pubkey_algo)));
+    SET_STRING_ELT(keyid, i, make_char(key->subkeys->keyid));
+    SET_STRING_ELT(fpr, i, make_char(key->subkeys->fpr));
+    SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_name(key->subkeys->pubkey_algo)));
 
     if(key->issuer_name)
-      SET_STRING_ELT(fpr, i, mkChar(key->issuer_name));
+      SET_STRING_ELT(fpr, i, make_char(key->issuer_name));
     if(key->uids && key->uids->name)
-      SET_STRING_ELT(name, i, mkChar(key->uids->name));
+      SET_STRING_ELT(name, i, make_char(key->uids->name));
     if(key->uids && key->uids->email)
-      SET_STRING_ELT(email, i, mkChar(key->uids->email));
+      SET_STRING_ELT(email, i, make_char(key->uids->email));
 
     INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
     INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
@@ -265,7 +267,7 @@ SEXP R_gpg_list_options(){
   do {
     if(opt->flags & GPGME_CONF_GROUP)
       continue;
-    SET_STRING_ELT(names, i, mkChar(opt->name));
+    SET_STRING_ELT(names, i, make_char(opt->name));
     //Rprintf("Option '%s' with type %d\n", opt->name, opt->type);
     if(ALT(opt->value, opt->default_value) == NULL){
       SET_VECTOR_ELT(res, i, R_NilValue);
@@ -278,7 +280,7 @@ SEXP R_gpg_list_options(){
         case GPGME_CONF_PUB_KEY:
         case GPGME_CONF_SEC_KEY:
         case GPGME_CONF_ALIAS_LIST:
-          SET_VECTOR_ELT(res, i, mkString(ALT(opt->value, opt->default_value)->value.string));
+          SET_VECTOR_ELT(res, i, make_string(ALT(opt->value, opt->default_value)->value.string));
           break;
 
         case GPGME_CONF_UINT32:
@@ -373,8 +375,8 @@ SEXP R_gpg_download(SEXP filter) {
 
   //output block
   SEXP result = PROTECT(allocVector(STRSXP, 1));
-  setAttrib(result, install("keyid"), mkString(key->subkeys->keyid));
-  setAttrib(result, install("fingerprint"), mkString(key->subkeys->keyid));
+  setAttrib(result, install("keyid"), make_string(key->subkeys->keyid));
+  setAttrib(result, install("fingerprint"), make_string(key->subkeys->keyid));
 
   /* export the public key */
   gpgme_data_t dh = NULL;

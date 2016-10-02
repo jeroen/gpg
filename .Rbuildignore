@@ -6,3 +6,4 @@
 .*\.o
 .*\.a
 ^src/Makevars$
+^windows
