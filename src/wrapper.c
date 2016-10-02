@@ -6,7 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define make_string(x) x ? Rf_mkString(x) : ScalarString(NA_STRING)
+#define make_string(x) ScalarString(make_char(x))
 #define make_char(x) x ? Rf_mkChar(x) : NA_STRING
 #define ALT(x,y) (x != NULL ? x : y)
 
@@ -62,12 +62,17 @@ void R_init_gpg(void *info) {
 
 /* Hardcode some paths of common GPG installations */
 #ifdef _WIN32
-  if (!access("C://Program Files (x86)//GnuPG/bin", F_OK)){
-    gpgme_set_global_flag("w32-inst-dir", "C://Program Files (x86)//GnuPG/bin");
-  } else if(!access("C://Program Files (x86)//GNU/GnuPG", F_OK)){
-    gpgme_set_global_flag("w32-inst-dir", "C://Program Files (x86)//GnuPG/bin");
+  if (!access("C://Program Files//GnuPG/bin/gpgme-w32spawn.exe", F_OK)){
+    gpgme_set_global_flag("w32-inst-dir", "C://Program Files/GnuPG/bin");
+  } else if(!access("C://Program Files/GNU/GnuPG/gpgme-w32spawn.exe", F_OK)){
+    gpgme_set_global_flag("w32-inst-dir", "C://Program Files/GNU/GnuPG");
+  } else if (!access("C://Program Files (x86)/GnuPG/bin/gpgme-w32spawn.exe", F_OK)){
+    gpgme_set_global_flag("w32-inst-dir", "C://Program Files (x86)/GnuPG/bin");
+  } else if(!access("C://Program Files (x86)/GNU/GnuPG/gpgme-w32spawn.exe", F_OK)){
+    gpgme_set_global_flag("w32-inst-dir", "C://Program Files (x86)/GNU/GnuPG");
   } else {
-    Rf_warningcall(R_NilValue, "GPG not found! Please install GPG4Win or similar.");
+    Rf_warningcall(R_NilValue, "GPG (gpgme-w32spawn.exe) not found! Please install GPG4Win or GnuPG 2 (modern)");
+    return;
   }
 #elif __APPLE__
   //assert(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, "/usr/local/bin/gpg", "~/.gnupg/"), "setting engine");
