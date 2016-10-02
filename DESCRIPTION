@@ -10,3 +10,4 @@ Description: Bindings to GPG for creating and verifying OpenGPG (RFC4880)
 License: MIT + file LICENSE
 SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm)
     gpgme (brew) or GPG4Win (Windows)
+RoxygenNote: 5.0.1
