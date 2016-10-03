@@ -30,3 +30,10 @@ gpg_options <- function(...){
     out
   }
 }
+
+
+#' @useDynLib gpg R_gpg_info
+#' @export
+gpg_info <- function(){
+  .Call(R_gpg_info)
+}

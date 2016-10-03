@@ -1,7 +1,9 @@
 PKG_CPPFLAGS=@cflags@
 PKG_LIBS=@libs@
 
+PKG_CFLAGS=-Wall -pedantic
+
 all: clean
 
 clean:
-	rm -f *.dll *.so
+	rm -f $(SHLIB) $(OBJECTS)

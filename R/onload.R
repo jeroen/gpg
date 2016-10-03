@@ -1,4 +1,5 @@
 .onLoad <- function(pkg, lib){
-  if(!length(gpg_options()$keyserver))
-    try(gpg_options(keyserver="hkp://keyserver.ubuntu.com:80"))
+  gpg_restart()
+  #if(!length(gpg_options()$keyserver))
+  #  try(gpg_options(keyserver="hkp://keyserver.ubuntu.com:80"))
 }
