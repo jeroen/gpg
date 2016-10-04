@@ -4,14 +4,20 @@
 \alias{gpg}
 \alias{gpg utilities}
 \alias{gpg_import}
-\alias{gpg_list}
+\alias{gpg_list_keys}
+\alias{gpg_list_secret_keys}
+\alias{gpg_recv}
 \alias{gpg_sign}
 \alias{gpg_verify}
 \title{PGP tools}
 \usage{
 gpg_import(pubkey)
 
-gpg_list(secret_only = FALSE)
+gpg_recv(id, keyserver = "https://pgp.mit.edu")
+
+gpg_list_keys()
+
+gpg_list_secret_keys()
 
 gpg_verify(sigfile, datafile)
 
@@ -20,7 +26,9 @@ gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
 \arguments{
 \item{pubkey}{path to a file with a trusted public key}
 
-\item{secret_only}{only list keys for which we have the secret (private key)}
+\item{id}{unique ID of the pubkey (starts with \code{0x})}
+
+\item{keyserver}{address of http keyserver}
 
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
 
@@ -29,6 +37,8 @@ gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
 \item{name}{find a key that matches a particular name}
 
 \item{password}{a string or expression callback to read a passphrase when needed}
+
+\item{secret_only}{only list keys for which we have the secret (private key)}
 }
 \description{
 Utilities to create and verify PGP signatures.

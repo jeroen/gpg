@@ -9,9 +9,9 @@
 #' @param wininst path to `gpgme-w32spawn.exe` executable on Windows
 #' @param debug debugging level, integer between 1 and 9
 gpg_restart <- function(path = NULL, home = NULL, wininst = NULL, debug = "none"){
-  path <- as.character(path)
-  home <- as.character(home)
-  debug <- as.character(debug)
+  path <- normalizePath(as.character(path), mustWork = FALSE)
+  home <- normalizePath(as.character(home), mustWork = FALSE)
+  debug <- normalizePath(as.character(debug), mustWork = FALSE)
   wininst <- find_wininst()
   engine <- .Call(R_gpg_restart, path, home, wininst, debug)
   gpg_info()

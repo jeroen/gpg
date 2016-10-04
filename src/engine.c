@@ -31,6 +31,11 @@ SEXP R_gpg_restart(SEXP path, SEXP home, SEXP wininst, SEXP debug) {
     bail(gpgme_set_global_flag("w32-inst-dir", CHAR(STRING_ELT(wininst, 0))), "setting w32-inst-dir");
   #endif
 
+  //temporary
+  #ifdef BUILD_AUTOBREW
+    gpgme_set_global_flag("gpg-name", "gpg1");
+  #endif
+
   // Set GPG path and config dir
   const char * pathdir = Rf_length(path) ? CHAR(STRING_ELT(path, 0)) : NULL;
   const char * homedir = Rf_length(home) ? CHAR(STRING_ELT(home, 0)) : NULL;

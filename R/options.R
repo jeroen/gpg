@@ -36,10 +36,11 @@ gpg_options <- function(...){
 #' @useDynLib gpg R_engine_info
 #' @export
 gpg_info <- function(){
-  dir_info <- lapply(.Call(R_dir_info), trimws)
-  engine_info <- lapply(.Call(R_engine_info), trimws)
-  list(
-    engine = structure(engine_info, names = c("path", "version", "home", "gpgme")),
-    static = structure(dir_info, names = c("home", "sysconf", "gpgconf", "gpg"))
-  )
+  dirs <- structure(lapply(.Call(R_dir_info), trimws),
+    names = c("home", "sysconf", "gpgconf", "gpg"))
+  engine <- structure(lapply(.Call(R_engine_info), trimws),
+    names = c("gpg", "version", "home", "gpgme"))
+  if(is.na(engine$home))
+    engine$home <- dirs$home
+  c(list(gpgconf = dirs$gpgconf), engine)
 }
