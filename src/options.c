@@ -2,7 +2,7 @@
 
 SEXP R_gpg_list_options(){
   gpgme_conf_comp_t conf;
-  gpgme_op_conf_load (ctx, &conf);
+  bail(gpgme_op_conf_load (ctx, &conf), "load gpg config");
   gpgme_conf_comp_t comp = conf;
 
   //search for the 'gpg' component
