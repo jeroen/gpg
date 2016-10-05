@@ -40,11 +40,13 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     BREWDIR="/tmp/homebrew"
     rm -Rf $BREWDIR
     mkdir -p $BREWDIR
+    mkdir -p inst/bin
     curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
     HOMEBREW_CACHE="/tmp" $BREWDIR/bin/brew install gnupg $PKG_BREW_NAME 2>&1 | sed 's/Warning/Note/g'
     PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
     PKG_LIBS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --libs)
     rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
+    cp -f $BREWDIR/opt/gnupg/bin/gpg1 inst/bin/gpg
   fi
 fi
 
@@ -78,10 +80,6 @@ fi
 
 # Write to Makevars
 sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars
-
-# Copy 'gpg1' executable
-mkdir -p inst/bin
-cp -f $BREWDIR/opt/gnupg/bin/gpg1 inst/bin/gpg
 
 # Success
 exit 0
