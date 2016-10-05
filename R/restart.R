@@ -21,12 +21,12 @@ find_wininst <- function(){
   if(!identical(.Platform$OS.type, "windows"))
     return(NULL)
   libs <- c("C://Program Files/GnuPG/bin", "C://Program Files/GNU/GnuPG",
-    "C://Program Files (x86)//GnuPG/bin", "C://Program Files (x86)/GNU/GnuPG")
+    "C://Program Files (x86)//GnuPG/bin", "C://Program Files (x86)/GNU/GnuPG",
+    system.file("bin", package = "gpg"))
   for(x in libs){
     exec <- normalizePath(file.path(x, "gpgme-w32spawn.exe"), mustWork = FALSE)
     if(file.exists(exec))
       return(normalizePath(x))
   }
-  warning("No GPG installation found. Please install GPG4Win or similar", call. = FALSE)
-  return(NULL)
+  stop("No GPG installation found", call. = FALSE)
 }
