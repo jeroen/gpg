@@ -7,3 +7,5 @@
 .*\.a
 ^src/Makevars$
 ^windows
+^inst$
+

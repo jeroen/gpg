@@ -8,6 +8,8 @@ all: clean winlibs
 
 winlibs:
 	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+	mkdir -p ../inst/bin
+	cp -f ../windows/gpgme-1.7.0/bin/* ../inst/bin/
 
 clean:
 	rm -f $(SHLIB) $(OBJECTS)
