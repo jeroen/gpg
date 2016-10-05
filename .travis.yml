@@ -28,6 +28,7 @@ addons:
   apt:
     packages:
       - libgpgme11-dev
+      - valgrind
 
 r_github_packages:
   - jimhester/covr
