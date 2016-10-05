@@ -12,3 +12,4 @@ SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm)
     gpgme (brew) or GPG4Win (Windows)
 RoxygenNote: 5.0.1.9000
 Roxygen: list(markdown = TRUE)
+Imports: curl

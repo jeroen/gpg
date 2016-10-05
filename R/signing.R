@@ -12,7 +12,6 @@
 #' @param datafile path to the file containing the message to be verified.
 #' @param pubkey path to a file with a trusted public key
 #' @param name find a key that matches a particular name
-#' @param secret_only only list keys for which we have the secret (private key)
 #' @param password a string or expression callback to read a passphrase when needed
 #' @examples # This requires you have the Debian master key in your keyring
 #' # See https://lists.debian.org/debian-devel-announce/2014/11/msg00017.html

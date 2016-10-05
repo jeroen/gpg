@@ -4,7 +4,7 @@
 \alias{gpg_options}
 \title{GPG options}
 \usage{
-gpg_options(...)
+gpg_options()
 }
 \description{
 Get and set options GnuPG configuration options.
@@ -17,11 +17,6 @@ can affect other software using this installation of GnuPG.
 \examples{
 # Read options:
 gpg_options()
-gpg_options("keyserver")
-
-# Write options
-gpg_options("debug-level" = "9")
-gpg_options("debug-level" = "none")
 }
 \seealso{
 Other gpg: \code{\link{gpg_import}},

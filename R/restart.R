@@ -19,7 +19,7 @@ gpg_restart <- function(path = NULL, home = NULL, wininst = NULL, debug = "none"
 
 find_wininst <- function(){
   if(!identical(.Platform$OS.type, "windows"))
-    return(NULL)
+    return(character())
   libs <- c("C://Program Files/GnuPG/bin", "C://Program Files/GNU/GnuPG",
     "C://Program Files (x86)//GnuPG/bin", "C://Program Files (x86)/GNU/GnuPG",
     system.file("bin", package = "gpg"))

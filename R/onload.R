@@ -1,12 +1,15 @@
-.onLoad <- function(pkg, lib){
+.onLoad <- function(lib, pkg){
   if(grepl("darwin", R.Version()$platform)){
     path <- Sys.getenv("PATH")
-    gpgbin <- system.file('bin', package = 'gpg')
+    gpgbin <- file.path(lib, pkg, "bin")
     if(file.exists(gpgbin) && !grepl(gpgbin, path, fixed = TRUE)){
-      sep <- ifelse(identical(.Platform$OS.type, "windows"), ";", ":")
-      Sys.setenv(PATH = paste(path, normalizePath(gpgbin), sep = sep))
+      Sys.setenv(PATH = paste(path, normalizePath(gpgbin), sep = ":"))
     }
   }
-  engine <- gpg_restart()
-  packageStartupMessage("Found GPG ", engine$version, " with keyring: ", engine$home)
+  gpg_restart()
+}
+
+.onAttach <- function(lib, pkg){
+  engine <- gpg_info()
+  packageStartupMessage("Found GPG ", engine$version, ". Using keyring: ", engine$home)
 }

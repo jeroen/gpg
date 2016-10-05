@@ -6,17 +6,8 @@
 #'
 #' @export
 #' @rdname gpg_keyserver
+#' @param name filter keys by name
 #' @family gpg
 gpg_search <- function(name = ""){
   gpg_keylist_internal(name, secret_only = FALSE, local = FALSE)
-}
-
-#' @export
-#' @useDynLib gpg R_gpg_download
-#' @rdname gpg_keyserver
-gpg_download <- function(id = ""){
-  if(!identical(substring(id, 1, 2), "0x")){
-    id <- paste0("0x", id);
-  }
-  .Call(R_gpg_download, id)
 }

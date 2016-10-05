@@ -11,30 +11,15 @@
 #' @family gpg
 #' @examples # Read options:
 #' gpg_options()
-#' gpg_options("keyserver")
-#'
-#' # Write options
-#' gpg_options("debug-level" = "9")
-#' gpg_options("debug-level" = "none")
-gpg_options <- function(...){
-  opts <- list(...)
-  if(length(names(opts))){
-    opts <- lapply(opts, as.character)
-    .Call(R_gpg_options, opts)
-  } else {
-    out <- .Call(R_gpg_list_options)
-    args <- c(...);
-    if(is.character(args) && length(args) == 1L){
-      out <- out[[args]]
-    }
-    out
-  }
+gpg_options <- function(){
+  .Call(R_gpg_list_options)
 }
-
 
 #' @useDynLib gpg R_dir_info
 #' @useDynLib gpg R_engine_info
 #' @export
+#' @rdname gpg
+#' @examples gpg_info()
 gpg_info <- function(){
   dirs <- structure(lapply(.Call(R_dir_info), trimws),
     names = c("home", "sysconf", "gpgconf", "gpg"))
