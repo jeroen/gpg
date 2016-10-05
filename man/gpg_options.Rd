@@ -14,10 +14,6 @@ This function reads and edits options in the GnuPG configuration file, which
 is stored by default in \code{~/.gnupg/gpg.conf}. Note that changing options
 can affect other software using this installation of GnuPG.
 }
-\examples{
-# Read options:
-gpg_options()
-}
 \seealso{
 Other gpg: \code{\link{gpg_import}},
   \code{\link{gpg_search}}

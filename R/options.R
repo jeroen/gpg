@@ -9,9 +9,8 @@
 #' @export
 #' @useDynLib gpg R_gpg_options R_gpg_list_options
 #' @family gpg
-#' @examples # Read options:
-#' gpg_options()
 gpg_options <- function(){
+  # only works with GPG2 ?
   .Call(R_gpg_list_options)
 }
 
