@@ -42,7 +42,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     mkdir -p $BREWDIR
     mkdir -p inst/bin
     curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-    HOMEBREW_CACHE="/tmp" $BREWDIR/bin/brew install gnupg $PKG_BREW_NAME 2>&1 | sed 's/Warning/Note/g'
+    HOMEBREW_CACHE="/tmp" $BREWDIR/bin/brew install --force-bottle --ignore-dependencies \
+      gnupg gpgme libassuan libgpg-error 2>&1 | perl -pe 's/Warning/Note/gi'
     PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
     PKG_LIBS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --libs)
     rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
