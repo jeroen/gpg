@@ -24,7 +24,9 @@ SEXP R_gpg_restart(SEXP path, SEXP home, SEXP wininst, SEXP debug) {
   }
 
   // Set or reset debugging flag
+#if GPGME_VERSION_NUMBER >= 0x010400
   gpgme_set_global_flag("debug", CHAR(STRING_ELT(debug, 0)));
+#endif
 
   // Windows needs path to gpgme-w32spawn.exe
   #ifdef WIN32
