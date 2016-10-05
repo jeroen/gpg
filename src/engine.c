@@ -47,12 +47,15 @@ SEXP R_gpg_restart(SEXP path, SEXP home, SEXP wininst, SEXP debug) {
   return R_engine_info();
 }
 
+//gpgme_get_dirinfo was introduced in GPGME 1.5.0
 SEXP R_dir_info(){
   SEXP out = PROTECT(allocVector(VECSXP, 4));
+#if GPGME_VERSION_NUMBER >= 0x010500
   SET_VECTOR_ELT(out, 0, make_string(gpgme_get_dirinfo("homedir")));
   SET_VECTOR_ELT(out, 1, make_string(gpgme_get_dirinfo("sysconfdir")));
   SET_VECTOR_ELT(out, 2, make_string(gpgme_get_dirinfo("gpgconf-name")));
   SET_VECTOR_ELT(out, 3, make_string(gpgme_get_dirinfo("gpg-name")));
+#endif
   UNPROTECT(1);
   return out;
 }
