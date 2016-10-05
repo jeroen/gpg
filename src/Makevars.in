@@ -1,7 +1,5 @@
-PKG_CPPFLAGS=@cflags@ -DBUILD_AUTOBREW
+PKG_CPPFLAGS=@cflags@
 PKG_LIBS=@libs@
-
-PKG_CFLAGS=-Wall -pedantic
 
 all: clean
 
