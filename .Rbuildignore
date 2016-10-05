@@ -6,7 +6,6 @@
 .*\.o
 .*\.a
 ^src/Makevars$
-^inst$
 ^api.R$
 ^\.travis\.yml$
 ^appveyor\.yml$
