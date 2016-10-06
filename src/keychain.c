@@ -1,5 +1,11 @@
 #include "common.h"
 
+SEXP R_gpg_keygen(SEXP params){
+  const char * par = Rf_length(params) ? CHAR(STRING_ELT(params, 0)) : NULL;
+  bail(gpgme_op_genkey(ctx, par, NULL, NULL), "generate key");
+  return R_NilValue;
+}
+
 SEXP R_gpg_import(SEXP pubkey) {
   gpgme_data_t KEY;
   bail(gpgme_data_new_from_mem(&KEY, (const char*) RAW(pubkey), LENGTH(pubkey), 0), "creating key buffer");

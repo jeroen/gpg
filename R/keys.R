@@ -49,3 +49,4 @@ gpg_keylist_internal <- function(name = "", secret_only = FALSE, local = FALSE){
   out$expires <- structure(out$expires, class=c("POSIXct", "POSIXt"))
   data.frame(out, stringsAsFactors = FALSE)
 }
+
