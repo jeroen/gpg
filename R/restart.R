@@ -4,18 +4,22 @@
 #'
 #' @export
 #' @useDynLib gpg R_gpg_restart
-#' @param path location of `gpg` or `gpg2` or `gpgconf`
+#' @param path location of `gpg` or `gpg2` or `gpgconf` or (on windows) `gpgme-w32spawn.exe`
 #' @param home path to your GPG configuration directory
-#' @param wininst path to `gpgme-w32spawn.exe` executable on Windows
 #' @param debug debugging level, integer between 1 and 9
-gpg_restart <- function(path = NULL, home = NULL, debug = "none"){
+#' @rdname gpg
+gpg_restart <- function(path = NULL, home = NULL, debug = "none", silent = FALSE){
   if(!length(path) && is_windows())
     path <- find_wininst()
   path <- normalizePath(as.character(path), mustWork = FALSE)
   home <- normalizePath(as.character(home), mustWork = FALSE)
+  if(length(home) && !file.exists(home)){
+    dir.create(home, showWarnings = FALSE)
+    stopifnot(isTRUE(file.info(home)$isdir))
+  }
   debug <- normalizePath(as.character(debug), mustWork = FALSE)
   engine <- .Call(R_gpg_restart, path, home, debug)
-  gpg_info()
+  gpg_version(silent = silent)
 }
 
 find_wininst <- function(){

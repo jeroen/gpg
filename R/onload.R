@@ -6,7 +6,7 @@
       Sys.setenv(PATH = paste(path, normalizePath(gpgbin), sep = ":"))
     }
   }
-  gpg_restart()
+  gpg_restart(silent = TRUE)
 }
 
 .onAttach <- function(lib, pkg){

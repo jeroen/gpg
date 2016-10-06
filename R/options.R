@@ -28,3 +28,16 @@ gpg_info <- function(){
     engine$home <- dirs$home
   c(list(gpgconf = dirs$gpgconf), engine)
 }
+
+
+#' @export
+#' @rdname gpg
+#' @examples gpg_version()
+#' @param silent suppress output of `gpg --version`
+gpg_version <- function(silent = FALSE){
+  info <- gpg_info()
+  out <- system2(info$gpg, "--version", stdout = TRUE)
+  if(!isTRUE(silent))
+    cat(out, sep = "\n")
+  invisible(out)
+}
