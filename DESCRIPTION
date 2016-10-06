@@ -3,13 +3,18 @@ Type: Package
 Title: GNU Privacy Guard for R
 Version: 0.1
 Authors@R: person("Jeroen", "Ooms", email = "jeroen.ooms@stat.ucla.edu", role = c("aut", "cre"))
-Description: Bindings to GPG for creating and verifying OpenGPG (RFC4880)
-    signatures. This is not a standaline library; GPG needs to be installed
-    on the system. On Windows you need GPG4Win or similar, on other systems
-    use the GPGME library.
+Description: Bindings to GPG for managing keys and creating / verifying OpenGPG
+    (RFC4880) signatures. On Windows and macOS the binary package includes a copy
+    of gnupg1 which supports basic signature operations. However more advanced 
+    features (such as elliptic curves) require installation of gnupg2 from e.g. 
+    homebrew or GPG4Win.
 License: MIT + file LICENSE
-SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm)
-    gpgme (brew) or GPG4Win (Windows)
+SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew)
 RoxygenNote: 5.0.1.9000
 Roxygen: list(markdown = TRUE)
-Imports: curl
+Imports: 
+    curl
+Suggests: 
+    knitr, 
+    rmarkdown
+VignetteBuilder: knitr

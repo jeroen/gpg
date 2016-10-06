@@ -1,0 +1,103 @@
+---
+title: "Using GPG in R"
+author: "Jeroen Ooms"
+output:
+  html_document:
+    fig_caption: false
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 3
+vignette: >
+  %\VignetteIndexEntry{Using GPG in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE}
+unlink("~/myapp", recursive = TRUE)
+knitr::opts_chunk$set(comment = "")
+library(gpg)
+library(tibble)
+```
+
+
+The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular open source implementation of the OpenPGP protocol ([RFC4880](https://tools.ietf.org/html/rfc4880)). The system is widely adopted for securing integrity and confidentiality of internet communications through the use of various cryptographic methods. Important applications include encryption and authentication of messages (such as email or software downloads) via public key encryption and cryptographic signatures.
+
+## GPG basics
+
+Like most modern crypto systems, GPG makes use of public key methods. The private key is known only by its owner and is used to create signatures or decrypt a message. The corresponding public key is made freely available and so that it can be used by anyone to verify signatures, or encrypt messages which can only be encrypted by the keypair owner. 
+
+### Compare to HTTPS
+
+The major difference between GPG and PKI systems (such as HTTPS) is how we exchange and authenticate public keys. HTTPS is based on a system with Certificate Authorities (CA). Anyone can create a keypair for any domain/personal name, however we only trust public keys which have been signed by an official CA. 
+
+This CA is typically a commercial vendor which verifies your identity (e.g. via a copy of your passport) and then uses their own keypair to sign a certificate containing your name and public key. The public keys of CA's are hardcoded in HTTP clients. The main disadvantage is that CA's are expensive and everything collapses if any of them is compromised or not doing their job well.
+
+### The web of trust
+
+GPG uses a different system which does not rely on authorities. In GPG, peers sign each other's keys, and it is up to the user to manage who they choose to trust in their personal keyring. For any given signature, GPG will check if it was created by a trusted party in the keyring, or by a third party which has been verified by someone in the keyring, and so on: a "web of trust".
+
+The easiest way to exchange (signed or unsigned) public keys is via a keyserver. GPG is compatible with existing PGP key servers. These servers mirror each other so most keys are available on either one.
+
+ - https://pgp.mit.edu
+ - https://keyserver.ubuntu.com
+ - http://keys.gnupg.net
+
+GPG key servers might not use HTTPS. In GPG we only trust keys only on basis of who has signed them, regardless of how they were obtained. For this reason it is also perfectly valid to share GPG public keys via e.g. a website or email.
+
+## Key management
+
+It is important to know which version of GPG you are running and where your home dir is. Your home directory contains your configuration and the keyrings. GPG defaults to your system keyring, which is the same as the `gpg` command line utility and system package manager use.
+
+```{r}
+str(gpg_info())
+```
+
+Use `gpg_restart` to switch to another GPG executable or different home directory, e.g. to build an application which uses its own configuration and keyrings:
+
+```{r}
+gpg_restart(home = "~/myapp")
+```
+
+### Your keyring
+
+Use `gpg_list_keys()` and `gpg_list_secret_keys()` to see the current contents of your keyring:
+
+```{r}
+gpg_list_keys()[c("keyid", "name", "email")]
+gpg_list_secret_keys()[c("keyid", "name", "email")]
+```
+
+### Generating keys
+
+Use `gpg_keygen()` to generate a new public private keypair:
+
+```{r}
+gpg_keygen(name = "Jerry", email = "jerry@gmail.com", passphrase = "supersecret")
+gpg_list_keys()[c("keyid", "name", "email")]
+```
+
+
+
+### Importing keys
+
+The `gpg_recv` function receives a key by its ID from the keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
+
+```{r}
+gpg_recv("E084DAB9")
+keyring <- gpg_list_keys()
+keyring[c("keyid", "name", "email")]
+```
+
+Note that for imported keys, we do not have the private key:
+
+```{r}
+secring <- gpg_list_secret_keys()
+secring[c("keyid", "name", "email")]
+```
+
+
+
+

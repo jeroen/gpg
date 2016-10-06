@@ -17,5 +17,5 @@ gpg_keygen <- function(name, email, passphrase = NULL, ...){
   str <- paste(names(params), unname(params), sep = ": ", collapse = "\n")
   str <- paste('<GnupgKeyParms format="internal">', str, '</GnupgKeyParms>\n', sep = "\n")
   .Call(R_gpg_keygen, str)
-  cat(str)
+  invisible(cat(str))
 }

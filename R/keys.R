@@ -7,14 +7,14 @@ gpg_import <- function(pubkey){
     pubkey <- readBin(pubkey, raw(), file.info(pubkey)$size)
   }
   out <- .Call(R_gpg_import, pubkey)
-  structure(as.list(out), names = c("considered", "imported", "unchanged"))
+  setNames(out, c("considered", "imported", "unchanged"))
 }
 
 #' @export
 #' @rdname gpg
 #' @param keyserver address of http keyserver
 #' @param id unique ID of the pubkey (starts with `0x`)
-gpg_recv <- function(id, keyserver = "https://pgp.mit.edu"){
+gpg_recv <- function(id, keyserver = "https://keyserver.ubuntu.com"){
   keyserver <- sub("hkp://", "http://", keyserver, fixed = TRUE)
   keyserver <- sub("/$", "", keyserver)
   if(!identical(substring(id, 1, 2), "0x")){
