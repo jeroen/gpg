@@ -16,12 +16,16 @@ SEXP R_engine_info(){
   );
 }
 
-SEXP R_gpg_restart(SEXP path, SEXP home, SEXP wininst, SEXP debug) {
+SEXP R_gpg_restart(SEXP path, SEXP home, SEXP debug) {
   // Clean up old engine
   if(ctx != NULL){
     gpgme_release(ctx);
     ctx = NULL;
   }
+
+  // Set GPG path and config dir
+  const char * pathdir = Rf_length(path) ? CHAR(STRING_ELT(path, 0)) : NULL;
+  const char * homedir = Rf_length(home) ? CHAR(STRING_ELT(home, 0)) : NULL;
 
   // Set or reset debugging flag
 #if GPGME_VERSION_NUMBER >= 0x010400
@@ -29,14 +33,12 @@ SEXP R_gpg_restart(SEXP path, SEXP home, SEXP wininst, SEXP debug) {
 #endif
 
   // Windows needs path to gpgme-w32spawn.exe
-  #ifdef WIN32
-    bail(gpgme_set_global_flag("w32-inst-dir", CHAR(STRING_ELT(wininst, 0))), "setting w32-inst-dir");
-  #endif
-
-  // Set GPG path and config dir
-  const char * pathdir = Rf_length(path) ? CHAR(STRING_ELT(path, 0)) : NULL;
-  const char * homedir = Rf_length(home) ? CHAR(STRING_ELT(home, 0)) : NULL;
-  bail(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, pathdir, homedir), "setting OpenPGP options");
+#ifdef WIN32
+  bail(gpgme_set_global_flag("w32-inst-dir", pathdir), "setting w32-inst-dir");
+  bail(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, NULL, homedir), "setting OpenPGP home");
+#else
+  bail(gpgme_set_engine_info(GPGME_PROTOCOL_OpenPGP, pathdir, homedir), "setting OpenPGP path/home");
+#endif
 
   // Initialize system
   gpgme_set_locale (NULL, LC_CTYPE, setlocale (LC_CTYPE, NULL));
