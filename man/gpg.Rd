@@ -16,7 +16,7 @@
 \usage{
 gpg_import(pubkey)
 
-gpg_recv(id, keyserver = "https://pgp.mit.edu")
+gpg_recv(id, keyserver = "https://keyserver.ubuntu.com")
 
 gpg_list_keys()
 

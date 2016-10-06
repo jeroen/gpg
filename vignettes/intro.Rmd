@@ -19,7 +19,6 @@ vignette: >
 unlink("~/myapp", recursive = TRUE)
 knitr::opts_chunk$set(comment = "")
 library(gpg)
-library(tibble)
 ```
 
 

@@ -7,7 +7,7 @@ gpg_import <- function(pubkey){
     pubkey <- readBin(pubkey, raw(), file.info(pubkey)$size)
   }
   out <- .Call(R_gpg_import, pubkey)
-  setNames(out, c("considered", "imported", "unchanged"))
+  stats::setNames(out, c("considered", "imported", "unchanged"))
 }
 
 #' @export
