@@ -82,10 +82,18 @@ gpg_list_keys()[c("keyid", "name", "email")]
 
 ### Importing keys
 
-The `gpg_recv` function receives a key by its ID from the keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
+The `gpg_import` function reads an armored GPG key from disk:
 
 ```{r}
-gpg_recv("E084DAB9")
+download.file("https://stallman.org/rms-pubkey.txt", "rms-pubkey.txt")
+gpg_import("rms-pubkey.txt")
+unlink("rms-pubkey.txt")
+```
+
+Use the `gpg_recv` function to download a given key ID from the keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
+
+```{r}
+gpg_recv(id ="E084DAB9")
 keyring <- gpg_list_keys()
 keyring[c("keyid", "name", "email")]
 ```
