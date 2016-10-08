@@ -10,6 +10,9 @@ matrix:
       dist: trusty
       sudo: required
       env: R_CODECOV=true
+    - os: linux
+      dist: trusty
+      sudo: required
       r_check_args: '--use-valgrind'
     - os: osx
       osx_image: xcode8
