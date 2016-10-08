@@ -67,27 +67,16 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   return out;
 }
 
-SEXP R_gpg_sign(SEXP msg, SEXP name, SEXP fun){
+SEXP R_gpg_sign(SEXP msg, SEXP id, SEXP fun){
   gpgme_data_t SIG, MSG;
   gpgme_key_t key = NULL;
+  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 1), "load key from keyring");
   bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
 
-  // get the key of the signer
-  gpgme_signers_clear(ctx);
-  bail(gpgme_op_keylist_start(ctx, CHAR(STRING_ELT(name, 0)), 1), "searching keys");
-
-  gpgme_error_t err = gpgme_op_keylist_next(ctx, &key);
-  if(gpg_err_code (err) == GPG_ERR_EOF)
-    Rf_errorcall(R_NilValue, "No secret key found for '%s'", CHAR(STRING_ELT(name, 0)));
-  bail(err, "selecting first matched key");
-  bail(gpgme_op_keylist_end(ctx), "done listing keys");
-
-  // debug
-  Rprintf("Using key: %s (%s)\n", key->subkeys->_keyid, key->uids->name);
-
-  // set passwd callback
+  // set private key passphrase callback
   gpgme_set_passphrase_cb(ctx, pwprompt, fun);
 
+  // TODO: vectorize to sign with multiple keys
   gpgme_signers_add(ctx, key);
   bail(gpgme_data_new(&SIG), "memory to hold signature");
   bail(gpgme_op_sign(ctx, MSG, SIG, GPGME_SIG_MODE_DETACH), "signing");

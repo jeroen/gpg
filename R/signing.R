@@ -1,4 +1,4 @@
-#' PGP tools
+#' PGP Signatures
 #'
 #' Utilities to create and verify PGP signatures.
 #'
@@ -10,8 +10,6 @@
 #' @useDynLib gpg R_gpgme_verify
 #' @param sigfile path to the gpg file containing the \code{PGP SIGNATURE} block.
 #' @param datafile path to the file containing the message to be verified.
-#' @param name find a key that matches a particular name
-#' @param password a string or expression callback to read a passphrase when needed
 #' @examples # This requires you have the Debian master key in your keyring
 #' # See https://lists.debian.org/debian-devel-announce/2014/11/msg00017.html
 #' # gpg --keyserver pgp.mit.edu --recv 0x7638d0442b90d010
@@ -34,11 +32,15 @@ gpg_verify <- function(sigfile, datafile){
 
 #' @useDynLib gpg R_gpg_sign
 #' @export
+#' @param file file-path or raw vector with data to sign
+#' @param id which private key to use for signing
+#' @param password a string or expression callback to read a passphrase when needed
 #' @rdname gpg
-gpg_sign <- function(datafile, name = "", password = readline("ENTER PASSWORD: ")){
-  stopifnot(file.exists(datafile))
-  password = substitute(password)
-  stopifnot(is.character(password) || is.call(password))
-  msg <- readBin(datafile, raw(), file.info(datafile)$size)
-  .Call(R_gpg_sign, msg, name, password)
+gpg_sign <- function(file, id, password = readline){
+  if(is.character(file)){
+    stopifnot(file.exists(file))
+    file <- readBin(file, raw(), file.info(file)$size)
+  }
+  stopifnot(is.raw(file))
+  .Call(R_gpg_sign, file, id, password)
 }

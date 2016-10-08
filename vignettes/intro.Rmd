@@ -74,7 +74,7 @@ gpg_list_secret_keys()[c("id", "name", "email")]
 Use `gpg_keygen()` to generate a new public private keypair:
 
 ```{r}
-gpg_keygen(name = "Jerry", email = "jerry@gmail.com", passphrase = "supersecret")
+(mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com", passphrase = "supersecret"))
 gpg_list_keys()[c("id", "name", "email")]
 ```
 
@@ -104,6 +104,9 @@ secring <- gpg_list_secret_keys()
 secring[c("id", "name", "email")]
 ```
 
+### Exporting a key
+
+TODO
 
 ### Deleting a key
 
@@ -114,3 +117,27 @@ gpg_delete('2C6464AF2A8E4C02')
 gpg_list_keys()[c("id", "name", "email")]
 ```
 
+
+## Signatures
+
+You can sign a file with your private key. Others can verify your signature from your public key.
+
+### Sign a file
+
+Let's use the private key we generated earlier to sign a file:
+
+```{r}
+myfile <- system.file("CITATION")
+sig <- gpg_sign(myfile, mykey, password = 'supersecret')
+print(sig)
+writeLines(sig, "myfile.sig")
+```
+
+### Verify a signature
+
+The `gpg_verify` function will see if a signature is valid for any of the keys in the keyring:
+
+```{r}
+gpg_verify("myfile.sig", myfile)
+unlink("myfile.sig")
+```

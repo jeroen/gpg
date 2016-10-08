@@ -5,18 +5,20 @@
 \alias{gpg utilities}
 \alias{gpg_sign}
 \alias{gpg_verify}
-\title{PGP tools}
+\title{PGP Signatures}
 \usage{
 gpg_verify(sigfile, datafile)
 
-gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
+gpg_sign(file, id, password = readline)
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
 
 \item{datafile}{path to the file containing the message to be verified.}
 
-\item{name}{find a key that matches a particular name}
+\item{file}{file-path or raw vector with data to sign}
+
+\item{id}{which private key to use for signing}
 
 \item{password}{a string or expression callback to read a passphrase when needed}
 }
