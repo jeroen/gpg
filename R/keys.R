@@ -50,3 +50,10 @@ gpg_keylist_internal <- function(name = "", secret_only = FALSE, local = FALSE){
   data.frame(out, stringsAsFactors = FALSE)
 }
 
+#' @useDynLib gpg R_gpg_delete
+#' @param allow_secret set to TRUE if are sure you want to a private keys
+#' @export
+#' @rdname gpg
+gpg_delete <- function(id, allow_secret = TRUE){
+  .Call(R_gpg_delete, id, allow_secret)
+}

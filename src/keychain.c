@@ -4,7 +4,16 @@ SEXP R_gpg_keygen(SEXP params){
   const char * par = Rf_length(params) ? CHAR(STRING_ELT(params, 0)) : NULL;
   bail(gpgme_op_genkey(ctx, par, NULL, NULL), "generate key");
   gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
-  return mkString(res->fpr);
+  gpgme_key_t key;
+  bail(gpgme_get_key(ctx, res->fpr, &key, 0), "get new key");
+  return mkString(key->subkeys->keyid);
+}
+
+SEXP R_gpg_delete(SEXP id, SEXP secret){
+  gpgme_key_t key;
+  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 0), "get new key");
+  bail(gpgme_op_delete(ctx, key, asLogical(secret)), "delete key");
+  return mkString(key->subkeys->keyid);
 }
 
 SEXP R_gpg_import(SEXP pubkey) {

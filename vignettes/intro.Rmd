@@ -79,7 +79,6 @@ gpg_list_keys()[c("keyid", "name", "email")]
 ```
 
 
-
 ### Importing keys
 
 The `gpg_import` function reads an armored GPG key from disk:
@@ -106,5 +105,12 @@ secring[c("keyid", "name", "email")]
 ```
 
 
+### Deleting a key
 
+Delete a key from its ID or fingerprint. Let's delete the RMS key:
+
+```{r}
+gpg_delete('2C6464AF2A8E4C02')
+gpg_list_keys()[c("keyid", "name", "email")]
+```
 

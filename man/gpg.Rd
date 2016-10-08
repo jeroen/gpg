@@ -3,6 +3,7 @@
 \name{gpg_import}
 \alias{gpg}
 \alias{gpg utilities}
+\alias{gpg_delete}
 \alias{gpg_import}
 \alias{gpg_info}
 \alias{gpg_list_keys}
@@ -22,6 +23,8 @@ gpg_list_keys()
 
 gpg_list_secret_keys()
 
+gpg_delete(id, allow_secret = TRUE)
+
 gpg_info()
 
 gpg_version(silent = FALSE)
@@ -38,6 +41,8 @@ gpg_sign(datafile, name = "", password = readline("ENTER PASSWORD: "))
 \item{id}{unique ID of the pubkey (starts with \code{0x})}
 
 \item{keyserver}{address of http keyserver}
+
+\item{allow_secret}{set to TRUE if are sure you want to a private keys}
 
 \item{silent}{suppress output of \code{gpg --version}}
 
