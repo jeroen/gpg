@@ -2,7 +2,7 @@
 % Please edit documentation in R/keygen.R
 \name{gpg_keygen}
 \alias{gpg_keygen}
-\title{GPG keygen}
+\title{GPG key generation}
 \usage{
 gpg_keygen(name, email, passphrase = NULL, key_type = "RSA", ...)
 }
@@ -20,9 +20,9 @@ gpg_keygen(name, email, passphrase = NULL, key_type = "RSA", ...)
 [GPG manual]: R:GPG manual}
 }
 \description{
-Generates a new private-public keypair. Supported options and parameters
-depend on the version of GPG. See the GPG manual section on
-\href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{Unattended key generation}
+Use \code{gpg_keygen} to generate a new private-public keypair. Supported options
+and parameters depend on the version of GPG. See the GPG manual section on
+\href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{Unattended key generation}.
 
 [Unattended key generation]: R:Unattended key generation
 }

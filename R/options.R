@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @useDynLib gpg R_gpg_options R_gpg_list_options
-#' @family gpg
+#' @rdname gpg_info
 gpg_options <- function(){
   # only works with GPG2 ?
   .Call(R_gpg_list_options)
@@ -17,7 +17,7 @@ gpg_options <- function(){
 #' @useDynLib gpg R_dir_info
 #' @useDynLib gpg R_engine_info
 #' @export
-#' @rdname gpg
+#' @rdname gpg_info
 #' @examples gpg_info()
 gpg_info <- function(){
   dirs <- structure(lapply(.Call(R_dir_info), trimws),
@@ -31,7 +31,7 @@ gpg_info <- function(){
 
 
 #' @export
-#' @rdname gpg
+#' @rdname gpg_info
 #' @examples gpg_version()
 #' @param silent suppress output of `gpg --version`
 gpg_version <- function(silent = FALSE){

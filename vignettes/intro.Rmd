@@ -65,8 +65,8 @@ gpg_restart(home = "~/myapp")
 Use `gpg_list_keys()` and `gpg_list_secret_keys()` to see the current contents of your keyring:
 
 ```{r}
-gpg_list_keys()[c("keyid", "name", "email")]
-gpg_list_secret_keys()[c("keyid", "name", "email")]
+gpg_list_keys()[c("id", "name", "email")]
+gpg_list_secret_keys()[c("id", "name", "email")]
 ```
 
 ### Generating keys
@@ -75,7 +75,7 @@ Use `gpg_keygen()` to generate a new public private keypair:
 
 ```{r}
 gpg_keygen(name = "Jerry", email = "jerry@gmail.com", passphrase = "supersecret")
-gpg_list_keys()[c("keyid", "name", "email")]
+gpg_list_keys()[c("id", "name", "email")]
 ```
 
 
@@ -94,14 +94,14 @@ Use the `gpg_recv` function to download a given key ID from the keyserver. For e
 ```{r}
 gpg_recv(id ="E084DAB9")
 keyring <- gpg_list_keys()
-keyring[c("keyid", "name", "email")]
+keyring[c("id", "name", "email")]
 ```
 
 Note that for imported keys, we do not have the private key:
 
 ```{r}
 secring <- gpg_list_secret_keys()
-secring[c("keyid", "name", "email")]
+secring[c("id", "name", "email")]
 ```
 
 
@@ -111,6 +111,6 @@ Delete a key from its ID or fingerprint. Let's delete the RMS key:
 
 ```{r}
 gpg_delete('2C6464AF2A8E4C02')
-gpg_list_keys()[c("keyid", "name", "email")]
+gpg_list_keys()[c("id", "name", "email")]
 ```
 

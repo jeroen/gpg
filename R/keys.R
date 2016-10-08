@@ -1,17 +1,24 @@
+#' GPG keyring management
+#'
+#' Signing or encrypting with GPG require that the keys are stored in your
+#' personal keyring. Use \link{gpg_version} to see which keyring (home dir)
+#' you are using. Also see \link{gpg_keygen} for generating a new key.
+#'
 #' @useDynLib gpg R_gpg_import
+#' @param file path to the key file or raw vector with key data
 #' @export
-#' @rdname gpg
-gpg_import <- function(pubkey){
-  if(is.character(pubkey)){
-    stopifnot(file.exists(pubkey))
-    pubkey <- readBin(pubkey, raw(), file.info(pubkey)$size)
+#' @rdname gpg_keys
+gpg_import <- function(file){
+  if(is.character(file)){
+    stopifnot(file.exists(file))
+    file <- readBin(file, raw(), file.info(file)$size)
   }
-  out <- .Call(R_gpg_import, pubkey)
+  out <- .Call(R_gpg_import, file)
   stats::setNames(out, c("considered", "imported", "unchanged"))
 }
 
 #' @export
-#' @rdname gpg
+#' @rdname gpg_keys
 #' @param keyserver address of http keyserver
 #' @param id unique ID of the pubkey (starts with `0x`)
 gpg_recv <- function(id, keyserver = "https://keyserver.ubuntu.com"){
@@ -27,14 +34,22 @@ gpg_recv <- function(id, keyserver = "https://keyserver.ubuntu.com"){
   gpg_import(req$content)
 }
 
+#' @useDynLib gpg R_gpg_delete
+#' @param allow_secret set to TRUE if are sure you want to a private keys
 #' @export
-#' @rdname gpg
+#' @rdname gpg_keys
+gpg_delete <- function(id, allow_secret = TRUE){
+  .Call(R_gpg_delete, id, allow_secret)
+}
+
+#' @export
+#' @rdname gpg_keys
 gpg_list_keys <- function(){
   gpg_keylist_internal(secret_only = FALSE, local = TRUE)
 }
 
 #' @export
-#' @rdname gpg
+#' @rdname gpg_keys
 gpg_list_secret_keys <- function(){
   gpg_keylist_internal(secret_only = TRUE, local = TRUE)
 }
@@ -44,16 +59,8 @@ gpg_keylist_internal <- function(name = "", secret_only = FALSE, local = FALSE){
   stopifnot(is.character(name))
   stopifnot(is.logical(secret_only))
   out <- .Call(R_gpg_keylist, name, secret_only, local)
-  names(out) <- c("keyid", "fingerprint", "name", "email", "algo", "timestamp", "expires")
+  names(out) <- c("id", "fingerprint", "name", "email", "algo", "timestamp", "expires")
   out$timestamp <- structure(out$timestamp, class=c("POSIXct", "POSIXt"))
   out$expires <- structure(out$expires, class=c("POSIXct", "POSIXt"))
   data.frame(out, stringsAsFactors = FALSE)
-}
-
-#' @useDynLib gpg R_gpg_delete
-#' @param allow_secret set to TRUE if are sure you want to a private keys
-#' @export
-#' @rdname gpg
-gpg_delete <- function(id, allow_secret = TRUE){
-  .Call(R_gpg_delete, id, allow_secret)
 }

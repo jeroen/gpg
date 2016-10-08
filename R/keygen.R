@@ -1,8 +1,8 @@
-#' GPG keygen
+#' GPG key generation
 #'
-#' Generates a new private-public keypair. Supported options and parameters
-#' depend on the version of GPG. See the GPG manual section on
-#' [Unattended key generation](https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html)
+#' Use `gpg_keygen` to generate a new private-public keypair. Supported options
+#' and parameters depend on the version of GPG. See the GPG manual section on
+#' [Unattended key generation](https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html).
 #'
 #' @export
 #' @useDynLib gpg R_gpg_keygen
@@ -13,7 +13,7 @@
 #' @param ... other fields, see [GPG manual](https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html)
 gpg_keygen <- function(name, email, passphrase = NULL, key_type = "RSA", ...){
   params <- list("Key-Type" = key_type, "Name-Real" = name,
-    "Name-Email" = email, ...)
+                 "Name-Email" = email, ...)
   cat(make_args_str(params))
   params["Passphrase"] = passphrase # Can be NULL
   .Call(R_gpg_keygen, make_args_str(params))

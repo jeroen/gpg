@@ -7,7 +7,7 @@
 #' @param path location of `gpg` or `gpg2` or `gpgconf` or (on windows) `gpgme-w32spawn.exe`
 #' @param home path to your GPG configuration directory
 #' @param debug debugging level, integer between 1 and 9
-#' @rdname gpg
+#' @rdname gpg_info
 gpg_restart <- function(path = NULL, home = NULL, debug = "none", silent = FALSE){
   if(!length(path) && is_windows())
     path <- find_wininst()
