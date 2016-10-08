@@ -4,7 +4,7 @@
 \alias{gpg_keygen}
 \title{GPG keygen}
 \usage{
-gpg_keygen(name, email, passphrase = NULL, ...)
+gpg_keygen(name, email, passphrase = NULL, key_type = "RSA", ...)
 }
 \arguments{
 \item{name}{value for the \code{Name-Real} field}
@@ -13,15 +13,17 @@ gpg_keygen(name, email, passphrase = NULL, ...)
 
 \item{passphrase}{(optional) protect with a passphrase}
 
+\item{key_type}{required field, defaults to RSA}
+
 \item{...}{other fields, see \href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{GPG manual}
 
 [GPG manual]: R:GPG manual}
 }
 \description{
-Generates a new private-public keypair. Note that some options are
-only supported if you have GPG2. The \href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{GPG manual}
-explains which fields are suppor
+Generates a new private-public keypair. Supported options and parameters
+depend on the version of GPG. See the GPG manual section on
+\href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{Unattended key generation}
 
-[GPG manual]: R:GPG manual
+[Unattended key generation]: R:Unattended key generation
 }
 

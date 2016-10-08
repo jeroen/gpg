@@ -3,7 +3,8 @@
 SEXP R_gpg_keygen(SEXP params){
   const char * par = Rf_length(params) ? CHAR(STRING_ELT(params, 0)) : NULL;
   bail(gpgme_op_genkey(ctx, par, NULL, NULL), "generate key");
-  return R_NilValue;
+  gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
+  return mkString(res->fpr);
 }
 
 SEXP R_gpg_import(SEXP pubkey) {
