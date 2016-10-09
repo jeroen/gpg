@@ -127,9 +127,10 @@ You can sign a file with your private key. Others can verify your signature from
 Let's use the private key we generated earlier to sign a file:
 
 ```{r}
-myfile <- system.file("CITATION")
+myfile <- tempfile()
+writeLines("This is a secret message", con = myfile)
 sig <- gpg_sign(myfile, mykey, password = 'supersecret')
-print(sig)
+cat(sig)
 writeLines(sig, "myfile.sig")
 ```
 

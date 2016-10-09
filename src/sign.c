@@ -74,10 +74,11 @@ SEXP R_gpg_sign(SEXP msg, SEXP id, SEXP fun){
   bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
 
   // set private key passphrase callback
+  //bail(gpgme_set_pinentry_mode(ctx, GPGME_PINENTRY_MODE_LOOPBACK), "set pinentry to loopback");
   gpgme_set_passphrase_cb(ctx, pwprompt, fun);
 
   // TODO: vectorize to sign with multiple keys
-  gpgme_signers_add(ctx, key);
+  bail(gpgme_signers_add(ctx, key), "add signer");
   bail(gpgme_data_new(&SIG), "memory to hold signature");
   bail(gpgme_op_sign(ctx, MSG, SIG, GPGME_SIG_MODE_DETACH), "signing");
 
