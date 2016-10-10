@@ -1,11 +1,16 @@
 #include "common.h"
 
+//note: passphrase callback seems broken for keygen
 SEXP R_gpg_keygen(SEXP params){
+  void * cb = NULL;
+  gpgme_get_passphrase_cb(ctx, NULL, &cb);
+  gpgme_set_passphrase_cb(ctx, NULL, NULL);
   const char * par = Rf_length(params) ? CHAR(STRING_ELT(params, 0)) : NULL;
   bail(gpgme_op_genkey(ctx, par, NULL, NULL), "generate key");
   gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
   gpgme_key_t key;
   bail(gpgme_get_key(ctx, res->fpr, &key, 0), "get new key");
+  gpgme_set_passphrase_cb(ctx, pwprompt, cb);
   return mkString(key->subkeys->keyid);
 }
 
@@ -27,6 +32,22 @@ SEXP R_gpg_import(SEXP pubkey) {
   INTEGER(out)[2] = result->unchanged;
   UNPROTECT(1);
   return out;
+}
+
+SEXP R_gpg_export(SEXP id){
+  gpgme_key_t keys[2] = {NULL, NULL};
+  gpgme_data_t keydata = NULL;
+  bail(gpgme_data_new(&keydata), "initiatie keydata");
+  gpgme_data_set_encoding(keydata, GPGME_DATA_ENCODING_ARMOR);
+  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &keys[0], 0), "get new key");
+  bail(gpgme_op_export_keys(ctx, keys, 0, keydata), "export key");
+  char * buf = malloc(1e6);
+  size_t len = gpgme_data_write(keydata, buf, 1e6);
+  if(len < 1) Rf_error("This key cannot be exported");
+  SEXP out = mkCharLenCE(buf, len, CE_UTF8);
+  gpgme_data_release(keydata);
+  free(buf);
+  return ScalarString(out);
 }
 
 SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {

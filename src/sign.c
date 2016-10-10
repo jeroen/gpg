@@ -5,39 +5,6 @@
 #include <string.h>
 #include <unistd.h>
 
-/* password prompt only supported in gpg1, not in gpg2 which uses the 'pinentry' program */
-gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_info, int prev_was_bad, int fd){
-
-  /* hardcoded password */
-  SEXP cb = (SEXP) hook;
-  if(isString(cb)){
-    gpgme_io_write(fd, CHAR(STRING_ELT(cb, 0)), LENGTH(STRING_ELT(cb, 0)));
-    gpgme_io_write(fd, "\n", 1);
-    return 0;
-  }
-
-  /* expression to call */
-  if(TYPEOF(cb) == LANGSXP){
-    //Rprintf("Enter password for %s (attempt %d)\n", uid_hint, prev_was_bad+1);
-
-    int err;
-    SEXP res = PROTECT(R_tryEval(cb, R_GlobalEnv, &err));
-
-    if(err || !isString(res)){
-      UNPROTECT(1);
-      Rf_errorcall(R_NilValue, "Password expression must return a string.");
-    }
-
-    gpgme_io_write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0)));
-    gpgme_io_write(fd, "\n", 1);
-    UNPROTECT(1);
-    return 0;
-  }
-
-  Rf_errorcall(R_NilValue, "Invalid ");
-  return 1;
-}
-
 SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   gpgme_data_t SIG, MSG;
   bail(gpgme_data_new_from_mem(&SIG, (const char*) RAW(sig), LENGTH(sig), 0), "creating sig buffer");
@@ -72,10 +39,6 @@ SEXP R_gpg_sign(SEXP msg, SEXP id, SEXP fun){
   gpgme_key_t key = NULL;
   bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 1), "load key from keyring");
   bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
-
-  // set private key passphrase callback
-  //bail(gpgme_set_pinentry_mode(ctx, GPGME_PINENTRY_MODE_LOOPBACK), "set pinentry to loopback");
-  gpgme_set_passphrase_cb(ctx, pwprompt, fun);
 
   // TODO: vectorize to sign with multiple keys
   bail(gpgme_signers_add(ctx, key), "add signer");

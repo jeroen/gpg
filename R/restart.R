@@ -18,7 +18,7 @@ gpg_restart <- function(path = NULL, home = NULL, debug = "none", silent = FALSE
     stopifnot(isTRUE(file.info(home)$isdir))
   }
   debug <- normalizePath(as.character(debug), mustWork = FALSE)
-  engine <- .Call(R_gpg_restart, path, home, debug)
+  engine <- .Call(R_gpg_restart, path, home, readline, debug)
   gpg_version(silent = silent)
 }
 

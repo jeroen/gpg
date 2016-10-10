@@ -8,6 +8,7 @@
 #define ALT(x,y) (x != NULL ? x : y)
 
 gpgme_ctx_t ctx;
+gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_info, int prev_was_bad, int fd);
 
 struct keylist {
   gpgme_key_t key;
