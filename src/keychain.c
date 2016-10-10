@@ -35,12 +35,10 @@ SEXP R_gpg_import(SEXP pubkey) {
 }
 
 SEXP R_gpg_export(SEXP id){
-  gpgme_key_t keys[2] = {NULL, NULL};
   gpgme_data_t keydata = NULL;
   bail(gpgme_data_new(&keydata), "initiatie keydata");
+  bail(gpgme_op_export(ctx, CHAR(STRING_ELT(id, 0)), 0, keydata), "export key");
   gpgme_data_set_encoding(keydata, GPGME_DATA_ENCODING_ARMOR);
-  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &keys[0], 0), "get new key");
-  bail(gpgme_op_export_keys(ctx, keys, 0, keydata), "export key");
   char * buf = malloc(1e6);
   size_t len = gpgme_data_write(keydata, buf, 1e6);
   if(len < 1) Rf_error("This key cannot be exported");
