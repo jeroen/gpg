@@ -48,12 +48,5 @@ SEXP R_gpg_sign(SEXP msg, SEXP id){
   //do something with result
   //gpgme_sign_result_t result = gpgme_op_sign_result(ctx);
   //gpgme_new_signature_t res = result->signatures;
-
-  size_t len;
-  char *sig = gpgme_data_release_and_get_mem(SIG, &len);
-  SEXP out = PROTECT(allocVector(STRSXP, 1));
-  SET_STRING_ELT(out, 0, mkCharLen(sig, len));
-  UNPROTECT(1);
-  gpgme_free(sig);
-  return out;
+  return data_to_string(SIG);
 }

@@ -38,13 +38,7 @@ SEXP R_gpg_export(SEXP id){
   gpgme_data_t keydata = NULL;
   bail(gpgme_data_new(&keydata), "initiatie keydata");
   bail(gpgme_op_export(ctx, CHAR(STRING_ELT(id, 0)), 0, keydata), "export key");
-  size_t len;
-  char * sig = gpgme_data_release_and_get_mem(keydata, &len);
-  SEXP out = PROTECT(allocVector(STRSXP, 1));
-  SET_STRING_ELT(out, 0, mkCharLen(sig, len));
-  UNPROTECT(1);
-  gpgme_free(sig);
-  return out;
+  return data_to_string(keydata);
 }
 
 SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
