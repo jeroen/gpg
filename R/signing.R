@@ -37,6 +37,7 @@ gpg_verify <- function(sigfile, datafile){
 #' @param password a string or expression callback to read a passphrase when needed
 #' @rdname gpg
 gpg_sign <- function(file, id, password = readline){
+  pinentry_warning()
   if(is.character(file)){
     stopifnot(file.exists(file))
     file <- readBin(file, raw(), file.info(file)$size)
