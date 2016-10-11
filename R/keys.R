@@ -42,8 +42,8 @@ gpg_delete <- function(id, allow_secret = TRUE){
   .Call(R_gpg_delete, id, allow_secret)
 }
 
-
-### Doesn't work
+#' @export
+#' @rdname gpg_keys
 #' @useDynLib gpg R_gpg_export
 gpg_export <- function(id){
   .Call(R_gpg_export, id)

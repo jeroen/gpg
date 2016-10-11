@@ -38,14 +38,13 @@ SEXP R_gpg_export(SEXP id){
   gpgme_data_t keydata = NULL;
   bail(gpgme_data_new(&keydata), "initiatie keydata");
   bail(gpgme_op_export(ctx, CHAR(STRING_ELT(id, 0)), 0, keydata), "export key");
-  gpgme_data_set_encoding(keydata, GPGME_DATA_ENCODING_ARMOR);
-  char * buf = malloc(1e6);
-  size_t len = gpgme_data_write(keydata, buf, 1e6);
-  if(len < 1) Rf_error("This key cannot be exported");
-  SEXP out = mkCharLenCE(buf, len, CE_UTF8);
-  gpgme_data_release(keydata);
-  free(buf);
-  return ScalarString(out);
+  size_t len;
+  char * sig = gpgme_data_release_and_get_mem(keydata, &len);
+  SEXP out = PROTECT(allocVector(STRSXP, 1));
+  SET_STRING_ELT(out, 0, mkCharLen(sig, len));
+  UNPROTECT(1);
+  gpgme_free(sig);
+  return out;
 }
 
 SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
