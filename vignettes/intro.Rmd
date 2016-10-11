@@ -157,3 +157,52 @@ The `gpg_verify` function will see if a signature is valid for any of the keys i
 gpg_verify(myfile, signature = "myfile.sig")
 unlink("myfile.sig")
 ```
+
+
+## Encryption
+
+GPG uses public key encryption. You can use someone's public key to encrypt a message or document, in a way that only the owner of the corresponding private key will be able to decrypt.
+
+This is a great way to send someone a highly confidential email. 
+
+### Encrypting a message
+
+For example we want to send an email [Glenn Greenwald](https://theintercept.com/staff/glenn-greenwald/) containing top secret information that may not be snooped by our ISP or government. His homepage at the intercept shows his GPG key in long form.
+
+```{r}
+glenn <- '734A3680A438DD45AF6F5B99A4A928C769CD6E44'
+gpg_recv(glenn)
+writeLines("TTIP is super evil!", "secret.txt")
+msg <- gpg_encrypt("secret.txt", glenn)
+writeLines(msg, "msg.gpg")
+unlink("secret.txt")
+cat(msg)
+```
+
+You can safely send this message over any channel (email, twitter, etc). Nobody in the world (not even ourselves) will be able to decipher this message, except for Glenn Greenwald.
+
+### Decrypting a message
+
+Decrypting a message is even easier, you don't have to specify a key. GPG will automatically pick the correct private key from your keyring, and error if you don't have it. For example we will not be able to decrypt the message we created above for Glenn Greenwald.
+
+```{r, error=TRUE}
+# This will error, we do not have this private key
+gpg_decrypt("msg.gpg")
+```
+
+To demonstrate decryption, we encrypt a message using our own keypair (for which we own the private key).
+
+```{r}
+writeLines("This is a test!", "secret.txt")
+msg <- gpg_encrypt("secret.txt", id = mykey)
+writeLines(msg, "msg.gpg")
+unlink("secret.txt")
+cat(msg)
+```
+
+Decryption is simple:
+
+```{r}
+gpg_decrypt("msg.gpg")
+unlink("msg.gpg")
+```
