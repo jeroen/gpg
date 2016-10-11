@@ -6,10 +6,11 @@ matrix:
     - os: linux
       dist: precise
       sudo: false
+      env: CHECK_OLD_GPGME=1
     - os: linux
       dist: trusty
       sudo: required
-      env: R_CODECOV=true
+      env: R_CODECOV=1
       r_check_args: '--use-valgrind'
     - os: osx
       osx_image: xcode8

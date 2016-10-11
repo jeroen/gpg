@@ -5,16 +5,19 @@
 \alias{gpg_encrypt}
 \title{Encryption}
 \usage{
-gpg_encrypt(file, id)
+gpg_encrypt(file, receiver, signer = NULL)
 
 gpg_decrypt(file)
 }
 \arguments{
 \item{file}{path to file or raw vector with data to encrypt / decrypt}
 
-\item{id}{key id or fingerprint}
+\item{receiver}{key id or fingerprint for recepient}
+
+\item{signer}{(optional) key id or fingerprint for the sender to sign the message}
 }
 \description{
-Encrypt or decrypt a message.
+Encrypt or decrypt a message using the public key from the \code{receiver}.
+Optionally the message can be signed using the private key of the sender.
 }
 

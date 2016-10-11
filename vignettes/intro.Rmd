@@ -159,11 +159,9 @@ unlink("myfile.sig")
 ```
 
 
-## Encryption
+## Anonymous Encryption
 
-GPG uses public key encryption. You can use someone's public key to encrypt a message or document, in a way that only the owner of the corresponding private key will be able to decrypt.
-
-This is a great way to send someone a highly confidential email. 
+GPG uses public key encryption. You can use someone's public key to encrypt a message or document, in a way that only the owner of the corresponding private key will be able to decrypt. This is a great way to send somebody highly confidential data.
 
 ### Encrypting a message
 
@@ -173,7 +171,7 @@ For example we want to send an email [Glenn Greenwald](https://theintercept.com/
 glenn <- '734A3680A438DD45AF6F5B99A4A928C769CD6E44'
 gpg_recv(glenn)
 writeLines("TTIP is super evil!", "secret.txt")
-msg <- gpg_encrypt("secret.txt", glenn)
+msg <- gpg_encrypt("secret.txt", receiver = glenn)
 writeLines(msg, "msg.gpg")
 unlink("secret.txt")
 cat(msg)
@@ -194,15 +192,35 @@ To demonstrate decryption, we encrypt a message using our own keypair (for which
 
 ```{r}
 writeLines("This is a test!", "secret.txt")
-msg <- gpg_encrypt("secret.txt", id = mykey)
+msg <- gpg_encrypt("secret.txt", receiver = mykey)
 writeLines(msg, "msg.gpg")
-unlink("secret.txt")
 cat(msg)
 ```
 
-Decryption is simple:
+Decryption is simple, given that we own the secret key for the message:
 
 ```{r}
 gpg_decrypt("msg.gpg")
+```
+
+## Authenticated Encryption
+
+So we showed how to encrypt a message so that it can only be read by the receiver. But how does Glenn Greenwald verify the sender of this information? Perhaps someone is trying to leak fake documents? 
+
+### Sign and Encrypt
+
+In signed encryption, also known as authenticated encryption, uses combined encryption and signing. The public key of the receiver is used to encrypt the message, and the private key of the sender to sign the message. This way the message is both confidential and the integrity of the sender can be checked and verified, only by the receiver.
+
+```{r}
+msg <- gpg_encrypt("secret.txt", receiver = glenn, signer = mykey)
+writeLines(msg, "msg.gpg")
+cat(msg)
+```
+
+
+
+
+```{r, echo = FALSE}
 unlink("msg.gpg")
+unlink("secret.txt")
 ```

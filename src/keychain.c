@@ -41,7 +41,9 @@ SEXP R_gpg_export(SEXP id, SEXP secret){
 #ifdef GPGME_EXPORT_MODE_SECRET
   mode += asLogical(secret) * GPGME_EXPORT_MODE_SECRET;
 #else
+#ifndef CHECK_OLD_GPGME
   if(asLogical(secret)) Rf_error("gpgme is too old, GPGME_EXPORT_MODE_SECRET not supported");
+#endif
 #endif
   bail(gpgme_op_export(ctx, CHAR(STRING_ELT(id, 0)), mode, keydata), "export key");
   return data_to_string(keydata);

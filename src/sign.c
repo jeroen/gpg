@@ -41,9 +41,11 @@ SEXP R_gpg_sign(SEXP msg, SEXP id){
   bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
 
   // TODO: vectorize to sign with multiple keys
+  gpgme_signers_clear(ctx);
   bail(gpgme_signers_add(ctx, key), "add signer");
   bail(gpgme_data_new(&SIG), "memory to hold signature");
   bail(gpgme_op_sign(ctx, MSG, SIG, GPGME_SIG_MODE_DETACH), "signing");
+  gpgme_signers_clear(ctx);
 
   //do something with result
   //gpgme_sign_result_t result = gpgme_op_sign_result(ctx);
