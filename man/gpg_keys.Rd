@@ -15,7 +15,7 @@ gpg_recv(id, keyserver = "https://keyserver.ubuntu.com")
 
 gpg_delete(id, allow_secret = TRUE)
 
-gpg_export(id)
+gpg_export(id, secret = FALSE)
 
 gpg_list_keys()
 
@@ -29,6 +29,8 @@ gpg_list_secret_keys()
 \item{keyserver}{address of http keyserver}
 
 \item{allow_secret}{set to TRUE if are sure you want to a private keys}
+
+\item{secret}{export private key}
 }
 \description{
 Signing or encrypting with GPG require that the keys are stored in your

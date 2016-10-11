@@ -104,6 +104,21 @@ secring <- gpg_list_secret_keys()
 secring[c("id", "name", "email")]
 ```
 
+### Exporting a key
+
+To export our newly created public key:
+
+```{r}
+str <- gpg_export(id = mykey)
+cat(str)
+```
+
+If you also own the private key you can export this as well:
+
+```{r}
+str <- gpg_export(id = mykey, secret = TRUE)
+cat(str)
+```
 
 ### Deleting a key
 

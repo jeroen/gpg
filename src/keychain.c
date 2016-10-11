@@ -34,10 +34,11 @@ SEXP R_gpg_import(SEXP pubkey) {
   return out;
 }
 
-SEXP R_gpg_export(SEXP id){
+SEXP R_gpg_export(SEXP id, SEXP secret){
   gpgme_data_t keydata = NULL;
   bail(gpgme_data_new(&keydata), "initiatie keydata");
-  bail(gpgme_op_export(ctx, CHAR(STRING_ELT(id, 0)), 0, keydata), "export key");
+  gpgme_export_mode_t mode = asLogical(secret) * GPGME_EXPORT_MODE_SECRET;
+  bail(gpgme_op_export(ctx, CHAR(STRING_ELT(id, 0)), mode, keydata), "export key");
   return data_to_string(keydata);
 }
 
