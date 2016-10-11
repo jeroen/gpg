@@ -22,10 +22,16 @@ gpg_encrypt <- function(file, receiver, signer = NULL){
 
 #' @export
 #' @rdname gpg_encrypt
-#' @useDynLib gpg R_gpgme_decrypt
-gpg_decrypt <- function(file){
+#' @param verify automatically checks that all signatures can be verified and raises an
+#' error otherwise
+#' @useDynLib gpg R_gpgme_decrypt R_gpgme_signed_decrypt
+gpg_decrypt <- function(file, verify = TRUE){
   data <- file_or_raw(file)
-  .Call(R_gpgme_decrypt, data)
+  if(isTRUE(verify)){
+    .Call(R_gpgme_signed_decrypt, data)
+  } else {
+    .Call(R_gpgme_decrypt, data)
+  }
 }
 
 file_or_raw <- function(file){

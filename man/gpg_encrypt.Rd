@@ -7,7 +7,7 @@
 \usage{
 gpg_encrypt(file, receiver, signer = NULL)
 
-gpg_decrypt(file)
+gpg_decrypt(file, verify = TRUE)
 }
 \arguments{
 \item{file}{path to file or raw vector with data to encrypt / decrypt}
@@ -15,6 +15,9 @@ gpg_decrypt(file)
 \item{receiver}{key id or fingerprint for recepient}
 
 \item{signer}{(optional) key id or fingerprint for the sender to sign the message}
+
+\item{verify}{automatically checks that all signatures can be verified and raises an
+error otherwise}
 }
 \description{
 Encrypt or decrypt a message using the public key from the \code{receiver}.

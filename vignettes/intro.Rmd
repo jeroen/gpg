@@ -217,7 +217,19 @@ writeLines(msg, "msg.gpg")
 cat(msg)
 ```
 
+### Decrypt and Verify
 
+If the encrypted message contains a signature, it will automatically be verified when the message is decrypted. The function raises an error otherwise.
+
+For purpose of illustrating authenticated decryption, we encrypt and sign using our own key (which usually does not make sense):
+
+```{r}
+msg <- gpg_encrypt("secret.txt", receiver = mykey, signer = mykey)
+writeLines(msg, "msg.gpg")
+gpg_decrypt("msg.gpg")
+```
+
+The signer fingerprint (if any) will be added as an attribute to the decrypted message.
 
 
 ```{r, echo = FALSE}
