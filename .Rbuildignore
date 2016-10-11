@@ -9,3 +9,4 @@
 ^api.R$
 ^\.travis\.yml$
 ^appveyor\.yml$
+^inst/bin$
