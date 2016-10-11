@@ -34,7 +34,7 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   return out;
 }
 
-SEXP R_gpg_sign(SEXP msg, SEXP id, SEXP fun){
+SEXP R_gpg_sign(SEXP msg, SEXP id){
   gpgme_data_t SIG, MSG;
   gpgme_key_t key = NULL;
   bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 1), "load key from keyring");

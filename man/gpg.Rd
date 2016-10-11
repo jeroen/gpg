@@ -9,7 +9,7 @@
 \usage{
 gpg_verify(sigfile, datafile)
 
-gpg_sign(file, id, password = readline)
+gpg_sign(file, id)
 }
 \arguments{
 \item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
@@ -19,8 +19,6 @@ gpg_sign(file, id, password = readline)
 \item{file}{file-path or raw vector with data to sign}
 
 \item{id}{which private key to use for signing}
-
-\item{password}{a string or expression callback to read a passphrase when needed}
 }
 \description{
 Utilities to create and verify PGP signatures.

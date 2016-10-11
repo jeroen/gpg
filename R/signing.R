@@ -34,14 +34,13 @@ gpg_verify <- function(sigfile, datafile){
 #' @export
 #' @param file file-path or raw vector with data to sign
 #' @param id which private key to use for signing
-#' @param password a string or expression callback to read a passphrase when needed
 #' @rdname gpg
-gpg_sign <- function(file, id, password = readline){
+gpg_sign <- function(file, id){
   pinentry_warning()
   if(is.character(file)){
     stopifnot(file.exists(file))
     file <- readBin(file, raw(), file.info(file)$size)
   }
   stopifnot(is.raw(file))
-  .Call(R_gpg_sign, file, id, password)
+  .Call(R_gpg_sign, file, id)
 }
