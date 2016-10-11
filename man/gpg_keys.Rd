@@ -2,7 +2,6 @@
 % Please edit documentation in R/keys.R
 \name{gpg_import}
 \alias{gpg_delete}
-\alias{gpg_export}
 \alias{gpg_import}
 \alias{gpg_list_keys}
 \alias{gpg_list_secret_keys}
@@ -14,8 +13,6 @@ gpg_import(file)
 gpg_recv(id, keyserver = "https://keyserver.ubuntu.com")
 
 gpg_delete(id, allow_secret = TRUE)
-
-gpg_export(id)
 
 gpg_list_keys()
 

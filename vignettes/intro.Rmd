@@ -74,7 +74,7 @@ gpg_list_secret_keys()[c("id", "name", "email")]
 Use `gpg_keygen()` to generate a new public private keypair:
 
 ```{r}
-(mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com", passphrase = "supersecret"))
+(mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com"))
 gpg_list_keys()[c("id", "name", "email")]
 ```
 
@@ -104,9 +104,6 @@ secring <- gpg_list_secret_keys()
 secring[c("id", "name", "email")]
 ```
 
-### Exporting a key
-
-TODO
 
 ### Deleting a key
 
@@ -129,7 +126,7 @@ Let's use the private key we generated earlier to sign a file:
 ```{r}
 myfile <- tempfile()
 writeLines("This is a secret message", con = myfile)
-sig <- gpg_sign(myfile, mykey, password = 'supersecret')
+sig <- gpg_sign(myfile, mykey)
 cat(sig)
 writeLines(sig, "myfile.sig")
 ```
