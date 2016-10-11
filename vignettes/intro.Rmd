@@ -46,7 +46,7 @@ The easiest way to exchange (signed or unsigned) public keys is via a keyserver.
 
 GPG key servers might not use HTTPS. In GPG we only trust keys only on basis of who has signed them, regardless of how they were obtained. For this reason it is also perfectly valid to share GPG public keys via e.g. a website or email.
 
-## Key management
+## Managing your keyring
 
 It is important to know which version of GPG you are running and where your home dir is. Your home directory contains your configuration and the keyrings. GPG defaults to your system keyring, which is the same as the `gpg` command line utility and system package manager use.
 
@@ -60,7 +60,6 @@ Use `gpg_restart` to switch to another GPG executable or different home director
 gpg_restart(home = "~/myapp")
 ```
 
-### Your keyring
 
 Use `gpg_list_keys()` and `gpg_list_secret_keys()` to see the current contents of your keyring:
 
@@ -79,15 +78,17 @@ gpg_list_keys()[c("id", "name", "email")]
 ```
 
 
-### Importing keys
+### Importing a key
 
 The `gpg_import` function reads an armored GPG key from disk:
 
 ```{r}
-download.file("https://stallman.org/rms-pubkey.txt", "rms-pubkey.txt")
+curl::curl_download("https://stallman.org/rms-pubkey.txt", "rms-pubkey.txt")
 gpg_import("rms-pubkey.txt")
 unlink("rms-pubkey.txt")
 ```
+
+### Download from keyserver
 
 Use the `gpg_recv` function to download a given key ID from the keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
 
@@ -130,11 +131,13 @@ gpg_list_keys()[c("id", "name", "email")]
 ```
 
 
-## Signatures
+## Digital Signatures
 
-You can sign a file with your private key. Others can verify your signature from your public key.
+A digital signature is a mathematical scheme for demonstrating the authenticity of a digital message or document. If you sign a file using your personal secret key, anyone can verify that this file has not been modified (i.e. the hash matches the one in your signture) via your public key.
 
-### Sign a file
+GPG signatures are widely used by Linux package managers such as `apt` to verify the integrity of downloaded files. Typically the public key is shipped with the OS, and the private key is owned by the repository maintainers. This way we can safely install software from any mirror or network.
+
+### Signing a file
 
 Let's use the private key we generated earlier to sign a file:
 
@@ -151,6 +154,6 @@ writeLines(sig, "myfile.sig")
 The `gpg_verify` function will see if a signature is valid for any of the keys in the keyring:
 
 ```{r}
-gpg_verify("myfile.sig", myfile)
+gpg_verify(myfile, signature = "myfile.sig")
 unlink("myfile.sig")
 ```

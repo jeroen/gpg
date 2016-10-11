@@ -7,16 +7,14 @@
 \alias{gpg_verify}
 \title{PGP Signatures}
 \usage{
-gpg_verify(sigfile, datafile)
+gpg_verify(file, signature)
 
 gpg_sign(file, id)
 }
 \arguments{
-\item{sigfile}{path to the gpg file containing the \code{PGP SIGNATURE} block.}
+\item{file}{file-path or raw vector with data to sign or verify}
 
-\item{datafile}{path to the file containing the message to be verified.}
-
-\item{file}{file-path or raw vector with data to sign}
+\item{signature}{path or raw vector for the gpg signature file (contains the \code{PGP SIGNATURE} block)}
 
 \item{id}{which private key to use for signing}
 }
@@ -31,7 +29,7 @@ msg <- tempfile()
 sig <- tempfile()
 download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
-gpg_verify(sig, msg)
+gpg_verify(msg, sig)
 }
 \seealso{
 Other gpg: \code{\link{gpg_search}}
