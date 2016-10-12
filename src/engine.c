@@ -1,5 +1,6 @@
 #include "common.h"
 #include <locale.h>
+#include <unistd.h>
 
 void bail(gpgme_error_t err, const char * msg){
   if(err)
@@ -22,8 +23,15 @@ gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_
     UNPROTECT(2);
     error("Password callback did not return a string value");
   }
+
+#ifdef HAVE_GPGME_IO_READWRITE
   gpgme_io_write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0)));
   gpgme_io_write(fd, "\n", 1);
+#else
+  write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0)));
+  write(fd, "\n", 1);
+#endif
+
   UNPROTECT(2);
   return 0;
 }

@@ -7,7 +7,7 @@
 #' can affect other software using this installation of GnuPG.
 #'
 #' @export
-#' @useDynLib gpg R_gpg_options R_gpg_list_options
+#' @useDynLib gpg R_gpg_list_options
 #' @rdname gpg_info
 gpg_options <- function(){
   # only works with GPG2 ?

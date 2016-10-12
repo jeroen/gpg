@@ -74,6 +74,8 @@ SEXP R_gpg_list_options(){
   return res;
 }
 
+/* Comment out, doens't work well and causes problems on old GPG
+
 SEXP R_gpg_options(SEXP input){
   gpgme_conf_comp_t conf;
   gpgme_op_conf_load (ctx, &conf);
@@ -114,3 +116,6 @@ SEXP R_gpg_options(SEXP input){
   bail(gpgme_op_conf_save (ctx, comp), "conf save");
   return res;
 }
+
+*/
+

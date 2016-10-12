@@ -52,10 +52,10 @@ SEXP R_gpg_import(SEXP pubkey) {
 SEXP R_gpg_export(SEXP id, SEXP secret){
   gpgme_data_t keydata = NULL;
   bail(gpgme_data_new(&keydata), "initiatie keydata");
-  gpgme_export_mode_t mode = 0;
 #ifdef GPGME_EXPORT_MODE_SECRET
-  mode += asLogical(secret) * GPGME_EXPORT_MODE_SECRET;
+  gpgme_export_mode_t mode = asLogical(secret) * GPGME_EXPORT_MODE_SECRET;
 #else
+  int mode = 0;
 #ifndef CHECK_OLD_GPGME
   if(asLogical(secret)) Rf_error("gpgme is too old, GPGME_EXPORT_MODE_SECRET not supported");
 #endif
