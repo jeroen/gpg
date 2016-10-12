@@ -18,13 +18,18 @@ gpg_keygen <- function(name, email, passphrase = NULL){
     .Call(R_gpg_keygen_new, userstring)
   } else {
     params <- list("Key-Type" = "RSA", "Name-Real" = name, "Name-Email" = email)
-    cat(make_args_str(params))
-    params["Passphrase"] = passphrase # Can be NULL
-    .Call(R_gpg_keygen, make_args_str(params))
+    controls <- "%no-ask-passphrase"
+    if(length(passphrase)){
+       params["Passphrase"] <- passphrase 
+    } else {
+      controls <- c(controls, "%no-protection")
+    }
+    .Call(R_gpg_keygen, make_args_str(params, controls))
   }
 }
 
-make_args_str <- function(params){
+make_args_str <- function(params, controls = c()){
   str <- paste(names(params), unname(params), sep = ": ", collapse = "\n")
+  str <- paste(c(str, controls), collapse = "\n") 
   paste('<GnupgKeyParms format="internal">', str, '</GnupgKeyParms>\n', sep = "\n")
 }
