@@ -4,8 +4,7 @@
 \alias{gpg_delete}
 \alias{gpg_export}
 \alias{gpg_import}
-\alias{gpg_list_keys}
-\alias{gpg_list_secret_keys}
+\alias{gpg_keylist}
 \alias{gpg_recv}
 \title{GPG keyring management}
 \usage{
@@ -17,9 +16,7 @@ gpg_delete(id, allow_secret = TRUE)
 
 gpg_export(id, secret = FALSE)
 
-gpg_list_keys()
-
-gpg_list_secret_keys()
+gpg_keylist(secret = FALSE)
 }
 \arguments{
 \item{file}{path to the key file or raw vector with key data}
@@ -31,6 +28,8 @@ gpg_list_secret_keys()
 \item{allow_secret}{set to TRUE if are sure you want to a private keys}
 
 \item{secret}{export private key}
+
+\item{secret}{only list keys for which you own the private (secret) key}
 }
 \description{
 Signing or encrypting with GPG require that the keys are stored in your

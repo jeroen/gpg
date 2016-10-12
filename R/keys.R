@@ -52,14 +52,9 @@ gpg_export <- function(id, secret = FALSE){
 
 #' @export
 #' @rdname gpg_keys
-gpg_list_keys <- function(){
-  gpg_keylist_internal(secret_only = FALSE, local = TRUE)
-}
-
-#' @export
-#' @rdname gpg_keys
-gpg_list_secret_keys <- function(){
-  gpg_keylist_internal(secret_only = TRUE, local = TRUE)
+#' @param secret only list keys for which you own the private (secret) key
+gpg_keylist <- function(secret = FALSE){
+  gpg_keylist_internal(secret_only = secret, local = TRUE)
 }
 
 #' @useDynLib gpg R_gpg_keylist
