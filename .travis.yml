@@ -8,12 +8,16 @@ matrix:
       sudo: false
       env: CHECK_OLD_GPGME=1
       env: R_CODECOV=1
-      apt_packages: gnupg
+      addons:
+        apt:
+          packages: gnupg
     - os: linux
       dist: precise
       sudo: false
       env: CHECK_OLD_GPGME=1
-      apt_packages: gnupg2
+      addons:
+        apt:
+          packages: gnupg2
     - os: linux
       dist: trusty
       sudo: required
