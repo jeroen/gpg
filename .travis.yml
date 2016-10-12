@@ -9,27 +9,9 @@ matrix:
       env:
         - CHECK_OLD_GPGME=1
         - R_CODECOV=1
-      addons:
-        apt:
-          packages:
-            - libgpgme11-dev
     - os: linux
       dist: trusty
       sudo: required
-      addons:
-        apt:
-          packages:
-            - gnupg
-            - libgpgme11-dev
-      before_install: sudo apt-get remove -y gnupg2
-    - os: linux
-      dist: trusty
-      sudo: required
-      addons:
-        apt:
-          packages:
-            - gnupg2
-            - libgpgme11-dev
     - os: osx
       osx_image: xcode8
       brew_packages: gpgme
@@ -42,6 +24,11 @@ matrix:
       osx_image: beta-xcode6.1
       disable_homebrew: true
       latex: false
+
+addons:
+  apt:
+    packages:
+      - libgpgme11-dev
 
 r_github_packages:
   - jimhester/covr

@@ -3,8 +3,7 @@
 #' Utilities to create and verify PGP signatures.
 #'
 #' @export
-#' @name gpg utilities
-#' @rdname gpg
+#' @rdname gpg_sign
 #' @family gpg
 #' @aliases gpg
 #' @useDynLib gpg R_gpgme_verify
@@ -31,7 +30,7 @@ gpg_verify <- function(file, signature){
 #' @export
 #' @param file file-path or raw vector with data to sign or verify
 #' @param id which private key to use for signing
-#' @rdname gpg
+#' @rdname gpg_sign
 gpg_sign <- function(file, id){
   pinentry_warning()
   if(is.character(file)){

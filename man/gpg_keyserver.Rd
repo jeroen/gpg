@@ -15,6 +15,6 @@ Search, download or publish keys on the GPG keyserver network via the HKP
 in your gpg.conf file. Might not work behind a firewall.
 }
 \seealso{
-Other gpg: \code{\link{gpg utilities}}
+Other gpg: \code{\link{gpg_verify}}
 }
 

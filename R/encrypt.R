@@ -26,6 +26,7 @@ gpg_encrypt <- function(file, receiver, signer = NULL){
 #' error otherwise
 #' @useDynLib gpg R_gpgme_decrypt R_gpgme_signed_decrypt
 gpg_decrypt <- function(file, verify = TRUE){
+  pinentry_warning()
   data <- file_or_raw(file)
   if(isTRUE(verify)){
     .Call(R_gpgme_signed_decrypt, data)
