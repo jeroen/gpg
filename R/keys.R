@@ -35,24 +35,22 @@ gpg_recv <- function(id, keyserver = "https://keyserver.ubuntu.com"){
 }
 
 #' @useDynLib gpg R_gpg_delete
-#' @param allow_secret set to TRUE if are sure you want to a private keys
 #' @export
 #' @rdname gpg_keys
-gpg_delete <- function(id, allow_secret = TRUE){
-  .Call(R_gpg_delete, id, allow_secret)
+gpg_delete <- function(id, secret = TRUE){
+  .Call(R_gpg_delete, id, secret)
 }
 
 #' @export
 #' @rdname gpg_keys
 #' @useDynLib gpg R_gpg_export
-#' @param secret export private key
 gpg_export <- function(id, secret = FALSE){
   .Call(R_gpg_export, id, secret)
 }
 
 #' @export
 #' @rdname gpg_keys
-#' @param secret only list keys for which you own the private (secret) key
+#' @param secret set to `TRUE` to list/export/delete private (secret) keys
 gpg_keylist <- function(secret = FALSE){
   gpg_keylist_internal(secret_only = secret, local = TRUE)
 }
