@@ -7,7 +7,6 @@ matrix:
       dist: precise
       sudo: false
       env: CHECK_OLD_GPGME=1
-      env: R_CODECOV=1
       addons:
         apt:
           packages:
@@ -42,6 +41,7 @@ matrix:
       osx_image: xcode8
       brew_packages: gpgme
       latex: false
+      env: R_CODECOV=1
     - os: osx
       osx_image: xcode8
       disable_homebrew: true
