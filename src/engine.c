@@ -70,7 +70,9 @@ SEXP R_gpg_restart(SEXP path, SEXP home, SEXP pwfun, SEXP debug) {
   gpgme_set_armor(ctx, 1);
 
   // Required for GPG 2.1
+#if GPGME_VERSION_NUMBER >= 0x010700
   bail(gpgme_set_pinentry_mode(ctx, GPGME_PINENTRY_MODE_LOOPBACK), "set pinentry to loopback");
+#endif
   gpgme_set_passphrase_cb(ctx, pwprompt, pwfun);
 
   // Get engine info
