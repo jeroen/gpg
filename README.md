@@ -16,5 +16,62 @@
 
 ## Documentation
 
-Lorem Ipsum Dolor Sit Amet.
+About the R package:
+
+ - Vignette: [Using GPG in R](https://cran.r-project.org/web/packages/gpg/vignettes/intro.html)
+
+Other resources:
+
+ - [The GNU Privacy Handbook](https://www.gnupg.org/gph/en/manual.html)
+
+
+## Hello World
+
+Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release) file, which contains checksums for all files in the repository:
+
+```r
+# Take out the spaces
+johannes <- gsub(" ", "", "6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480")
+gpg_recv(johannes)
+
+# Verify the file
+library(curl)
+curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release', 'Release')
+curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release.gpg', 'Release.gpg')
+gpg_verify('Release', 'Release.gpg')
+```
+
+
+## Installation
+
+Binary packages for __OS-X__ or __Windows__ can be installed directly from CRAN:
+
+```r
+install.packages("gpg")
+```
+
+Installation from source on Linux or OSX requires [`GPGME`](https://www.gnupg.org/(es)/related_software/gpgme/index.html). On __Debian__ or __Ubuntu__ install [libgpgme11-dev](https://packages.debian.org/testing/libgpgme11-dev) directly from Universe:
+
+```
+sudo apt-get install -y libgpgme11-dev
+```
+
+On __Fedora__ and __CentOS__ we need [gpgme-devel](https://apps.fedoraproject.org/packages/gpgme-devel):
+
+```
+sudo yum install gpgme-devel
+````
+
+On __OS-X__ use [gpgme](https://github.com/Homebrew/homebrew-core/blob/master/Formula/gpgme.rb) from Homebrew:
+
+```
+brew install gpgme
+```
+
+On __Solaris 10__ we can have [gpgme_dev](https://www.opencsw.org/packages/CSWgpgme-dev) from [OpenCSW](https://www.opencsw.org/):
+```
+pkgadd -d http://get.opencsw.org/now
+/opt/csw/bin/pkgutil -U
+/opt/csw/bin/pkgutil -y -i gpgme_dev 
+```
 

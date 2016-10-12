@@ -10,3 +10,4 @@
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^inst/bin$
+^README.md$

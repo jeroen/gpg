@@ -19,6 +19,7 @@ vignette: >
 unlink("~/myapp", recursive = TRUE)
 knitr::opts_chunk$set(comment = "")
 library(gpg)
+options(width = 120)
 ```
 
 
@@ -159,6 +160,30 @@ gpg_verify(myfile, signature = "myfile.sig")
 unlink("myfile.sig")
 ```
 
+Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org/bin/linux/debian/) says the following:
+
+> The Debian backports archives on CRAN are signed with the key of Johannes Ranke (CRAN Debian archive) <jranke@uni-bremen.de> with key fingerprint 6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480
+
+Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release) file, which contains checksums for all files in the repository:
+
+```{r}
+# take out the spaces
+johannes <- gsub(" ", "", "6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480")
+gpg_recv(johannes)
+
+# Verify the file
+library(curl)
+curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release', 'Release')
+curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release.gpg', 'Release.gpg')
+gpg_verify('Release', 'Release.gpg')
+```
+
+Looking good! We can trust the checksums in the `Release` file to be legitimate.
+
+```{r, echo = FALSE}
+unlink('Release')
+unlink('Release.gpg')
+```
 
 ## Anonymous Encryption
 
