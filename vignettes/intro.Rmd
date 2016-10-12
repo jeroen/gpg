@@ -22,9 +22,11 @@ library(gpg)
 ```
 
 
-The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular open source implementation of the OpenPGP protocol ([RFC4880](https://tools.ietf.org/html/rfc4880)). The system is widely adopted for securing integrity and confidentiality of internet communications through the use of various cryptographic methods. Important applications include encryption and authentication of messages (such as email or software downloads) via public key encryption and cryptographic signatures.
+**DISCLAIMER**: Author is not an expert in cryptography (he is not an expert in anything really). Use this stuff at your own risk. If you find bugs or inaccuracies, please create an issue or PR on the [github repository](https://github.com/jeroenooms/gpg).  
 
 ## GPG basics
+
+The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular open source implementation of the OpenPGP protocol ([RFC4880](https://tools.ietf.org/html/rfc4880)). The system is widely adopted for securing integrity and confidentiality of internet communications through the use of various cryptographic methods. Important applications include encryption and authentication of messages (such as email or software downloads) via public key encryption and cryptographic signatures.
 
 Like most modern crypto systems, GPG makes use of public key methods. The private key is known only by its owner and is used to create signatures or decrypt a message. The corresponding public key is made freely available and so that it can be used by anyone to verify signatures, or encrypt messages which can only be encrypted by the keypair owner. 
 
@@ -67,7 +69,7 @@ Use `gpg_keylist()` to see the current contents of your keyring. It is empty to 
 gpg_keylist()
 ```
 
-### Generating keys
+### Generate keys
 
 Use `gpg_keygen()` to generate a new public private keypair:
 
@@ -77,7 +79,7 @@ gpg_keylist()[c("id", "name", "email")]
 ```
 
 
-### Importing a key
+### Import from disk
 
 The `gpg_import` function reads an armored GPG key from disk:
 
@@ -87,7 +89,7 @@ gpg_import("rms-pubkey.txt")
 unlink("rms-pubkey.txt")
 ```
 
-### Download from keyserver
+### Import from keyserver
 
 Use the `gpg_recv` function to download a given key ID from the keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
 
@@ -104,7 +106,7 @@ secring <- gpg_keylist(secret = TRUE)
 secring[c("id", "name", "email")]
 ```
 
-### Exporting a key
+### Export a key
 
 To export our newly created public key:
 
@@ -120,7 +122,7 @@ str <- gpg_export(id = mykey, secret = TRUE)
 cat(str)
 ```
 
-### Deleting a key
+### Delete a key
 
 Delete a key from its ID or fingerprint. Let's delete the RMS key:
 
@@ -136,11 +138,11 @@ A digital signature is a mathematical scheme for demonstrating the authenticity 
 
 GPG signatures are widely used by Linux package managers such as `apt` to verify the integrity of downloaded files. Typically the public key is shipped with the OS, and the private key is owned by the repository maintainers. This way we can safely install software from any mirror or network.
 
-### Signing a file
+### Sign a file
 
 Let's use the private key we generated earlier to sign a file:
 
-```{r}
+```{r, message=FALSE}
 myfile <- tempfile()
 writeLines("This is a secret message", con = myfile)
 sig <- gpg_sign(myfile, mykey)
@@ -162,7 +164,7 @@ unlink("myfile.sig")
 
 GPG uses public key encryption. You can use someone's public key to encrypt a message or document, in a way that only the owner of the corresponding private key will be able to decrypt. This is a great way to send somebody highly confidential data.
 
-### Encrypting a message
+### Encrypt a message
 
 For example we want to send an email [Glenn Greenwald](https://theintercept.com/staff/glenn-greenwald/) containing top secret information that may not be snooped by our ISP or government. His homepage at the intercept shows his GPG key in long form.
 
@@ -178,11 +180,11 @@ cat(msg)
 
 You can safely send this message over any channel (email, twitter, etc). Nobody in the world (not even ourselves) will be able to decipher this message, except for Glenn Greenwald.
 
-### Decrypting a message
+### Decrypt a message
 
 Decrypting a message is even easier, you don't have to specify a key. GPG will automatically pick the correct private key from your keyring, and error if you don't have it. For example we will not be able to decrypt the message we created above for Glenn Greenwald.
 
-```{r, error=TRUE}
+```{r, error=TRUE, message=FALSE}
 # This will error, we do not have this private key
 gpg_decrypt("msg.gpg")
 ```
@@ -198,7 +200,7 @@ cat(msg)
 
 Decryption is simple, given that we own the secret key for the message:
 
-```{r}
+```{r, message=FALSE}
 gpg_decrypt("msg.gpg")
 ```
 
@@ -222,7 +224,7 @@ If the encrypted message contains a signature, it will automatically be verified
 
 For purpose of illustrating authenticated decryption, we encrypt and sign using our own key (which usually does not make sense):
 
-```{r}
+```{r, message=FALSE}
 msg <- gpg_encrypt("secret.txt", receiver = mykey, signer = mykey)
 writeLines(msg, "msg.gpg")
 gpg_decrypt("msg.gpg")
