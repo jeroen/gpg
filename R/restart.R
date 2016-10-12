@@ -39,7 +39,7 @@ is_windows <- function(){
 }
 
 pinentry_warning <- function(){
-  if(as.numeric_version(gpg_info()$version) >= 2 && !is_windows()){
+  if(gpg_info()$version >= 2 && !is_windows()){
     try({
       if(system2("tty", stdout = NULL) > 0){
         message("Note that in GPG2, passphrases can only be entered if R runs in a terminal session")

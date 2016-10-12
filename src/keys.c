@@ -14,6 +14,21 @@ SEXP R_gpg_keygen(SEXP params){
   return mkString(key->subkeys->keyid);
 }
 
+// NEW method, requires GPGME 1.7 and GnuPG 2.1
+SEXP R_gpg_keygen_new(SEXP userid){
+#if GPGME_VERSION_NUMBER >= 0x010700
+  unsigned int flags = GPGME_CREATE_SIGN | GPGME_CREATE_ENCR | GPGME_CREATE_NOPASSWD | GPGME_CREATE_FORCE;
+  bail(gpgme_op_createkey(ctx, CHAR(STRING_ELT(userid, 0)), "default", 0, 0, NULL, flags), "create key");
+  gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
+  gpgme_key_t key;
+  bail(gpgme_get_key(ctx, res->fpr, &key, 0), "get new key");
+  return mkString(key->subkeys->keyid);
+#else
+  Rf_error("GPGME too old for gpgme_op_createkey");
+#endif
+}
+
+
 SEXP R_gpg_delete(SEXP id, SEXP secret){
   gpgme_key_t key;
   bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 0), "get new key");

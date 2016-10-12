@@ -69,8 +69,8 @@ SEXP R_gpg_restart(SEXP path, SEXP home, SEXP pwfun, SEXP debug) {
   bail(gpgme_new(&ctx), "context creation");
   gpgme_set_armor(ctx, 1);
 
-  // Try to disable the interactive pinentry thing
-  //bail(gpgme_set_pinentry_mode(ctx, GPGME_PINENTRY_MODE_LOOPBACK), "set pinentry to loopback");
+  // Required for GPG 2.1
+  bail(gpgme_set_pinentry_mode(ctx, GPGME_PINENTRY_MODE_LOOPBACK), "set pinentry to loopback");
   gpgme_set_passphrase_cb(ctx, pwprompt, pwfun);
 
   // Get engine info

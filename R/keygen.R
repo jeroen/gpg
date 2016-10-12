@@ -5,18 +5,23 @@
 #' [Unattended key generation](https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html).
 #'
 #' @export
-#' @useDynLib gpg R_gpg_keygen
+#' @rdname gpg_keygen
+#' @useDynLib gpg R_gpg_keygen R_gpg_keygen_new
 #' @param name value for the `Name-Real` field
 #' @param email value for the `Name-Email` field
 #' @param passphrase (optional) protect with a passphrase
-#' @param key_type required field, defaults to RSA
-#' @param ... other fields, see [GPG manual](https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html)
-gpg_keygen <- function(name, email, passphrase = NULL, key_type = "RSA", ...){
-  params <- list("Key-Type" = key_type, "Name-Real" = name,
-                 "Name-Email" = email, ...)
-  cat(make_args_str(params))
-  params["Passphrase"] = passphrase # Can be NULL
-  .Call(R_gpg_keygen, make_args_str(params))
+gpg_keygen <- function(name, email, passphrase = NULL){
+  info <- gpg_info()
+  # Use the 'new' API, required for GnuPG 2.1
+  if(!length(passphrase) && info$gpgme >= "1.7.0" && info$version >= "2.1"){
+    userstring <- paste0(name, " <", email, ">")
+    .Call(R_gpg_keygen_new, userstring)
+  } else {
+    params <- list("Key-Type" = "RSA", "Name-Real" = name, "Name-Email" = email)
+    cat(make_args_str(params))
+    params["Passphrase"] = passphrase # Can be NULL
+    .Call(R_gpg_keygen, make_args_str(params))
+  }
 }
 
 make_args_str <- function(params){
