@@ -16,7 +16,6 @@ vignette: >
 ---
 
 ```{r, echo = FALSE, message = FALSE}
-unlink("~/myapp", recursive = TRUE)
 knitr::opts_chunk$set(comment = "")
 library(gpg)
 options(width = 120)
@@ -60,7 +59,7 @@ str(gpg_info())
 Use `gpg_restart` to switch to another GPG executable or different home directory, e.g. to build an application which uses its own configuration and keyrings:
 
 ```{r}
-gpg_restart(home = "~/myapp")
+gpg_restart(home = tempdir())
 ```
 
 
