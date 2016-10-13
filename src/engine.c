@@ -28,8 +28,10 @@ gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_
   gpgme_io_write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0)));
   gpgme_io_write(fd, "\n", 1);
 #else
-  write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0)));
-  write(fd, "\n", 1);
+  if(write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0))) < 1)
+    Rf_error("Failed to write password to buffer");
+  if(write(fd, "\n", 1) < 1)
+    Rf_error("Failed to write EOL to buffer");
 #endif
 
   UNPROTECT(2);
