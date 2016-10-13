@@ -20,9 +20,9 @@ gpg_options <- function(){
 #' @rdname gpg_info
 #' @examples gpg_info()
 gpg_info <- function(){
-  dirs <- structure(lapply(.Call(R_dir_info), trimws),
+  dirs <- structure(lapply(.Call(R_dir_info), mytrimws),
     names = c("home", "sysconf", "gpgconf", "gpg"))
-  engine <- structure(lapply(.Call(R_engine_info), trimws),
+  engine <- structure(lapply(.Call(R_engine_info), mytrimws),
     names = c("gpg", "version", "home", "gpgme"))
   if(is.na(engine$home))
     engine$home <- dirs$home
@@ -42,4 +42,10 @@ gpg_version <- function(silent = FALSE){
   if(!isTRUE(silent))
     cat(out, sep = "\n")
   invisible(out)
+}
+
+# Fallback for base::trimws for R < 3.2
+mytrimws <- function(x){
+  mysub <- function(re, x) sub(re, "", x, perl = TRUE)
+  mysub("[ \t\r\n]+$", mysub("^[ \t\r\n]+", x))
 }
