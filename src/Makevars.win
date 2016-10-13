@@ -1,8 +1,8 @@
 PKG_LIBS= -L../windows/gpgme-1.7.0/lib${R_ARCH} \
 	-lgpgme -lassuan -lgpg-error -lws2_32
 
-PKG_CPPFLAGS= -I../windows/gpgme-1.7.0/include
-
+PKG_CPPFLAGS= -I../windows/gpgme-1.7.0/include \
+	-DHAVE_GPGME_IO_READWRITE
 
 all: clean winlibs
 
