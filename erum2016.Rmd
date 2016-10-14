@@ -51,10 +51,15 @@ img{margin-left: 100px;}
 
 ## Example: GPG
 
-First keyring is empty:
+Load the package
 
 ```{r}
 library(gpg)
+```
+
+First keyring is empty:
+
+```{r}
 gpg_list_keys()
 ```
 
