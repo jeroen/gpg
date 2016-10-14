@@ -1,0 +1,9 @@
+*.sig
+*.msg
+*.gpg
+Release
+.Rhistory
+*.Rproj
+.Rproj.user
+
+
