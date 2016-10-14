@@ -80,7 +80,7 @@
 
 <body style="opacity: 0">
 
-<slides>
+<slides class="layout-widescreen">
 
   <slide class="title-slide segue nobackground">
         <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
@@ -143,12 +143,12 @@ gpg_list_keys()</pre>
 <pre class = 'prettyprint lang-r'>mykey &lt;- gpg_keygen(name = &quot;Jerry&quot;, email = &quot;jerry@gmail.com&quot;)
 print(mykey)</pre>
 
-<pre >[1] &quot;C530EE02F45620D7&quot;</pre>
+<pre >[1] &quot;E46CB2DC83402B35&quot;</pre>
 
 <pre class = 'prettyprint lang-r'>gpg_list_keys()</pre>
 
 <pre >                id  name           email
-1 C530EE02F45620D7 Jerry jerry@gmail.com</pre>
+1 E46CB2DC83402B35 Jerry jerry@gmail.com</pre>
 
 </article></slide><slide class=''><hgroup><h2>Export pubkey</h2></hgroup><article  id="export-pubkey">
 
@@ -157,20 +157,20 @@ print(mykey)</pre>
 <pre >-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2
 
-mQENBFgAxI0BCADJvufqU+CZbclckNcykxcT8nzXhknd872q90zBCF08TsVxiSwB
-ckI+k44nldOFWpRgEdUUiQnjRRnOrF4dojt6BuMrfX/XL6eR2qzmGna5DkTq6sjG
-Su1gtHZIDY+XgZlubz20uAzj35s64T+8uaSbU7AI4X43TInduXP/bpMgNP+ANvdY
-PIIvB0pRc0T5Hw3W1S0fUaty2bNlYGoA220Apwo5lkLHj94Yx1suJ1DzmaNHboKg
-FJsEZQw247OdYrdJAhWzJ0ONe9aP4WuvK2YxSLS/6ynsQhd6XeS70a2qX0y3Qyrd
-rQdLC4mVTTa9HIgV4pGUk17LJt/HfbG+W4GBABEBAAG0F0plcnJ5IDxqZXJyeUBn
-bWFpbC5jb20+iQE5BBMBCAAjBQJYAMSNAhsvBwsJCAcDAgEGFQgCCQoLBBYCAwEC
-HgECF4AACgkQxTDuAvRWINc5FAf/ZC+9bISZl1rnkCgQO0MkuH/BttM1LrY7IoEW
-rv1b8of5S79XQotRIglRBnsZ89inRBiBgGUGXUXm02tBgBjl1AMTdcVtKVCz4yhO
-cI+3hWqCNTnfFlzXzRKxCbDaWXZOnz8iTA5fc7NiE+8wyQsmHz67GBscMCdSYvBc
-m7vcrSNIgvyokIYSJP+Qrgh+ykq5/QvzqMGHg7NGsuMJUf2QiEYzYAmrbPZ9khyz
-VYx/pXqk7I9e+V8RcqhVQ57g8GCekeGe+xoh3EhEJfO7PXU+UHxR975B9PcPQBuW
-fcMi7kYqbFJpuWT79DTFWCx8t5Gstld4hyipnA2vm7B6iuy3bQ==
-=MS+m
+mQENBFgAx1IBCADlsZqyLmTrw1vpaLZBXoIIZej494P33gkN7OuXzvQyVI+3KCLs
+tbWGqGA28ZAMreyMpkr136FAvRqSS0JdoJ9FGL2PeW811FclmlHY8qYUCz13VTbk
+2mQkmBhhdtqKQZRxDq7TeXz4aiJHQWzm0Th+Ut5yFI0KWizo8EmNKTiFDnQNXP1P
+078MovzD+/Qvn4WfCkWixbtNgqD25B8qwo/njOJZdzGvCUlQB1OblowJ3Vsx/3sn
+M+58KXvYeTEUlBrtCv3HZ6RcJPuApxlmufuXDSnSxz2UAQYZxTrirqy8o73fFEmb
+SIbXQ7Rbxb60WMoh37RCupmh1ZyE1OEGvsfXABEBAAG0F0plcnJ5IDxqZXJyeUBn
+bWFpbC5jb20+iQE5BBMBCAAjBQJYAMdSAhsvBwsJCAcDAgEGFQgCCQoLBBYCAwEC
+HgECF4AACgkQ5Gyy3INAKzV2jQf+ODNYC0QrU+9ABwi9FEXoic+oXc9aIjwlcciF
+TLHowpv/1SlBx/gWlinPqVIyouO21qNKzrgOaJQPzUQubryRcEtrG+oYK/SX4WG/
+l47QIHSGfgPGvKuoXMfzaPafWUAZ0wYw32v9P2dTwS5m8ctdKpHOh0ds4hGbxWed
+ilAFY85HCYltcCq53UNduFhVdhyWOTEMPmAO7r1cNSf2wBbofqzfug5rckXdgeAo
+A6K6xZ9RKjsr1v2molnawDfocuzEmYYN/0BSfOj8DDokK287jfbbHuP0eoFNkdlz
+oXNUpynvb8M/1L0hGuZwjU9d4TcNY8ga7gLlF/2PBKz+tNEz6w==
+=RUaC
 -----END PGP PUBLIC KEY BLOCK-----</pre>
 
 </article></slide><slide class=''><hgroup><h2>Import someones public key</h2></hgroup><article  id="import-someones-public-key">
@@ -183,13 +183,13 @@ fcMi7kYqbFJpuWT79DTFWCx8t5Gstld4hyipnA2vm7B6iuy3bQ==
 <pre class = 'prettyprint lang-r'>gpg_list_keys()</pre>
 
 <pre >                id            name                            email
-1 C530EE02F45620D7           Jerry                  jerry@gmail.com
+1 E46CB2DC83402B35           Jerry                  jerry@gmail.com
 2 A4A928C769CD6E44 Glenn Greenwald Glenn.Greenwald@theintercept.com</pre>
 
 <pre class = 'prettyprint lang-r'>gpg_list_keys(secret = TRUE)</pre>
 
 <pre >                id  name           email
-1 C530EE02F45620D7 Jerry jerry@gmail.com</pre>
+1 E46CB2DC83402B35 Jerry jerry@gmail.com</pre>
 
 </article></slide><slide class=''><hgroup><h2>Encrypt a message</h2></hgroup><article  id="encrypt-a-message">
 
@@ -200,15 +200,15 @@ cat(head(encrypted))</pre>
 <pre >-----BEGIN PGP MESSAGE-----
 Version: GnuPG v2
 
-hQEMA8Uw7gL0ViDXAQf8D0sE7v4KDBkWaZImypWGUX4HqcWwiCX7UwD4jRX1mDer
-pa+fw5ousQMtusMTDYXrcr/u6MlGlqsnjVsytskZN5g2xvkiRUGmW2131T6PDaa0
-ZZ3Un6rVJC94odq01vUbw7N2yN7Dgxzp4yvBUNMdmSZcoasiDfcnqyx6w7wyjEoI
-f41MGb8jZ20FqFtmFU/vXjdNFOXcI7yRZ7Fxj7YzeclqHqEY+EkXtT2q+Z7l46UK
-HFNZf5Yz/hKf55CV9HhYJfOrOXRGMRinxi+ejcaE72QAnXFUOdEa5vwJDZL2GemB
-s8EQwh6f6ByZpv58VTa9mcpKm19EF7+WTLhXUa+1M9JUARlUPL/TvfiYeiwjixVk
-I/EbVVWYDW95BqycifVdmIsJnT9fr88jnnQjXPBHbk6nZBmrMxdU/Z8EI8jFP1n2
-BylZUaYp1no44MjFaqQYtrcYkTK0
-=ZP6b
+hQEMA+RsstyDQCs1AQf/d4mnwS6GZ1d2di1a5icf8JeXMOFSgOc+igOLF5090wy8
+pPrPmkHp9+obA5scMNbKnfcjbGjF/Upk1nBI3lvr/isrQW0LeaKHMM4FJORFEqiQ
+3r04vnsEYGtkEo0MC4YdyDB7g8cNxS18WVaAxu1SbQAdQlqzCvPlju/n3mMN0MeC
+wz256/2p11v0oRs2O5nJqBbmXs/t3dhadh+oXu7Ulimw3AsJqsQSaUSHfCr9AYqN
++OyloTurbFh8ExK84mJk/MD+Du0WtMHszrDPcULD8erCeWoEp1M2N2W6rAaM3rcs
+oEVsYfevIHZ7sgS3L/6/DggotRgmH00KX9Y7Sd4n5tJUAVeCJWy4E5JA0i+4zNbU
+VxMnkCBKVY2k9eOUfrcc9sumNq1XAfzu1+6nNxK+GkAB4X9DnHVRKQY7P09kex37
+WWtEhRMORoSRjBPbpQR+WqVw/nwN
+=Kz5I
 -----END PGP MESSAGE-----</pre>
 
 </article></slide><slide class=''><hgroup><h2>Decrypt a message</h2></hgroup><article  id="decrypt-a-message">
@@ -230,13 +230,13 @@ gpg_decrypt(&quot;encrypted.msg&quot;)</pre>
 <pre >-----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABCAAGBQJYAMSOAAoJEMUw7gL0ViDXoakH/i5vLHJb9xsNWG5jEJDn1uP4
-ECNuQvjqTABphS1tvH+9zyAbI2ZEqylkmQrBbNaEW5LB/jKhLN8tuaKOIK3wM0Sl
-1rLVhBKwtdrv7YimhYq5SuKtnhq/QT8eP8zZlKraNef6+OTEgGfEEExHCKRfBJL1
-b9+g6vUGB2i4GdSGi+ylaNHnxdrOM8YFFboHyCRt7boGY6BVQbsOeCP/q69C6nep
-bVEcYYkW7BhYpngKGD35WEamP4aj87N7OSqf+fKlqGCmaq588QovYwoYLL+fXa8R
-nMfggH3DybWFRcNQ/QwxhGeSKbpiDmmF612CBdw96eoL85KkLeUMbtI0XpyRo4s=
-=UWna
+iQEcBAABCAAGBQJYAMdTAAoJEORsstyDQCs1GLAIAJxWqmlxfcU+s5HnCehJH2b3
+IosdxS0gIUvNB0jBsXMhrPfSvm1DPRQ5R+yFuIzZH4NCpIJwBrCl3rBH6KnEcFgZ
+/GLJov088OQjSIZi8h++zBK50YqYiDb/xdhwGSWwHbh0onS8PB4e4ZmF1s8rFNu7
+n2O6yuXsF/RXIZRhzKSVTbesin5AwJxA0mgfWXvMlml+4MJHGxr3jzGToaDqFEkM
+srX/CTeHI4VEhvMtPuFWDqiCWsfS2COQvjEcbCYc6eBzI4xWpLGr5Hu+56JACTCE
+fbV/yZp/padRjXRbxS7ckVjZKN/qyopLT6CUovRdAAkU/nvU0QD/XEpQmp05kLg=
+=UVE7
 -----END PGP SIGNATURE-----</pre>
 
 <pre class = 'prettyprint lang-r'>writeLines(sig, &quot;secret.sig&quot;)</pre>
@@ -246,7 +246,7 @@ nMfggH3DybWFRcNQ/QwxhGeSKbpiDmmF612CBdw96eoL85KkLeUMbtI0XpyRo4s=
 <pre class = 'prettyprint lang-r'>gpg_verify(&quot;secret.msg&quot;, &quot;secret.sig&quot;)</pre>
 
 <pre >                               fingerprint           timestamp success
-1 9CCA5E20E03A9FFDE833E2CFC530EE02F45620D7 2016-10-14 13:42:06    TRUE</pre>
+1 D77E4F3807222707642CDD15E46CB2DC83402B35 2016-10-14 13:53:55    TRUE</pre>
 
 </article></slide><slide class=''><hgroup><h2>Example: signed debian pgk</h2></hgroup><article  id="example-signed-debian-pgk">
 

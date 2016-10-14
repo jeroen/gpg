@@ -3,6 +3,7 @@ title: "Cryptography in R"
 author: "Jeroen Ooms"
 date: "10/14/2016"
 output: ioslides_presentation
+widescreen: true
 ---
 
 ```{r setup, include=FALSE}
