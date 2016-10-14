@@ -140,36 +140,37 @@ gpg_list_keys()</pre>
 
 </article></slide><slide class=''><hgroup><h2>Generate GPG keypair</h2></hgroup><article  id="generate-gpg-keypair">
 
-<pre class = 'prettyprint lang-r'>(mykey &lt;- gpg_keygen(name = &quot;Jerry&quot;, email = &quot;jerry@gmail.com&quot;))</pre>
+<pre class = 'prettyprint lang-r'>mykey &lt;- gpg_keygen(name = &quot;Jerry&quot;, email = &quot;jerry@gmail.com&quot;)
+print(mykey)</pre>
 
-<pre >[1] &quot;A61DF33171B90E6B&quot;</pre>
+<pre >[1] &quot;C530EE02F45620D7&quot;</pre>
 
 <pre class = 'prettyprint lang-r'>gpg_list_keys()</pre>
 
 <pre >                id  name           email
-1 A61DF33171B90E6B Jerry jerry@gmail.com</pre>
+1 C530EE02F45620D7 Jerry jerry@gmail.com</pre>
 
 </article></slide><slide class=''><hgroup><h2>Export pubkey</h2></hgroup><article  id="export-pubkey">
 
-<pre class = 'prettyprint lang-r'>cat(str &lt;- gpg_export(id = mykey))</pre>
+<pre class = 'prettyprint lang-r'>cat(gpg_export(id = mykey))</pre>
 
 <pre >-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2
 
-mQENBFgAr3kBCAC2+Z/3Y/DxqkO/RMiMQoSqpy6YoFaukr+OzdklB58wri57mlbf
-4qGTt57Sh4pqVbtaepgZLkPNji9LRXlaAG56uCDfgrZguTuGPs7FqHZeb/bkiSr0
-7HYamLq4vAUAny2KjmYYHsetWGDCVqEL9S/1GhR159mx6Tpjf7RB6FxTmkKq6x56
-zosY/4NpFIu8MEybLXVcq4e9rP6MliWoqMZEkHxXsjb+LM+Vv3cQGuLUCCuFxYvF
-c7oXClqnN/yAMlLY74eCq2v2V28sLEti5QRwnrUJw21h5fn5MudBxtnj/2EcyfzC
-lSq/6CBOYzStRGT7KGf25Mr8z/fbywzZI7PbABEBAAG0F0plcnJ5IDxqZXJyeUBn
-bWFpbC5jb20+iQE5BBMBCAAjBQJYAK95AhsvBwsJCAcDAgEGFQgCCQoLBBYCAwEC
-HgECF4AACgkQph3zMXG5Dmu0hAf/VPoQCnqcZFFDTc/mOmBisSK1c5enXm6/asQ1
-01jK0UllY53eGSQrbIZoEkaatmFdd/vteAWHEHvFDy6nH009oAOkdCgeO5r1DJ8t
-gwV24E6OQT/Tw3mdiG7BuMDJ6iAltO9bEDyqZ82eMhiyt/K/f5Dky8TRipULLzG0
-ZWN6edtxQyCzp+77h+rJ1X6PS94v0qoRRTiHeCb1AFCIhs8oqBlz2xhYrNANW2hL
-K2N6uage9n59p6E2XX8x5fvN4V1Q2Xrn5u83wHQgoVyyRHa4RN/pKqqUA+IJCkOm
-TYGzf399Osa3ZkHAp2Q3kiuf4vjElOhtLTa8B+SklxykBkncQw==
-=N3Eh
+mQENBFgAxI0BCADJvufqU+CZbclckNcykxcT8nzXhknd872q90zBCF08TsVxiSwB
+ckI+k44nldOFWpRgEdUUiQnjRRnOrF4dojt6BuMrfX/XL6eR2qzmGna5DkTq6sjG
+Su1gtHZIDY+XgZlubz20uAzj35s64T+8uaSbU7AI4X43TInduXP/bpMgNP+ANvdY
+PIIvB0pRc0T5Hw3W1S0fUaty2bNlYGoA220Apwo5lkLHj94Yx1suJ1DzmaNHboKg
+FJsEZQw247OdYrdJAhWzJ0ONe9aP4WuvK2YxSLS/6ynsQhd6XeS70a2qX0y3Qyrd
+rQdLC4mVTTa9HIgV4pGUk17LJt/HfbG+W4GBABEBAAG0F0plcnJ5IDxqZXJyeUBn
+bWFpbC5jb20+iQE5BBMBCAAjBQJYAMSNAhsvBwsJCAcDAgEGFQgCCQoLBBYCAwEC
+HgECF4AACgkQxTDuAvRWINc5FAf/ZC+9bISZl1rnkCgQO0MkuH/BttM1LrY7IoEW
+rv1b8of5S79XQotRIglRBnsZ89inRBiBgGUGXUXm02tBgBjl1AMTdcVtKVCz4yhO
+cI+3hWqCNTnfFlzXzRKxCbDaWXZOnz8iTA5fc7NiE+8wyQsmHz67GBscMCdSYvBc
+m7vcrSNIgvyokIYSJP+Qrgh+ykq5/QvzqMGHg7NGsuMJUf2QiEYzYAmrbPZ9khyz
+VYx/pXqk7I9e+V8RcqhVQ57g8GCekeGe+xoh3EhEJfO7PXU+UHxR975B9PcPQBuW
+fcMi7kYqbFJpuWT79DTFWCx8t5Gstld4hyipnA2vm7B6iuy3bQ==
+=MS+m
 -----END PGP PUBLIC KEY BLOCK-----</pre>
 
 </article></slide><slide class=''><hgroup><h2>Import someones public key</h2></hgroup><article  id="import-someones-public-key">
@@ -182,38 +183,45 @@ TYGzf399Osa3ZkHAp2Q3kiuf4vjElOhtLTa8B+SklxykBkncQw==
 <pre class = 'prettyprint lang-r'>gpg_list_keys()</pre>
 
 <pre >                id            name                            email
-1 A61DF33171B90E6B           Jerry                  jerry@gmail.com
+1 C530EE02F45620D7           Jerry                  jerry@gmail.com
 2 A4A928C769CD6E44 Glenn Greenwald Glenn.Greenwald@theintercept.com</pre>
+
+<pre class = 'prettyprint lang-r'>gpg_list_keys(secret = TRUE)</pre>
+
+<pre >                id  name           email
+1 C530EE02F45620D7 Jerry jerry@gmail.com</pre>
 
 </article></slide><slide class=''><hgroup><h2>Encrypt a message</h2></hgroup><article  id="encrypt-a-message">
 
-<pre class = 'prettyprint lang-r'>writeLines(&quot;TTIP is evil!&quot;, &quot;secret.msg&quot;)
+<pre class = 'prettyprint lang-r'>writeLines(&quot;This is secret information&quot;, con = &quot;secret.msg&quot;)
 encrypted &lt;- gpg_encrypt(&quot;secret.msg&quot;, receiver = mykey)
 cat(head(encrypted))</pre>
 
 <pre >-----BEGIN PGP MESSAGE-----
 Version: GnuPG v2
 
-hQEMA6Yd8zFxuQ5rAQgAhdbLNeJfY9wXuOwOYc5rWBY4fnUc0rlBg9bXD/cuv2hP
-mEFIttvnR6ONqXygce9ynpYJiJWLc6dqOF73jPJHV77Z69Mcob7LBuvluKkQKrqa
-m9mzteNGOvvA/5YkKnztcHpDg90orTuIhPEIoveHpiTSjFhECLElfdytSqKi8uaw
-ExtIYlMwh3ajftUNeNmhx507FjtpUEkuDNCFcwwHpMgbK87Bb4LGbbCe53p4f8bv
-dY8kJA75sobK1TXOh4pknSEIs3bClbZu0Hf1R6KzjC6bYIUdwmAjV3/ePb445c9h
-zod+P0bywI4RNhvgX6H7W+hBC1orZxks13rXSjOlbtJJAZSBeu01XrM9chv1m9Ht
-smOj9KMU4LYpbbyKJi3DB+uEgvpYtyb7bEju4Nq1pssUTZJe8gnviHqCaIsjJjc/
-TU+uIZ7azqisLg==
-=xznX
+hQEMA8Uw7gL0ViDXAQf8D0sE7v4KDBkWaZImypWGUX4HqcWwiCX7UwD4jRX1mDer
+pa+fw5ousQMtusMTDYXrcr/u6MlGlqsnjVsytskZN5g2xvkiRUGmW2131T6PDaa0
+ZZ3Un6rVJC94odq01vUbw7N2yN7Dgxzp4yvBUNMdmSZcoasiDfcnqyx6w7wyjEoI
+f41MGb8jZ20FqFtmFU/vXjdNFOXcI7yRZ7Fxj7YzeclqHqEY+EkXtT2q+Z7l46UK
+HFNZf5Yz/hKf55CV9HhYJfOrOXRGMRinxi+ejcaE72QAnXFUOdEa5vwJDZL2GemB
+s8EQwh6f6ByZpv58VTa9mcpKm19EF7+WTLhXUa+1M9JUARlUPL/TvfiYeiwjixVk
+I/EbVVWYDW95BqycifVdmIsJnT9fr88jnnQjXPBHbk6nZBmrMxdU/Z8EI8jFP1n2
+BylZUaYp1no44MjFaqQYtrcYkTK0
+=ZP6b
 -----END PGP MESSAGE-----</pre>
 
 </article></slide><slide class=''><hgroup><h2>Decrypt a message</h2></hgroup><article  id="decrypt-a-message">
 
-<p>GPG automatically finds the correct private key (if you have it). For this demo we encrypted with out own key so we can decrypt.</p>
+<p>GPG automatically finds the correct private key (if you have it).</p>
 
 <pre class = 'prettyprint lang-r'># we have the private key
 writeLines(encrypted, &quot;encrypted.msg&quot;)
 gpg_decrypt(&quot;encrypted.msg&quot;)</pre>
 
-<pre >[1] &quot;TTIP is evil!\n&quot;</pre>
+<pre >[1] &quot;This is secret information\n&quot;</pre>
+
+<p>For this demo we encrypted with out own key so we can decrypt.</p>
 
 </article></slide><slide class=''><hgroup><h2>Sign a message</h2></hgroup><article  id="sign-a-message">
 
@@ -222,13 +230,13 @@ gpg_decrypt(&quot;encrypted.msg&quot;)</pre>
 <pre >-----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABCAAGBQJYAK96AAoJEKYd8zFxuQ5rJDMIALOfXxefa1QIjwKz8St7acUX
-glQzMVsTpJ6IS7IaF47XNXQi7ecIGaP1ZXo+U95CTqUrK96iJucRDo2v5BpP1xsI
-Gne32vPDU15HKH96lar8iRBF21ftFKulpLrwm7+9THZXkbXESnzyzmyz1cZUKktm
-ujc5sIgMBqrShf+gTqJYWrNv/e9P+GxUjeGrTkEkV+NEiRFZmcs5Hp8LTZTd3g0I
-ZHObqcJ/ursV3SGb1QF4PEaIXaheNs33kNqYX8DdzrukVahTXmLyNKrzf17sf4cg
-q3696dcU16/PzdPIou8y6HLaMm/pKKL1O1HMo/9ktzp3JGmWysLJim7Q67rwy94=
-=KqSj
+iQEcBAABCAAGBQJYAMSOAAoJEMUw7gL0ViDXoakH/i5vLHJb9xsNWG5jEJDn1uP4
+ECNuQvjqTABphS1tvH+9zyAbI2ZEqylkmQrBbNaEW5LB/jKhLN8tuaKOIK3wM0Sl
+1rLVhBKwtdrv7YimhYq5SuKtnhq/QT8eP8zZlKraNef6+OTEgGfEEExHCKRfBJL1
+b9+g6vUGB2i4GdSGi+ylaNHnxdrOM8YFFboHyCRt7boGY6BVQbsOeCP/q69C6nep
+bVEcYYkW7BhYpngKGD35WEamP4aj87N7OSqf+fKlqGCmaq588QovYwoYLL+fXa8R
+nMfggH3DybWFRcNQ/QwxhGeSKbpiDmmF612CBdw96eoL85KkLeUMbtI0XpyRo4s=
+=UWna
 -----END PGP SIGNATURE-----</pre>
 
 <pre class = 'prettyprint lang-r'>writeLines(sig, &quot;secret.sig&quot;)</pre>
@@ -238,7 +246,7 @@ q3696dcU16/PzdPIou8y6HLaMm/pKKL1O1HMo/9ktzp3JGmWysLJim7Q67rwy94=
 <pre class = 'prettyprint lang-r'>gpg_verify(&quot;secret.msg&quot;, &quot;secret.sig&quot;)</pre>
 
 <pre >                               fingerprint           timestamp success
-1 D6FAFEBBB9F1AD0B79A572CCA61DF33171B90E6B 2016-10-14 12:12:10    TRUE</pre>
+1 9CCA5E20E03A9FFDE833E2CFC530EE02F45620D7 2016-10-14 13:42:06    TRUE</pre>
 
 </article></slide><slide class=''><hgroup><h2>Example: signed debian pgk</h2></hgroup><article  id="example-signed-debian-pgk">
 

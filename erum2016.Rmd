@@ -9,8 +9,8 @@ output: ioslides_presentation
 knitr::opts_chunk$set(comment = "", message = FALSE)
 library(gpg)
 gpg_restart(tempdir(), silent = TRUE)
-gpg_list_keys <- function(){
-  gpg::gpg_list_keys()[c("id", "name", "email")]
+gpg_list_keys <- function(...){
+  gpg::gpg_list_keys(...)[c("id", "name", "email")]
 }
 gpg_verify <- function(...){
   gpg::gpg_verify(...)[c("fingerprint", "timestamp", "success")]
@@ -60,14 +60,15 @@ gpg_list_keys()
 ## Generate GPG keypair
 
 ```{r, message=FALSE}
-(mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com"))
+mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com")
+print(mykey)
 gpg_list_keys()
 ```
 
 ## Export pubkey
 
 ```{r}
-cat(str <- gpg_export(id = mykey))
+cat(gpg_export(id = mykey))
 ```
 
 ## Import someones public key
@@ -75,13 +76,14 @@ cat(str <- gpg_export(id = mykey))
 ```{r}
 gpg_recv(id ="A4A928C769CD6E44")
 gpg_list_keys()
+gpg_list_keys(secret = TRUE)
 ```
 
 
 ## Encrypt a message
 
 ```{r}
-writeLines("TTIP is evil!", "secret.msg")
+writeLines("This is secret information", con = "secret.msg")
 encrypted <- gpg_encrypt("secret.msg", receiver = mykey)
 cat(head(encrypted))
 ```
@@ -89,13 +91,14 @@ cat(head(encrypted))
 ## Decrypt a message
 
 GPG automatically finds the correct private key (if you have it).
-For this demo we encrypted with out own key so we can decrypt.
 
 ```{r}
 # we have the private key
 writeLines(encrypted, "encrypted.msg")
 gpg_decrypt("encrypted.msg")
 ```
+
+For this demo we encrypted with out own key so we can decrypt.
 
 ## Sign a message
 
