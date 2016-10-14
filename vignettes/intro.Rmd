@@ -3,6 +3,7 @@ title: "Using GPG in R"
 author: "Jeroen Ooms"
 output:
   html_document:
+    mathjax: null
     fig_caption: false
     toc: true
     toc_float:
@@ -44,7 +45,6 @@ The easiest way to exchange (signed or unsigned) public keys is via a keyserver.
 
  - https://pgp.mit.edu
  - https://keyserver.ubuntu.com
- - http://keys.gnupg.net
 
 GPG key servers might not use HTTPS. In GPG we only trust keys only on basis of who has signed them, regardless of how they were obtained. For this reason it is also perfectly valid to share GPG public keys via e.g. a website or email.
 
@@ -56,17 +56,17 @@ It is important to know which version of GPG you are running and where your home
 str(gpg_info())
 ```
 
-Use `gpg_restart` to switch to another GPG executable or different home directory, e.g. to build an application which uses its own configuration and keyrings:
+Use `gpg_restart` to switch to another home directory, e.g. for a client which uses its own configuration and keyrings. For this example we store keys in a temporary directory.
 
 ```{r}
 gpg_restart(home = tempdir())
 ```
 
 
-Use `gpg_keylist()` to see the current contents of your keyring. It is empty to start with:
+Use `gpg_list_keys()` to see the current contents of your keyring. It is empty to start with:
 
 ```{r}
-gpg_keylist()
+gpg_list_keys()
 ```
 
 ### Generate keys
@@ -75,7 +75,7 @@ Use `gpg_keygen()` to generate a new public private keypair:
 
 ```{r}
 (mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com"))
-gpg_keylist()[c("id", "name", "email")]
+gpg_list_keys()[c("id", "name", "email")]
 ```
 
 
@@ -95,14 +95,14 @@ Use the `gpg_recv` function to download a given key ID from the keyserver. For e
 
 ```{r}
 gpg_recv(id ="E084DAB9")
-keyring <- gpg_keylist()
+keyring <- gpg_list_keys()
 keyring[c("id", "name", "email")]
 ```
 
 Note that for imported keys, we do not have the private key:
 
 ```{r}
-secring <- gpg_keylist(secret = TRUE)
+secring <- gpg_list_keys(secret = TRUE)
 secring[c("id", "name", "email")]
 ```
 
@@ -128,7 +128,7 @@ Delete a key from its ID or fingerprint. Let's delete the RMS key:
 
 ```{r}
 gpg_delete('2C6464AF2A8E4C02')
-gpg_keylist()[c("id", "name", "email")]
+gpg_list_keys()[c("id", "name", "email")]
 ```
 
 

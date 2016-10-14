@@ -1,7 +1,7 @@
 Package: gpg
 Type: Package
 Title: GNU Privacy Guard for R
-Version: 0.1
+Version: 0.2
 Authors@R: person("Jeroen", "Ooms", email = "jeroen.ooms@stat.ucla.edu", role = c("aut", "cre"))
 Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic methods.
     Includes utilities for public key encryption, creating and verifying digital signatures,

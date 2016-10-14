@@ -51,7 +51,7 @@ gpg_export <- function(id, secret = FALSE){
 #' @export
 #' @rdname gpg_keys
 #' @param secret set to `TRUE` to list/export/delete private (secret) keys
-gpg_keylist <- function(secret = FALSE){
+gpg_list_keys <- function(secret = FALSE){
   gpg_keylist_internal(secret_only = secret, local = TRUE)
 }
 

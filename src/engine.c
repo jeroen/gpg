@@ -48,7 +48,7 @@ SEXP R_engine_info(){
   );
 }
 
-SEXP R_gpg_restart(SEXP path, SEXP home, SEXP pwfun, SEXP debug) {
+SEXP R_gpg_restart(SEXP home, SEXP path, SEXP pwfun, SEXP debug) {
   // Clean up old engine
   if(ctx != NULL){
     gpgme_release(ctx);
