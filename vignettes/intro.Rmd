@@ -1,5 +1,5 @@
 ---
-title: "Using GPG in R"
+title: "Encryption and Digital Signatures in R using GPG"
 author: "Jeroen Ooms"
 output:
   html_document:
@@ -11,7 +11,7 @@ output:
       smooth_scroll: false
     toc_depth: 3
 vignette: >
-  %\VignetteIndexEntry{Using GPG in R}
+  %\VignetteIndexEntry{Encryption and Digital Signatures in R using GPG}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
