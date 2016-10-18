@@ -41,7 +41,7 @@ SEXP R_gpg_sign(SEXP msg, SEXP id){
   // GPG uses default or first key if no id's are given
   for(int i = 0; i < Rf_length(id); i++){
     gpgme_key_t key = NULL;
-    bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 1), "load key from keyring");
+    bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, i)), &key, 1), "load key from keyring");
     bail(gpgme_signers_add(ctx, key), "add signer");
   }
 

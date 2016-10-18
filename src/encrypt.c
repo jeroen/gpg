@@ -30,11 +30,13 @@ SEXP R_gpgme_signed_encrypt(SEXP data, SEXP receiver, SEXP sender) {
   gpgme_key_t keys[2] = {NULL, NULL};
   bail(gpgme_get_key(ctx, CHAR(STRING_ELT(receiver, 0)), &keys[0], 0), "load pubkey from keyring");
 
-  //signer key
-  gpgme_key_t sender_key;
-  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(sender, 0)), &sender_key, 0), "load pubkey from keyring");
+  // signer key; GPG uses default or first key if no id's are given
   gpgme_signers_clear(ctx);
-  bail(gpgme_signers_add(ctx, sender_key), "add signer");
+  for(int i = 0; i < Rf_length(sender); i++){
+    gpgme_key_t key = NULL;
+    bail(gpgme_get_key(ctx, CHAR(STRING_ELT(sender, i)), &key, 1), "load key from keyring");
+    bail(gpgme_signers_add(ctx, key), "add signer");
+  }
 
   //sign and encrypt
   bail(gpgme_data_new_from_mem(&input, (const char*) RAW(data), LENGTH(data), 0), "creating input buffer");
