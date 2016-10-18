@@ -145,9 +145,9 @@ Let's use the private key we generated earlier to sign a file:
 ```{r, message=FALSE}
 myfile <- tempfile()
 writeLines("This is a secret message", con = myfile)
-sig <- gpg_sign(myfile, mykey)
+sig <- gpg_sign(myfile)
 cat(sig)
-writeLines(sig, "myfile.sig")
+writeLines(sig, "myfile.gpg")
 ```
 
 ### Verify a signature
@@ -155,8 +155,8 @@ writeLines(sig, "myfile.sig")
 The `gpg_verify` function will see if a signature is valid for any of the keys in the keyring:
 
 ```{r}
-gpg_verify(myfile, signature = "myfile.sig")
-unlink("myfile.sig")
+gpg_verify(myfile, signature = "myfile.gpg")
+unlink("myfile.gpg")
 ```
 
 Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org/bin/linux/debian/) says the following:

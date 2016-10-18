@@ -29,9 +29,10 @@ gpg_verify <- function(file, signature){
 #' @useDynLib gpg R_gpg_sign
 #' @export
 #' @param file file-path or raw vector with data to sign or verify
-#' @param id which private key to use for signing
+#' @param id (optional) vector with key ID's to use for signing. If not set, GPG defaults
+#' to first private key in the keyring, or what has been configured in global options.
 #' @rdname gpg_sign
-gpg_sign <- function(file, id){
+gpg_sign <- function(file, id = NULL){
   pinentry_warning()
   if(is.character(file)){
     stopifnot(file.exists(file))

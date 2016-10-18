@@ -36,13 +36,17 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
 
 SEXP R_gpg_sign(SEXP msg, SEXP id){
   gpgme_data_t SIG, MSG;
-  gpgme_key_t key = NULL;
-  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 1), "load key from keyring");
-  bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
-
-  // TODO: vectorize to sign with multiple keys
   gpgme_signers_clear(ctx);
-  bail(gpgme_signers_add(ctx, key), "add signer");
+
+  // GPG uses default or first key if no id's are given
+  for(int i = 0; i < Rf_length(id); i++){
+    gpgme_key_t key = NULL;
+    bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 1), "load key from keyring");
+    bail(gpgme_signers_add(ctx, key), "add signer");
+  }
+
+  //create signature
+  bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
   bail(gpgme_data_new(&SIG), "memory to hold signature");
   bail(gpgme_op_sign(ctx, MSG, SIG, GPGME_SIG_MODE_DETACH), "signing");
   gpgme_signers_clear(ctx);
