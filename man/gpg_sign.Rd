@@ -27,7 +27,6 @@ Utilities to create and verify PGP signatures.
 \examples{
 # This requires you have the Debian master key in your keyring
 # See https://lists.debian.org/debian-devel-announce/2014/11/msg00017.html
-# gpg --keyserver pgp.mit.edu --recv 0x7638d0442b90d010
 msg <- tempfile()
 sig <- tempfile()
 download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)

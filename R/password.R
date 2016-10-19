@@ -7,12 +7,16 @@
 #' @export
 #' @param prompt the string printed when prompting the user for input.
 askpass <- function(prompt = "Enter your GPG passphrase:"){
-  if(is_unix() && has_pinentry() && is_tty()){
+  if(is_unix() && (is_cmd_build() || is_tty()) && has_pinentry()){
     pinentry(prompt)
   } else {
     FUN <- getOption("askpass", readline)
     FUN(prompt)
   }
+}
+
+is_cmd_build <- function(){
+  grepl("^Rbuild", basename(getwd()))
 }
 
 is_unix <- function(){
