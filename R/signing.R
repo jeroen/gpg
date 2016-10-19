@@ -25,9 +25,9 @@ gpg_verify <- function(file, signature, error = TRUE){
   out <- data.frame(lapply(1:5, function(i){sapply(out, `[[`, i)}), stringsAsFactors=FALSE)
   names(out) <- c("fingerprint", "timestamp", "hash", "pubkey", "success");
   out$timestamp <- structure(out$timestamp, class=c("POSIXct", "POSIXt"))
-  if(isTRUE(error) && !all(out$success)){
+  if(isTRUE(error) && !any(out$success)){
     fp_failed <- out$fingerprint[!(out$success)]
-    stop("Verification failed. Pubkey not found in keyring: ", paste(fp_failed, collapse = ", "), call. = FALSE)
+    stop("Verification failed. None of the pubkeys not found in keyring: ", paste(fp_failed, collapse = ", "), call. = FALSE)
   } else {
     out
   }
