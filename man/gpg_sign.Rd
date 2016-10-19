@@ -6,16 +6,20 @@
 \alias{gpg_verify}
 \title{PGP Signatures}
 \usage{
-gpg_verify(file, signature)
+gpg_verify(file, signature, error = TRUE)
 
-gpg_sign(file, id)
+gpg_sign(file, id = NULL)
 }
 \arguments{
 \item{file}{file-path or raw vector with data to sign or verify}
 
 \item{signature}{path or raw vector for the gpg signature file (contains the \code{PGP SIGNATURE} block)}
 
-\item{id}{which private key to use for signing}
+\item{error}{raise an error if verification fails because you do not have the
+signer public key in your keyring.}
+
+\item{id}{(optional) vector with key ID's to use for signing. If \code{NULL}, GPG defaults
+to first private key in the keyring, or what has been configured in global options.}
 }
 \description{
 Utilities to create and verify PGP signatures.
