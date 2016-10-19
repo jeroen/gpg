@@ -1,14 +1,17 @@
 #' Password Entry
 #'
 #' Function to prompt the user for a password to read a protected private key.
-#' IDE can provide a custom password entry widget by setting the \code{askpass}
-#' option. If no such option is specified we default to \code{\link{readline}}.
+#'
+#' If available, this function calls the GnuPG `pinentry` program. However this
+#' only works in a terminal. Therefore the IDE can provide a custom password entry
+#' widget by setting the \code{askpass} option. If no such option is specified
+#' we default to \code{\link{readline}}.
 #'
 #' @export
 #' @param prompt the string printed when prompting the user for input.
-askpass <- function(prompt = "Enter your GPG passphrase:"){
+pinentry <- function(prompt = "Enter your GPG passphrase:"){
   if(is_unix() && (is_cmd_build() || is_tty()) && has_pinentry()){
-    pinentry(prompt)
+    pinentry_exec(prompt)
   } else {
     FUN <- getOption("askpass", readline)
     FUN(prompt)
@@ -32,7 +35,7 @@ has_pinentry <- function(){
 }
 
 # in POSIX, "/dev/tty" means current CTTY
-pinentry <- function(str){
+pinentry_exec <- function(str){
   input <- c(paste("SETPROMPT", str), "GETPIN")
   res <- system2("pinentry", paste("-T", '/dev/tty'), input = input, stdout = TRUE)
   pwline <- res[grepl("D ", res, fixed = TRUE)]
