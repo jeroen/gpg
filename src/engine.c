@@ -24,6 +24,9 @@ gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_
     error("Password callback did not return a string value");
   }
 
+  if(!Rf_isString(res) || !Rf_length(res))
+    Rf_error("Failed to prompt for GPG passphrase");
+
 #ifdef HAVE_GPGME_IO_READWRITE
   gpgme_io_write(fd, CHAR(STRING_ELT(res, 0)), LENGTH(STRING_ELT(res, 0)));
   gpgme_io_write(fd, "\n", 1);
