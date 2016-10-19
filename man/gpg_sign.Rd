@@ -32,7 +32,7 @@ msg <- tempfile()
 sig <- tempfile()
 download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
-gpg_verify(msg, sig)
+gpg_verify(msg, sig, error = FALSE)
 }
 \seealso{
 Other gpg: \code{\link{gpg_search}}

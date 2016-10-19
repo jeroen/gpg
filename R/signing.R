@@ -12,12 +12,11 @@
 #' signer public key in your keyring.
 #' @examples # This requires you have the Debian master key in your keyring
 #' # See https://lists.debian.org/debian-devel-announce/2014/11/msg00017.html
-#' # gpg --keyserver pgp.mit.edu --recv 0x7638d0442b90d010
 #' msg <- tempfile()
 #' sig <- tempfile()
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
-#' gpg_verify(msg, sig)
+#' gpg_verify(msg, sig, error = FALSE)
 gpg_verify <- function(file, signature, error = TRUE){
   msg <- file_or_raw(file)
   sig <- file_or_raw(signature)
