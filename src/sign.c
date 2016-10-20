@@ -12,7 +12,9 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
     bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
     bail(gpgme_op_verify(ctx, SIG, MSG, NULL), "detached verification");
   } else {
-    bail(gpgme_op_verify(ctx, SIG, NULL, NULL), "clear verification");
+    bail(gpgme_data_new(&MSG), "creating output buffer");
+    bail(gpgme_op_verify(ctx, SIG, NULL, MSG), "clear verification");
+    //do something with MSG here?
   }
   gpgme_verify_result_t result = gpgme_op_verify_result(ctx);
   gpgme_signature_t cur1 = result->signatures;
