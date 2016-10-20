@@ -11,18 +11,21 @@
 \usage{
 gpg_import(file)
 
-gpg_recv(id, keyserver = NULL)
+gpg_recv(id, search = NULL, keyserver = NULL)
 
-gpg_delete(id, secret = TRUE)
+gpg_delete(id, secret = FALSE)
 
 gpg_export(id, secret = FALSE)
 
-gpg_list_keys(secret = FALSE)
+gpg_list_keys(search = "", secret = FALSE)
 }
 \arguments{
 \item{file}{path to the key file or raw vector with key data}
 
-\item{id}{unique ID of the pubkey (starts with \code{0x})}
+\item{id}{unique ID of the pubkey to import (starts with \code{0x}). Alternatively you
+can specify a \code{search} string.}
+
+\item{search}{string with name or email address to match the key info.}
 
 \item{keyserver}{address of http keyserver. Default searches several common
 servers (MIT, Ubuntu, GnuPG)}

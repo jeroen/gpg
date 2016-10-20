@@ -1,5 +1,7 @@
 0.3
   - Add support for non-detached (clear/normal mode) signature
+  - Rename some parameters for consistency
+  - Support 'search' parameter in gpg_import (tnx Marius Pascariu)
   - Expose 'pinentry' function
   - Better out-of-the-box support for entering passphrases
   - Search for keys on multiple keyservers
