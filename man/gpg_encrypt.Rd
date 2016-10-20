@@ -10,14 +10,15 @@ gpg_encrypt(data, receiver, signer = NULL)
 gpg_decrypt(data, verify = TRUE)
 }
 \arguments{
-\item{data}{path to file or raw vector with data to encrypt / decrypt}
+\item{data}{path or raw vector with data to encrypt / decrypt}
 
-\item{receiver}{one or more key ids or fingerprints for recepient(s)}
+\item{receiver}{key id(s) or fingerprint(s) for recepient(s)}
 
-\item{signer}{(optional) key ids or fingerprints for the sender to sign the message}
+\item{signer}{(optional) key id(s) or fingerprint(s) for the sender(s) to sign
+the message}
 
-\item{verify}{automatically checks that all signatures can be verified and raises an
-error otherwise}
+\item{verify}{automatically checks that all signatures (if any) can be verified and
+raises an error otherwise}
 }
 \description{
 Encrypt or decrypt a message using the public key from the \code{receiver}.
