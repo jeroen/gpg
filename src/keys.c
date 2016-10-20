@@ -65,12 +65,8 @@ SEXP R_gpg_export(SEXP id, SEXP secret){
 }
 
 SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
-  gpgme_keylist_mode_t mode = 0;
-  if(asLogical(local)){
-    mode |= GPGME_KEYLIST_MODE_LOCAL;
-  } else {
-    mode |= GPGME_KEYLIST_MODE_EXTERN;
-  }
+  gpgme_keylist_mode_t mode = gpgme_get_keylist_mode(ctx);
+  mode |= asLogical(local) ? GPGME_KEYLIST_MODE_LOCAL : GPGME_KEYLIST_MODE_EXTERN;
   mode |= GPGME_KEYLIST_MODE_SIGS;
   mode |= GPGME_KEYLIST_MODE_SIG_NOTATIONS;
   gpgme_set_keylist_mode (ctx, mode);
