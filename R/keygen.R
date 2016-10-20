@@ -8,6 +8,7 @@
 #' [Unattended key generation](https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html).
 #' @export
 #' @rdname gpg_keygen
+#' @family gpg
 #' @useDynLib gpg R_gpg_keygen R_gpg_keygen_new
 #' @param name value for the `Name-Real` field
 #' @param email value for the `Name-Email` field

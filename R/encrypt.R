@@ -5,6 +5,7 @@
 #'
 #' @export
 #' @rdname gpg_encrypt
+#' @family gpg
 #' @useDynLib gpg R_gpgme_encrypt R_gpgme_signed_encrypt
 #' @param data path or raw vector with data to encrypt / decrypt
 #' @param receiver key id(s) or fingerprint(s) for recepient(s)

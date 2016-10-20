@@ -7,7 +7,6 @@
 #' @export
 #' @rdname gpg_keyserver
 #' @param name filter keys by name
-#' @family gpg
 gpg_search <- function(name = ""){
   gpg_keylist_internal(name, secret_only = FALSE, local = FALSE)
 }

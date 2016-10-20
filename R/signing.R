@@ -4,14 +4,14 @@
 #'
 #' @export
 #' @rdname gpg_sign
-#' @family gpg
+#' @name gpg_sign
 #' @aliases gpg
+#' @family gpg
 #' @useDynLib gpg R_gpgme_verify
-#' @param signature path or raw vector for the gpg signature file (contains the \code{PGP SIGNATURE} block)
+#' @param signature path or raw vector for the gpg signature (contains the \code{PGP SIGNATURE} block)
 #' @param error raise an error if verification fails because you do not have the
 #' signer public key in your keyring.
 #' @examples # This requires you have the Debian master key in your keyring
-#' # See https://lists.debian.org/debian-devel-announce/2014/11/msg00017.html
 #' msg <- tempfile()
 #' sig <- tempfile()
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
@@ -39,15 +39,15 @@ gpg_verify <- function(signature, data = NULL, error = TRUE){
 
 #' @useDynLib gpg R_gpg_sign
 #' @export
-#' @param data file-path or raw vector with data to sign or verify. In `gpg_verify` this
+#' @param data path or raw vector with data to sign or verify. In `gpg_verify` this
 #' should be `NULL` if `signature` is not detached (i.e. `clear` or `normal` signature)
-#' @param id (optional) vector with key ID's to use for signing. If `NULL`, GPG tries
+#' @param signer (optional) vector with key ID's to use for signing. If `NULL`, GPG tries
 #' the user default private key.
 #' @param mode use `normal` to create a full OpenPGP message containing both data and
 #' signature or `clear` append the signature to the clear-text data (for email messages).
 #' Default `detach` only returns the signature itself.
 #' @rdname gpg_sign
-gpg_sign <- function(data, id = NULL, mode = c("detach", "normal", "clear")){
+gpg_sign <- function(data, signer = NULL, mode = c("detach", "normal", "clear")){
   pinentry_warning()
   mode <- match.arg(mode)
   if(is.character(data)){
@@ -55,5 +55,5 @@ gpg_sign <- function(data, id = NULL, mode = c("detach", "normal", "clear")){
     data <- readBin(data, raw(), file.info(data)$size)
   }
   stopifnot(is.raw(data))
-  .Call(R_gpg_sign, data, id, mode)
+  .Call(R_gpg_sign, data, signer, mode)
 }

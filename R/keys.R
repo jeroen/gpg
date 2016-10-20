@@ -7,6 +7,8 @@
 #' @useDynLib gpg R_gpg_import
 #' @param file path to the key file or raw vector with key data
 #' @export
+#' @family gpg
+#' @name gpg_keys
 #' @rdname gpg_keys
 gpg_import <- function(file){
   if(is.character(file)){

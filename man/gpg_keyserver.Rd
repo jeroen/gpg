@@ -14,7 +14,4 @@ Search, download or publish keys on the GPG keyserver network via the HKP
 (OpenPGP HTTP Keyserver Protocol). Requires a valid keyserver is configured
 in your gpg.conf file. Might not work behind a firewall.
 }
-\seealso{
-Other gpg: \code{\link{gpg_verify}}
-}
 

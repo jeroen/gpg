@@ -24,4 +24,8 @@ GPG manual section on
 
 [Unattended key generation]: R:Unattended key generation
 }
+\seealso{
+Other gpg: \code{\link{gpg_encrypt}},
+  \code{\link{gpg_keys}}, \code{\link{gpg_sign}}
+}
 

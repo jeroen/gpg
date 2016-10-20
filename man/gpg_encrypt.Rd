@@ -24,4 +24,8 @@ raises an error otherwise}
 Encrypt or decrypt a message using the public key from the \code{receiver}.
 Optionally the message can be signed using the private key of the sender.
 }
+\seealso{
+Other gpg: \code{\link{gpg_keygen}},
+  \code{\link{gpg_keys}}, \code{\link{gpg_sign}}
+}
 
