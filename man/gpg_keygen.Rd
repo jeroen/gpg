@@ -14,8 +14,12 @@ gpg_keygen(name, email, passphrase = NULL)
 \item{passphrase}{(optional) protect with a passphrase}
 }
 \description{
-Use \code{gpg_keygen} to generate a new private-public keypair. Supported options
-and parameters depend on the version of GPG. See the GPG manual section on
+Generates a new standard private-public keypair. This function is mostly
+for testing purposes. Use the \code{gpg --gen-key} command line utility to generate an
+official GPG key with custom fields and options.
+}
+\references{
+GPG manual section on
 \href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{Unattended key generation}.
 
 [Unattended key generation]: R:Unattended key generation
