@@ -181,13 +181,14 @@ unlink(c("sig.gpg", "clearsig.gpg"))
 
 Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org/bin/linux/debian/) says the following:
 
-> The Debian backports archives on CRAN are signed with the key of Johannes Ranke (CRAN Debian archive) <jranke@uni-bremen.de> with key fingerprint 6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480
+
+*The Debian backports archives on CRAN are signed with the key of Johannes Ranke (CRAN Debian archive) <jranke@uni-bremen.de> with key fingerprint __6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480__*
 
 Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release) file, which contains checksums for all files in the repository:
 
-```{r}
+```{r, message=FALSE}
 # take out the spaces
-johannes <- gsub(" ", "", "6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480")
+johannes <- "6212B7B7931C4BB16280BA1306F90DE5381BA480"
 gpg_recv(johannes)
 
 # Verify the file
@@ -212,7 +213,7 @@ GPG uses public key encryption. You can use someone's public key to encrypt a me
 
 For example we want to send an email [Glenn Greenwald](https://theintercept.com/staff/glenn-greenwald/) containing top secret information that may not be snooped by our ISP or government. His homepage at the intercept shows his GPG key in long form.
 
-```{r}
+```{r message=FALSE}
 glenn <- '734A3680A438DD45AF6F5B99A4A928C769CD6E44'
 gpg_recv(glenn)
 writeLines("TTIP is super evil!", "secret.txt")
