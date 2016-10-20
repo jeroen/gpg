@@ -5,16 +5,16 @@
 \alias{gpg_encrypt}
 \title{Encryption}
 \usage{
-gpg_encrypt(file, receiver, signer = NULL)
+gpg_encrypt(data, receiver, signer = NULL)
 
-gpg_decrypt(file, verify = TRUE)
+gpg_decrypt(data, verify = TRUE)
 }
 \arguments{
-\item{file}{path to file or raw vector with data to encrypt / decrypt}
+\item{data}{path to file or raw vector with data to encrypt / decrypt}
 
-\item{receiver}{key id or fingerprint for recepient}
+\item{receiver}{one or more key ids or fingerprints for recepient(s)}
 
-\item{signer}{(optional) key id or fingerprint for the sender to sign the message}
+\item{signer}{(optional) key ids or fingerprints for the sender to sign the message}
 
 \item{verify}{automatically checks that all signatures can be verified and raises an
 error otherwise}

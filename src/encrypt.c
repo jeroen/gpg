@@ -6,9 +6,12 @@
 #include <unistd.h>
 
 SEXP R_gpgme_encrypt(SEXP data, SEXP id) {
+  size_t len = Rf_length(id);
+  gpgme_key_t keys[len + 1];
+  for(size_t i = 0; i < len; i++)
+    bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, i)), &keys[i], 0), "load pubkey from keyring");
+  keys[len] = NULL;
   gpgme_data_t output, input;
-  gpgme_key_t keys[2] = {NULL, NULL};
-  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &keys[0], 0), "load pubkey from keyring");
   bail(gpgme_data_new_from_mem(&input, (const char*) RAW(data), LENGTH(data), 0), "creating input buffer");
   bail(gpgme_data_new(&output), "creating output buffer");
   bail(gpgme_op_encrypt(ctx, keys, GPGME_ENCRYPT_ALWAYS_TRUST, input, output), "encrypt message");
@@ -24,13 +27,14 @@ SEXP R_gpgme_decrypt(SEXP data) {
 }
 
 SEXP R_gpgme_signed_encrypt(SEXP data, SEXP receiver, SEXP sender) {
-  gpgme_data_t output, input;
+  //receiver keys
+  size_t len = Rf_length(receiver);
+  gpgme_key_t keys[len + 1];
+  for(size_t i = 0; i < len; i++)
+    bail(gpgme_get_key(ctx, CHAR(STRING_ELT(receiver, i)), &keys[i], 0), "load pubkey from keyring");
+  keys[len] = NULL;
 
-  //receiver key
-  gpgme_key_t keys[2] = {NULL, NULL};
-  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(receiver, 0)), &keys[0], 0), "load pubkey from keyring");
-
-  // signer key; GPG uses default or first key if no id's are given
+  // signer keys; GPG uses default or first key if no id's are given
   gpgme_signers_clear(ctx);
   for(int i = 0; i < Rf_length(sender); i++){
     gpgme_key_t key = NULL;
@@ -39,6 +43,7 @@ SEXP R_gpgme_signed_encrypt(SEXP data, SEXP receiver, SEXP sender) {
   }
 
   //sign and encrypt
+  gpgme_data_t output, input;
   bail(gpgme_data_new_from_mem(&input, (const char*) RAW(data), LENGTH(data), 0), "creating input buffer");
   bail(gpgme_data_new(&output), "creating output buffer");
   bail(gpgme_op_encrypt_sign(ctx, keys, GPGME_ENCRYPT_ALWAYS_TRUST, input, output), "encrypt message");
