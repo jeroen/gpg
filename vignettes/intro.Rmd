@@ -144,10 +144,18 @@ Let's use the private key we generated earlier to sign a file:
 
 ```{r, message=FALSE}
 myfile <- tempfile()
-writeLines("This is a secret message", con = myfile)
+writeLines("This is a signed message", con = myfile)
 sig <- gpg_sign(myfile)
+writeLines(sig, "sig.gpg")
 cat(sig)
-writeLines(sig, "myfile.gpg")
+```
+
+You can also create a signed message which includes the data itself by setting `mode` to `normal` or `clear`, which is useful for email:
+
+```{r}
+clearsig <- gpg_sign(myfile, mode = "clear")
+writeLines(clearsig, "clearsig.gpg")
+cat(clearsig)
 ```
 
 ### Verify a signature
@@ -155,9 +163,21 @@ writeLines(sig, "myfile.gpg")
 The `gpg_verify` function will see if a signature is valid for any of the keys in the keyring:
 
 ```{r}
-gpg_verify("myfile.gpg", file = myfile)
-unlink("myfile.gpg")
+gpg_verify("sig.gpg", data = myfile)
 ```
+
+If the signature is in `clear` or `normal` mode, the signature file contains both the message and signature: 
+
+```{r}
+gpg_verify("clearsig.gpg")
+```
+
+
+```{r echo=FALSE}
+unlink(c("sig.gpg", "clearsig.gpg"))
+```
+
+### Debian example
 
 Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org/bin/linux/debian/) says the following:
 

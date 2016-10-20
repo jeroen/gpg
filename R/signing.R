@@ -17,14 +17,11 @@
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
 #' gpg_verify(sig, msg, error = FALSE)
-gpg_verify <- function(signature, file = NULL, error = TRUE){
+gpg_verify <- function(signature, data = NULL, error = TRUE){
   sig <- file_or_raw(signature)
-  msg <- if(is.null(file)){
-    NULL
-  } else {
-    file_or_raw(file)
-  }
-  out <- .Call(R_gpgme_verify, sig, msg)
+  if(!is.null(data))
+    data <- file_or_raw(data)
+  out <- .Call(R_gpgme_verify, sig, data)
   if(!length(out)){
     out <- as.data.frame(matrix(ncol = 5, nrow = 0))
   } else {
@@ -42,7 +39,7 @@ gpg_verify <- function(signature, file = NULL, error = TRUE){
 
 #' @useDynLib gpg R_gpg_sign
 #' @export
-#' @param file file-path or raw vector with data to sign or verify. In `gpg_verify` this
+#' @param data file-path or raw vector with data to sign or verify. In `gpg_verify` this
 #' should be `NULL` if `signature` is not detached (i.e. `clear` or `normal` signature)
 #' @param id (optional) vector with key ID's to use for signing. If `NULL`, GPG tries
 #' the user default private key.
@@ -50,13 +47,13 @@ gpg_verify <- function(signature, file = NULL, error = TRUE){
 #' signature or `clear` append the signature to the clear-text data (for email messages).
 #' Default `detach` only returns the signature itself.
 #' @rdname gpg_sign
-gpg_sign <- function(file, id = NULL, mode = c("detach", "normal", "clear")){
+gpg_sign <- function(data, id = NULL, mode = c("detach", "normal", "clear")){
   pinentry_warning()
   mode <- match.arg(mode)
-  if(is.character(file)){
-    stopifnot(file.exists(file))
-    file <- readBin(file, raw(), file.info(file)$size)
+  if(is.character(data)){
+    stopifnot(file.exists(data))
+    data <- readBin(data, raw(), file.info(data)$size)
   }
-  stopifnot(is.raw(file))
-  .Call(R_gpg_sign, file, id, mode)
+  stopifnot(is.raw(data))
+  .Call(R_gpg_sign, data, id, mode)
 }

@@ -6,14 +6,14 @@
 \alias{gpg_verify}
 \title{PGP Signatures}
 \usage{
-gpg_verify(signature, file = NULL, error = TRUE)
+gpg_verify(signature, data = NULL, error = TRUE)
 
-gpg_sign(file, id = NULL, mode = c("detach", "normal", "clear"))
+gpg_sign(data, id = NULL, mode = c("detach", "normal", "clear"))
 }
 \arguments{
 \item{signature}{path or raw vector for the gpg signature file (contains the \code{PGP SIGNATURE} block)}
 
-\item{file}{file-path or raw vector with data to sign or verify. In \code{gpg_verify} this
+\item{data}{file-path or raw vector with data to sign or verify. In \code{gpg_verify} this
 should be \code{NULL} if \code{signature} is not detached (i.e. \code{clear} or \code{normal} signature)}
 
 \item{error}{raise an error if verification fails because you do not have the
