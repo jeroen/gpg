@@ -2,6 +2,7 @@
   - Add support for non-detached (clear/normal mode) signature
   - Expose 'pinentry' function
   - Better out-of-the-box support for entering passphrases
+  - Search for keys on multiple keyservers
 
 0.2
   - Initial CRAN release

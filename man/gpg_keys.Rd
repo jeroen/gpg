@@ -10,7 +10,7 @@
 \usage{
 gpg_import(file)
 
-gpg_recv(id, keyserver = "https://keyserver.ubuntu.com")
+gpg_recv(id, keyserver = NULL)
 
 gpg_delete(id, secret = TRUE)
 
@@ -23,7 +23,8 @@ gpg_list_keys(secret = FALSE)
 
 \item{id}{unique ID of the pubkey (starts with \code{0x})}
 
-\item{keyserver}{address of http keyserver}
+\item{keyserver}{address of http keyserver. Default searches several common
+servers (MIT, Ubuntu, GnuPG)}
 
 \item{secret}{set to \code{TRUE} to list/export/delete private (secret) keys}
 }
