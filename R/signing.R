@@ -16,12 +16,20 @@
 #' sig <- tempfile()
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
-#' gpg_verify(msg, sig, error = FALSE)
-gpg_verify <- function(file, signature, error = TRUE){
-  msg <- file_or_raw(file)
+#' gpg_verify(sig, msg, error = FALSE)
+gpg_verify <- function(signature, file = NULL, error = TRUE){
   sig <- file_or_raw(signature)
+  msg <- if(is.null(file)){
+    NULL
+  } else {
+    file_or_raw(file)
+  }
   out <- .Call(R_gpgme_verify, sig, msg)
-  out <- data.frame(lapply(1:5, function(i){sapply(out, `[[`, i)}), stringsAsFactors=FALSE)
+  if(!length(out)){
+    out <- as.data.frame(matrix(ncol = 5, nrow = 0))
+  } else {
+    out <- data.frame(lapply(1:5, function(i){sapply(out, `[[`, i)}), stringsAsFactors=FALSE)
+  }
   names(out) <- c("fingerprint", "timestamp", "hash", "pubkey", "success");
   out$timestamp <- structure(out$timestamp, class=c("POSIXct", "POSIXt"))
   if(isTRUE(error) && !any(out$success)){
@@ -34,16 +42,21 @@ gpg_verify <- function(file, signature, error = TRUE){
 
 #' @useDynLib gpg R_gpg_sign
 #' @export
-#' @param file file-path or raw vector with data to sign or verify
-#' @param id (optional) vector with key ID's to use for signing. If `NULL`, GPG defaults
-#' to first private key in the keyring, or what has been configured in global options.
+#' @param file file-path or raw vector with data to sign or verify. In `gpg_verify` this
+#' should be `NULL` if `signature` is not detached (i.e. `clear` or `normal` signature)
+#' @param id (optional) vector with key ID's to use for signing. If `NULL`, GPG tries
+#' the user default private key.
+#' @param mode use `normal` to create a full OpenPGP message containing both data and
+#' signature or `clear` append the signature to the clear-text data (for email messages).
+#' Default `detach` only returns the signature itself.
 #' @rdname gpg_sign
-gpg_sign <- function(file, id = NULL){
+gpg_sign <- function(file, id = NULL, mode = c("detach", "normal", "clear")){
   pinentry_warning()
+  mode <- match.arg(mode)
   if(is.character(file)){
     stopifnot(file.exists(file))
     file <- readBin(file, raw(), file.info(file)$size)
   }
   stopifnot(is.raw(file))
-  .Call(R_gpg_sign, file, id)
+  .Call(R_gpg_sign, file, id, mode)
 }

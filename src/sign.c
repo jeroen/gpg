@@ -8,8 +8,12 @@
 SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   gpgme_data_t SIG, MSG;
   bail(gpgme_data_new_from_mem(&SIG, (const char*) RAW(sig), LENGTH(sig), 0), "creating sig buffer");
-  bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
-  bail(gpgme_op_verify(ctx, SIG, MSG, NULL), "verification");
+  if(Rf_length(msg)){
+    bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
+    bail(gpgme_op_verify(ctx, SIG, MSG, NULL), "detached verification");
+  } else {
+    bail(gpgme_op_verify(ctx, SIG, NULL, NULL), "clear verification");
+  }
   gpgme_verify_result_t result = gpgme_op_verify_result(ctx);
   gpgme_signature_t cur1 = result->signatures;
   int n = 0;
@@ -17,6 +21,8 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
     cur1 = cur1->next;
     n++;
   }
+  if(n == 0)
+    Rf_errorcall(R_NilValue, "Failed to find signature for this file");
   gpgme_signature_t cur2 = result->signatures;
   SEXP out = PROTECT(allocVector(VECSXP, n));
   for(int i = 0; i < n; i++) {
@@ -34,7 +40,7 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   return out;
 }
 
-SEXP R_gpg_sign(SEXP msg, SEXP id){
+SEXP R_gpg_sign(SEXP msg, SEXP id, SEXP mode){
   gpgme_data_t SIG, MSG;
   gpgme_signers_clear(ctx);
 
@@ -45,10 +51,17 @@ SEXP R_gpg_sign(SEXP msg, SEXP id){
     bail(gpgme_signers_add(ctx, key), "add signer");
   }
 
+  gpgme_sig_mode_t sigmode = GPGME_SIG_MODE_NORMAL;
+  if(!strcmp(CHAR(STRING_ELT(mode, 0)), "detach")){
+    sigmode = GPGME_SIG_MODE_DETACH;
+  } else if(!strcmp(CHAR(STRING_ELT(mode, 0)), "clear")){
+    sigmode = GPGME_SIG_MODE_CLEAR;
+  }
+
   //create signature
   bail(gpgme_data_new_from_mem(&MSG, (const char*) RAW(msg), LENGTH(msg), 0), "creating msg buffer");
   bail(gpgme_data_new(&SIG), "memory to hold signature");
-  bail(gpgme_op_sign(ctx, MSG, SIG, GPGME_SIG_MODE_DETACH), "signing");
+  bail(gpgme_op_sign(ctx, MSG, SIG, sigmode), "signing");
   gpgme_signers_clear(ctx);
 
   //do something with result

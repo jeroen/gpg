@@ -6,20 +6,25 @@
 \alias{gpg_verify}
 \title{PGP Signatures}
 \usage{
-gpg_verify(file, signature, error = TRUE)
+gpg_verify(signature, file = NULL, error = TRUE)
 
-gpg_sign(file, id = NULL)
+gpg_sign(file, id = NULL, mode = c("detach", "normal", "clear"))
 }
 \arguments{
-\item{file}{file-path or raw vector with data to sign or verify}
-
 \item{signature}{path or raw vector for the gpg signature file (contains the \code{PGP SIGNATURE} block)}
+
+\item{file}{file-path or raw vector with data to sign or verify. In \code{gpg_verify} this
+should be \code{NULL} if \code{signature} is not detached (i.e. \code{clear} or \code{normal} signature)}
 
 \item{error}{raise an error if verification fails because you do not have the
 signer public key in your keyring.}
 
-\item{id}{(optional) vector with key ID's to use for signing. If \code{NULL}, GPG defaults
-to first private key in the keyring, or what has been configured in global options.}
+\item{id}{(optional) vector with key ID's to use for signing. If \code{NULL}, GPG tries
+the user default private key.}
+
+\item{mode}{use \code{normal} to create a full OpenPGP message containing both data and
+signature or \code{clear} append the signature to the clear-text data (for email messages).
+Default \code{detach} only returns the signature itself.}
 }
 \description{
 Utilities to create and verify PGP signatures.
@@ -31,7 +36,7 @@ msg <- tempfile()
 sig <- tempfile()
 download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
-gpg_verify(msg, sig, error = FALSE)
+gpg_verify(sig, msg, error = FALSE)
 }
 \seealso{
 Other gpg: \code{\link{gpg_search}}

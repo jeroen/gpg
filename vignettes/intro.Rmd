@@ -155,7 +155,7 @@ writeLines(sig, "myfile.gpg")
 The `gpg_verify` function will see if a signature is valid for any of the keys in the keyring:
 
 ```{r}
-gpg_verify(myfile, signature = "myfile.gpg")
+gpg_verify("myfile.gpg", file = myfile)
 unlink("myfile.gpg")
 ```
 
@@ -174,7 +174,7 @@ gpg_recv(johannes)
 library(curl)
 curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release', 'Release')
 curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release.gpg', 'Release.gpg')
-gpg_verify('Release', 'Release.gpg')
+gpg_verify('Release.gpg', 'Release')
 ```
 
 Looking good! We can trust the checksums in the `Release` file to be legitimate.
