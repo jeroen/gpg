@@ -54,6 +54,11 @@ gpg_sign <- function(data, signer = NULL, mode = c("detach", "normal", "clear"))
     stopifnot(file.exists(data))
     data <- readBin(data, raw(), file.info(data)$size)
   }
+  if(is.null(signer)){
+    seckeys <- gpg_list_keys(secret = TRUE)
+    if(!nrow(seckeys))
+      warning("No suitable private keys founds in keyring", immediate. = TRUE, call. = FALSE)
+  }
   stopifnot(is.raw(data))
   .Call(R_gpg_sign, data, signer, mode)
 }
