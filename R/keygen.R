@@ -15,6 +15,7 @@
 #' @param passphrase (optional) protect with a passphrase
 gpg_keygen <- function(name, email, passphrase = NULL){
   info <- gpg_info()
+  check_entropy()
   # Use the 'new' API, required for GnuPG 2.1
   if(!length(passphrase) && info$gpgme >= "1.7.0" && info$version >= "2.1"){
     userstring <- paste0(name, " <", email, ">")
@@ -29,6 +30,20 @@ gpg_keygen <- function(name, email, passphrase = NULL){
     }
     .Call(R_gpg_keygen, make_args_str(params, controls))
   }
+}
+
+check_entropy <- function(){
+  try({
+    if(is_unix()){
+      if(file.exists("/proc/sys/kernel/random/entropy_avail")){
+        val <- as.numeric(readLines("/proc/sys/kernel/random/entropy_avail"))
+        if(val < 1000)
+          warning("Insufficient available entropy for key generation. Consider installing 'haveged'.")
+        return(val)
+      }
+    }
+  })
+  invisible()
 }
 
 make_args_str <- function(params, controls = c()){

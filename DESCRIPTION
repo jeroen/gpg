@@ -9,7 +9,8 @@ Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic 
     GnuPG that is installed on the system. In particular GnuPG 2 mandates the use of 
     'gpg-agent' for entering passphrases, which only works if R runs in a terminal session.
 License: MIT + file LICENSE
-SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew)
+SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew). Also on Linux,
+    'haveged' is recommended when using the GPG key generator.
 RoxygenNote: 5.0.1.9000
 Roxygen: list(markdown = TRUE)
 Imports: 
