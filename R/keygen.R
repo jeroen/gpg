@@ -33,16 +33,14 @@ gpg_keygen <- function(name, email, passphrase = NULL){
 }
 
 check_entropy <- function(){
-  try({
-    if(is_unix()){
-      if(file.exists("/proc/sys/kernel/random/entropy_avail")){
-        val <- as.numeric(readLines("/proc/sys/kernel/random/entropy_avail"))
-        if(val < 1000)
-          warning("Available entropy is low. Consider installing the 'haveged' program.", call. = FALSE)
-        return(val)
-      }
+  if(is_unix()){
+    if(file.exists("/proc/sys/kernel/random/entropy_avail")){
+      val <- try(as.numeric(readLines("/proc/sys/kernel/random/entropy_avail")), silent = TRUE)
+      if(is.numeric(val) && val < 1000)
+        warning("Available entropy is low. Consider installing the 'haveged' program.", call. = FALSE)
+      return(val)
     }
-  })
+  }
   invisible()
 }
 
