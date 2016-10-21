@@ -4,7 +4,7 @@
 
 void bail(gpgme_error_t err, const char * msg){
   if(err)
-    Rf_errorcall(R_NilValue, "GPG %s error: %s", msg, gpgme_strerror(err));
+    Rf_errorcall(R_NilValue, "%s %s error: %s", gpgme_strsource(err), msg, gpgme_strerror(err));
 }
 
 /* password prompt only supported in gpg1, not in gpg2 which uses the 'pinentry' program */
