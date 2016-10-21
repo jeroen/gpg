@@ -29,6 +29,7 @@ addons:
   apt:
     packages:
       - libgpgme11-dev
+      - haveged
 
 r_github_packages:
   - jimhester/covr
