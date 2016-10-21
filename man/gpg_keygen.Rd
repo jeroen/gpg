@@ -21,8 +21,6 @@ official GPG key with custom fields and options.
 \references{
 GPG manual section on
 \href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{Unattended key generation}.
-
-[Unattended key generation]: R:Unattended key generation
 }
 \seealso{
 Other gpg: \code{\link{gpg_encrypt}},
