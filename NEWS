@@ -5,6 +5,7 @@
   - Expose 'pinentry' function
   - Better out-of-the-box support for entering passphrases
   - Search for keys on multiple keyservers
+  - Mention 'haveged' to solve freezing keygen problem
 
 0.2
   - Initial CRAN release
