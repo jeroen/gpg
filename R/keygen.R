@@ -37,7 +37,7 @@ check_entropy <- function(){
     if(file.exists("/proc/sys/kernel/random/entropy_avail")){
       val <- try(as.numeric(readLines("/proc/sys/kernel/random/entropy_avail")), silent = TRUE)
       if(is.numeric(val) && val < 1000)
-        warning("Available entropy is low. Consider installing the 'haveged' program.", call. = FALSE)
+        warning("Available entropy is low. Consider installing 'haveged' or similar", immediate. = TRUE, call. = FALSE)
       return(val)
     }
   }
