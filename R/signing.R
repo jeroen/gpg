@@ -48,7 +48,6 @@ gpg_verify <- function(signature, data = NULL, error = TRUE){
 #' Default `detach` only returns the signature itself.
 #' @rdname gpg_sign
 gpg_sign <- function(data, signer = NULL, mode = c("detach", "normal", "clear")){
-  pinentry_warning()
   mode <- match.arg(mode)
   if(is.character(data)){
     stopifnot(file.exists(data))

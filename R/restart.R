@@ -47,16 +47,6 @@ is_windows <- function(){
   identical(.Platform$OS.type, "windows")
 }
 
-pinentry_warning <- function(){
-  if(gpg_info()$version >= 2 && !is_windows()){
-    try({
-      if(system2("tty", stdout = NULL) > 0){
-        message("Note that in GPG2, passphrases can only be entered if R runs in a terminal session")
-      }
-    }, silent = TRUE)
-  }
-}
-
 #' @export
 #' @rdname gpg_info
 #' @examples gpg_version()
