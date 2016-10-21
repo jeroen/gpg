@@ -73,7 +73,7 @@ gpg_list_keys()
 
 Use `gpg_keygen()` to generate a new public private keypair:
 
-```{r}
+```{r, warning=FALSE}
 (mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com"))
 gpg_list_keys()[c("id", "name", "email")]
 ```
