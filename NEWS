@@ -1,3 +1,6 @@
+0.4
+  - Always try to use native pinentry first before fallbacks
+
 0.3
   - Add support for non-detached (clear/normal mode) signature
   - Rename some parameters for consistency
