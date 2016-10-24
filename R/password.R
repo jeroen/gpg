@@ -10,8 +10,10 @@
 #' @export
 #' @param prompt the string printed when prompting the user for input.
 pinentry <- function(prompt = "Enter your GPG passphrase:"){
-  if(is_unix() && (is_cmd_build() || is_tty()) && has_pinentry()){
-    return(pinentry_exec(prompt))
+  if(is_unix() && has_pinentry()){
+    tryCatch({
+      return(pinentry_exec(prompt))
+    }, error = identity)
   }
   if(is.function(FUN <- getOption("askpass"))){
     return(FUN(prompt))
@@ -46,6 +48,11 @@ has_pinentry <- function(){
 pinentry_exec <- function(str){
   input <- c(paste("SETPROMPT", str), "GETPIN")
   res <- system2("pinentry", paste("-T", '/dev/tty'), input = input, stdout = TRUE)
-  pwline <- res[grepl("D ", res, fixed = TRUE)]
+  errors <- res[grepl("^ERR ", res)]
+  if(length(errors))
+    stop(sub("^ERR", "Pinentry error", errors[1]), call. = FALSE)
+  pwline <- res[grepl("^D ", res)]
+  if(!length(pwline))
+    return(NULL) #no password entered
   sub("D ", "", pwline, fixed = TRUE)
 }
