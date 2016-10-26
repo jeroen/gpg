@@ -106,7 +106,7 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
     key = head->key;
     SET_STRING_ELT(keyid, i, make_char(key->subkeys->keyid));
     SET_STRING_ELT(fpr, i, make_char(key->subkeys->fpr));
-    SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_string(key->subkeys)));
+    SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_name(key->subkeys->pubkey_algo)));
 
     if(key->issuer_name)
       SET_STRING_ELT(fpr, i, make_char(key->issuer_name));
