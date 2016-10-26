@@ -19,7 +19,11 @@ vignette: >
 ```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(comment = "")
 library(gpg)
-options(width = 120)
+options(width = 120, max.print = 100)
+
+gpg_list_keys <- function(...){
+  gpg::gpg_list_keys(...)[c("id", "name", "email")]
+}
 ```
 
 
@@ -75,9 +79,24 @@ Use `gpg_keygen()` to generate a new public private keypair:
 
 ```{r, warning=FALSE}
 (mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com"))
-gpg_list_keys()[c("id", "name", "email")]
+gpg_list_keys()
 ```
 
+
+### Import from keyserver
+
+Use the `gpg_recv` function to download a given key and all available signatures for this key from a keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
+
+```{r}
+gpg_recv(id ="E084DAB9")
+(keyring <- gpg_list_keys())
+```
+
+Note that for imported keys, we do not have the private key:
+
+```{r}
+(secring <- gpg_list_keys(secret = TRUE))
+```
 
 ### Import from disk
 
@@ -89,22 +108,15 @@ gpg_import("rms-pubkey.txt")
 unlink("rms-pubkey.txt")
 ```
 
-### Import from keyserver
-
-Use the `gpg_recv` function to download a given key ID from the keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
+However this file does not contain any signatures for this key. If we import it from a keyserver we also get the signatures:
 
 ```{r}
-gpg_recv(id ="E084DAB9")
-keyring <- gpg_list_keys()
-keyring[c("id", "name", "email")]
+(rms_id <- gpg_list_keys("rms")$id)
+gpg_recv(rms_id)
+gpg_list_signatures(rms_id)
 ```
 
-Note that for imported keys, we do not have the private key:
-
-```{r}
-secring <- gpg_list_keys(secret = TRUE)
-secring[c("id", "name", "email")]
-```
+The signature only contains the key ID of the signer. You would need to download the corresponding pubkeys to actually verify these signatures.
 
 ### Export a key
 
@@ -128,7 +140,7 @@ Delete a key from its ID or fingerprint. Let's delete the RMS key:
 
 ```{r}
 gpg_delete('2C6464AF2A8E4C02')
-gpg_list_keys()[c("id", "name", "email")]
+gpg_list_keys()
 ```
 
 
@@ -190,7 +202,17 @@ Let's import his key so that we can verify the [Release](https://cran.r-project.
 # take out the spaces
 johannes <- "6212B7B7931C4BB16280BA1306F90DE5381BA480"
 gpg_recv(johannes)
+```
 
+If you don't trust the CRAN homepage, you could check who has signed this key. You'd need to import the corresponding peer keys for more information.
+
+```{r}
+gpg_list_signatures(johannes)
+```
+
+Now lets verify the release files:
+
+```{r}
 # Verify the file
 library(curl)
 curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release', 'Release')

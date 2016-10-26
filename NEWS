@@ -1,5 +1,7 @@
 0.4
   - Always try to use native pinentry first before fallbacks
+  - Add gpg_list_signatures() function
+  - Refactor gpg_list_keys()
 
 0.3
   - Add support for non-detached (clear/normal mode) signature
