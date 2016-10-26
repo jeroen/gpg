@@ -31,7 +31,9 @@ gpg_list_keys <- function(...){
 
 ## GPG basics
 
-The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular open source implementation of the OpenPGP protocol ([RFC4880](https://tools.ietf.org/html/rfc4880)). The system is widely adopted for securing integrity and confidentiality of internet communications through the use of various cryptographic methods. Important applications include encryption and authentication of messages (such as email or software downloads) via public key encryption and cryptographic signatures.
+The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular open source OpenPGP ([RFC4880](https://tools.ietf.org/html/rfc4880)) implementation. The system is widely trusted for securing integrity and confidentiality of internet communications through various cryptographic methods. The package manager from [Debian](https://wiki.debian.org/SecureApt) or [Redhat](https://access.redhat.com/security/team/key) use it to verify software downloads, and people like Edward Snowden and [Glenn Greenwald](https://theintercept.com/staff/glenn-greenwald/) use it to secure their email exchanges, to name some applications.
+
+![pubkey](http://jeroenooms.github.io/gpg/pubkey.png)
 
 Like most modern crypto systems, GPG makes use of public key methods. The private key is known only by its owner and is used to create signatures or decrypt a message. The corresponding public key is made freely available and so that it can be used by anyone to verify signatures, or encrypt messages which can only be encrypted by the keypair owner. 
 
