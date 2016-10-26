@@ -98,14 +98,12 @@ Note that for imported keys, we do not have the private key:
 (secring <- gpg_list_keys(secret = TRUE))
 ```
 
-### Import from disk
+### Import from file
 
-The `gpg_import` function reads an armored GPG key from disk:
+The `gpg_import` function reads an armored GPG key from a file or URL:
 
 ```{r}
-curl::curl_download("https://stallman.org/rms-pubkey.txt", "rms-pubkey.txt")
-gpg_import("rms-pubkey.txt")
-unlink("rms-pubkey.txt")
+gpg_import("https://stallman.org/rms-pubkey.txt")
 ```
 
 However this file does not contain any signatures for this key. If we import it from a keyserver we also get the signatures:

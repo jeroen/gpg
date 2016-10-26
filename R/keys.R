@@ -12,6 +12,12 @@
 #' @rdname gpg_keys
 gpg_import <- function(file){
   if(is.character(file)){
+    if(grepl("https?://", file)){
+      tmp <- tempfile()
+      on.exit(unlink(tmp))
+      curl::curl_download(file, tmp)
+      file <- tmp
+    }
     stopifnot(file.exists(file))
     file <- readBin(file, raw(), file.info(file)$size)
   }
