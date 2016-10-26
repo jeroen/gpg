@@ -16,7 +16,7 @@ gpg_import <- function(file){
     file <- readBin(file, raw(), file.info(file)$size)
   }
   out <- .Call(R_gpg_import, file)
-  stats::setNames(out, c("considered", "imported", "unchanged"))
+  stats::setNames(out, c("found", "imported", "secrets", "signatures", "revoked"))
 }
 
 #' @export
@@ -65,6 +65,13 @@ gpg_export <- function(id, secret = FALSE){
 #' @param secret set to `TRUE` to list/export/delete private (secret) keys
 gpg_list_keys <- function(search = "", secret = FALSE){
   gpg_keylist_internal(name = search, secret_only = secret, local = TRUE)
+}
+
+#' @export
+#' @rdname gpg_keys
+#' @useDynLib gpg R_gpg_keysig
+gpg_list_signatures <- function(id){
+  .Call(R_gpg_keysig, id)
 }
 
 #' @useDynLib gpg R_gpg_keylist

@@ -41,10 +41,12 @@ SEXP R_gpg_import(SEXP pubkey) {
   bail(gpgme_data_new_from_mem(&KEY, (const char*) RAW(pubkey), LENGTH(pubkey), 0), "creating key buffer");
   bail(gpgme_op_import(ctx, KEY), "importing pubkey");
   gpgme_import_result_t result = gpgme_op_import_result(ctx);
-  SEXP out = PROTECT(allocVector(INTSXP, 3));
+  SEXP out = PROTECT(allocVector(INTSXP, 5));
   INTEGER(out)[0] = result->considered;
   INTEGER(out)[1] = result->imported;
-  INTEGER(out)[2] = result->unchanged;
+  INTEGER(out)[2] = result->secret_imported;
+  INTEGER(out)[3] = result->new_signatures;
+  INTEGER(out)[4] = result->new_revocations;
   UNPROTECT(1);
   return out;
 }
@@ -104,7 +106,7 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
     key = head->key;
     SET_STRING_ELT(keyid, i, make_char(key->subkeys->keyid));
     SET_STRING_ELT(fpr, i, make_char(key->subkeys->fpr));
-    SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_name(key->subkeys->pubkey_algo)));
+    SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_string(key->subkeys)));
 
     if(key->issuer_name)
       SET_STRING_ELT(fpr, i, make_char(key->issuer_name));

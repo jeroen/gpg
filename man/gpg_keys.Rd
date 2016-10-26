@@ -7,6 +7,7 @@
 \alias{gpg_delete}
 \alias{gpg_export}
 \alias{gpg_list_keys}
+\alias{gpg_list_signatures}
 \title{GPG keyring management}
 \usage{
 gpg_import(file)
@@ -18,6 +19,8 @@ gpg_delete(id, secret = FALSE)
 gpg_export(id, secret = FALSE)
 
 gpg_list_keys(search = "", secret = FALSE)
+
+gpg_list_signatures(id)
 }
 \arguments{
 \item{file}{path to the key file or raw vector with key data}
