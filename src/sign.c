@@ -5,6 +5,52 @@
 #include <string.h>
 #include <unistd.h>
 
+
+SEXP make_signatures(gpgme_signature_t sig){
+  gpgme_signature_t cur1 = sig;
+  gpgme_signature_t cur2 = sig;
+  int n = 0;
+  while(cur1) {
+    cur1 = cur1->next;
+    n++;
+  }
+
+  SEXP rowname = PROTECT(allocVector(INTSXP, n));
+  SEXP fpr = PROTECT(allocVector(STRSXP, n));
+  SEXP timestamp = PROTECT(allocVector(INTSXP, n));
+  SEXP hash = PROTECT(allocVector(STRSXP, n));
+  SEXP algo = PROTECT(allocVector(STRSXP, n));
+  SEXP status = PROTECT(allocVector(LGLSXP, n));
+
+  for(int i = 0; i < n; i++) {
+    INTEGER(rowname)[i] = i+1;
+    SET_STRING_ELT(fpr, i, make_char(cur2->fpr));
+    INTEGER(timestamp)[i] = cur2->timestamp;
+    SET_STRING_ELT(hash, i, make_char(gpgme_hash_algo_name(cur2->hash_algo)));
+    SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_name(cur2->pubkey_algo)));
+    LOGICAL(status)[i] = cur2->status == GPG_ERR_NO_ERROR;
+    cur2 = cur2->next;
+  }
+  SEXP df = PROTECT(allocVector(VECSXP, 5));
+  SET_VECTOR_ELT(df, 0, fpr);
+  SET_VECTOR_ELT(df, 1, timestamp);
+  SET_VECTOR_ELT(df, 2, hash);
+  SET_VECTOR_ELT(df, 3, algo);
+  SET_VECTOR_ELT(df, 4, status);
+
+  SEXP names = PROTECT(allocVector(STRSXP, 5));
+  SET_STRING_ELT(names, 0, mkChar("fingerprint"));
+  SET_STRING_ELT(names, 1, mkChar("timestamp"));
+  SET_STRING_ELT(names, 2, mkChar("hash"));
+  SET_STRING_ELT(names, 3, mkChar("pubkey"));
+  SET_STRING_ELT(names, 4, mkChar("success"));
+  setAttrib(df, R_NamesSymbol, names);
+  setAttrib(df, R_ClassSymbol, mkString("data.frame"));
+  setAttrib(df, R_RowNamesSymbol, rowname);
+  UNPROTECT(8);
+  return df;
+}
+
 SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
   gpgme_data_t SIG, MSG;
   bail(gpgme_data_new_from_mem(&SIG, (const char*) RAW(sig), LENGTH(sig), 0), "creating sig buffer");
@@ -17,29 +63,7 @@ SEXP R_gpgme_verify(SEXP sig, SEXP msg) {
     //do something with MSG here?
   }
   gpgme_verify_result_t result = gpgme_op_verify_result(ctx);
-  gpgme_signature_t cur1 = result->signatures;
-  int n = 0;
-  while(cur1) {
-    cur1 = cur1->next;
-    n++;
-  }
-  if(n == 0)
-    Rf_errorcall(R_NilValue, "Failed to find signature for this file");
-  gpgme_signature_t cur2 = result->signatures;
-  SEXP out = PROTECT(allocVector(VECSXP, n));
-  for(int i = 0; i < n; i++) {
-    SEXP el = PROTECT(allocVector(VECSXP, 5));
-    SET_VECTOR_ELT(el, 0, make_string(cur2->fpr));
-    SET_VECTOR_ELT(el, 1, ScalarInteger(cur2->timestamp));
-    SET_VECTOR_ELT(el, 2, make_string(gpgme_hash_algo_name(cur2->hash_algo)));
-    SET_VECTOR_ELT(el, 3, make_string(gpgme_pubkey_algo_name(cur2->pubkey_algo)));
-    SET_VECTOR_ELT(el, 4, ScalarLogical(cur2->status == GPG_ERR_NO_ERROR));
-    cur2 = cur2->next;
-    SET_VECTOR_ELT(out, i, el);
-    UNPROTECT(1);
-  }
-  UNPROTECT(1);
-  return out;
+  return make_signatures(result->signatures);
 }
 
 SEXP R_gpg_sign(SEXP msg, SEXP id, SEXP mode){
