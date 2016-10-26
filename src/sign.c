@@ -15,15 +15,19 @@ SEXP make_signatures(gpgme_signature_t sig){
     n++;
   }
 
-  SEXP rowname = PROTECT(allocVector(INTSXP, n));
-  SEXP fpr = PROTECT(allocVector(STRSXP, n));
   SEXP timestamp = PROTECT(allocVector(INTSXP, n));
+  SEXP tsclass = PROTECT(allocVector(STRSXP, 2));
+  SET_STRING_ELT(tsclass, 0, make_char("POSIXct"));
+  SET_STRING_ELT(tsclass, 1, make_char("POSIXt"));
+  setAttrib(timestamp, R_ClassSymbol, tsclass);
+  UNPROTECT(1);
+
+  SEXP fpr = PROTECT(allocVector(STRSXP, n));
   SEXP hash = PROTECT(allocVector(STRSXP, n));
   SEXP algo = PROTECT(allocVector(STRSXP, n));
   SEXP status = PROTECT(allocVector(LGLSXP, n));
 
   for(int i = 0; i < n; i++) {
-    INTEGER(rowname)[i] = i+1;
     SET_STRING_ELT(fpr, i, make_char(cur2->fpr));
     INTEGER(timestamp)[i] = cur2->timestamp;
     SET_STRING_ELT(hash, i, make_char(gpgme_hash_algo_name(cur2->hash_algo)));
@@ -45,9 +49,7 @@ SEXP make_signatures(gpgme_signature_t sig){
   SET_STRING_ELT(names, 3, mkChar("pubkey"));
   SET_STRING_ELT(names, 4, mkChar("success"));
   setAttrib(df, R_NamesSymbol, names);
-  setAttrib(df, R_ClassSymbol, mkString("data.frame"));
-  setAttrib(df, R_RowNamesSymbol, rowname);
-  UNPROTECT(8);
+  UNPROTECT(7);
   return df;
 }
 

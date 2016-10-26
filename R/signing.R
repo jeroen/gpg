@@ -22,6 +22,7 @@ gpg_verify <- function(signature, data = NULL, error = TRUE){
   if(!is.null(data))
     data <- file_or_raw(data)
   out <- .Call(R_gpgme_verify, sig, data)
+  out <- data.frame(out, stringsAsFactors = FALSE)
   if(isTRUE(error) && !any(out$success)){
     fp_failed <- out$fingerprint[!(out$success)]
     stop("Verification failed. None of the pubkeys not found in keyring: ", paste(fp_failed, collapse = ", "), call. = FALSE)
