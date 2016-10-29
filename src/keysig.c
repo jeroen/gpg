@@ -53,6 +53,6 @@ SEXP make_keysig(gpgme_key_sig_t sig){
 
 SEXP R_gpg_keysig(SEXP id){
   gpgme_key_t key;
-  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 0), "get new key");
+  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 0), "find key");
   return make_keysig(key->uids->signatures);
 }

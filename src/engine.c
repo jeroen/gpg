@@ -3,8 +3,19 @@
 #include <unistd.h>
 
 void bail(gpgme_error_t err, const char * msg){
-  if(err)
-    Rf_errorcall(R_NilValue, "%s %s error: %s", gpgme_strsource(err), msg, gpgme_strerror(err));
+  // Override error messages because GPGME errors are pretty poor
+  if(err){
+    const char * errmsg = NULL;
+    switch(gpg_err_code (err)) {
+    case GPG_ERR_EOF:
+      errmsg = "Key not found"; break;
+    default:
+      errmsg = gpgme_strerror(err);
+    };
+
+    // Throw the error
+    Rf_errorcall(R_NilValue, "%s %s error: %s", gpgme_strsource(err), msg, errmsg);
+  }
 }
 
 /* password prompt only supported in gpg1, not in gpg2 which uses the 'pinentry' program */
