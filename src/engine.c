@@ -8,7 +8,7 @@ void bail(gpgme_error_t err, const char * msg){
     const char * errmsg = NULL;
     switch(gpg_err_code (err)) {
     case GPG_ERR_EOF:
-      errmsg = "Key not found"; break;
+      errmsg = "Not found"; break;
     default:
       errmsg = gpgme_strerror(err);
     };

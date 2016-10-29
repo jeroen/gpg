@@ -28,11 +28,16 @@ SEXP R_gpg_keygen_new(SEXP userid){
 #endif
 }
 
-
 SEXP R_gpg_delete(SEXP id, SEXP secret){
   gpgme_key_t key;
-  bail(gpgme_get_key(ctx, CHAR(STRING_ELT(id, 0)), &key, 0), "get new key");
-  bail(gpgme_op_delete(ctx, key, asLogical(secret)), "delete key");
+  const char * idstr = CHAR(STRING_ELT(id, 0));
+  bail(gpgme_get_key(ctx, idstr, &key, 0), "find key");
+  gpgme_error_t err = gpgme_op_delete(ctx, key, asLogical(secret));
+  if(gpg_err_code (err) == GPG_ERR_CONFLICT){
+    Rf_warningcall(R_NilValue, "Did not delete %s. Set secret = TRUE to delete private keys", idstr);
+    return mkString("");
+  }
+  bail(err, "delete key");
   return mkString(key->subkeys->keyid);
 }
 
