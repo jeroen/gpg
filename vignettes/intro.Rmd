@@ -41,11 +41,11 @@ Like most modern crypto systems, GPG makes use of public key methods. You can ea
 
 Your **private key** is to be kept secret and needed to **sign** or **decrypt** messages. The corresponding **public key** should be made available to anyone that needs to **verify** your signature, or **encrypt** messages which can only be decrypted by you.
 
-Once we have someones public key, we can send them secure messages and verify their signatures. However how do we find and authenticate the public key of a person or server if we have talked to them before?
+Once we have someone's public key, we can send them secure messages and verify their signatures. However how do we find and authenticate the public key of a person or server if we have not talked to them before?
 
 ### Web of trust
 
-The complexity in public key systems derives from authenticating public keys. If we can not trust our communication channel to be safe, we can only be sure that a public key belongs to given person is it has been signed by someone that we do trust.
+The complexity in public key systems derives from authenticating public keys. If we can not trust our communication channel to be safe, we can only be sure that a public key belongs to given person if it has been signed by someone that we do trust.
 
 The major difference between GPG and PKI systems (such as HTTPS) is how we authenticate public keys. HTTPS is based on a system with Certificate Authorities (CA). Anyone can create a keypair for any domain/personal name, however we only trust public keys which have been signed by an official CA. This CA is typically a commercial vendor which verifies your identity (e.g. via a copy of your passport) and then uses their own keypair to sign a certificate containing your public key and your personal name / email / domain.
 
@@ -152,7 +152,7 @@ gpg_list_keys()
 
 ## Digital Signatures
 
-A digital signature is a mathematical scheme for demonstrating the authenticity of a digital message or document. If you sign a file using your personal secret key, anyone can verify that this file has not been modified (i.e. the hash matches the one in your signture) via your public key.
+A digital signature is a mathematical scheme for demonstrating the authenticity of a digital message or document. If you sign a file using your personal secret key, anyone can verify that this file has not been modified (i.e. the hash matches the one in your signature) via your public key.
 
 GPG signatures are widely used by Linux package managers such as `apt` to verify the integrity of downloaded files. Typically the public key is shipped with the OS, and the private key is owned by the repository maintainers. This way we can safely install software from any mirror or network.
 

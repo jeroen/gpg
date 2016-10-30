@@ -10,7 +10,7 @@
 [![Github Stars](https://img.shields.io/github/stars/jeroenooms/gpg.svg?style=social&label=Github)](https://github.com/jeroenooms/gpg)
 
 > Bindings to GPG for creating and verifying OpenGPG (RFC4880)
-  signatures. This is not a standaline library; GPG needs to be installed
+  signatures. This is not a standalone library; GPG needs to be installed
   on the system. On Windows you need GPG4Win or similar, on other systems
   use the GPGME library.
 
