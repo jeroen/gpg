@@ -95,7 +95,8 @@ download_key <- function(id, servers){
   for(keyserver in servers){
     message("Searching: ", keyserver)
     try({
-      req <- curl::curl_fetch_memory(paste0(keyserver, '/pks/lookup?op=get&search=', id))
+      h <- new_handle(timeout = 10)
+      req <- curl::curl_fetch_memory(paste0(keyserver, '/pks/lookup?op=get&search=', id), handle = h)
       if(req$status == 200) return(req$content)
     })
   }
