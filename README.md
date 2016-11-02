@@ -10,7 +10,7 @@
 [![Github Stars](https://img.shields.io/github/stars/jeroenooms/gpg.svg?style=social&label=Github)](https://github.com/jeroenooms/gpg)
 
 > Bindings to GPG for creating and verifying OpenGPG (RFC4880)
-  signatures. This is not a standaline library; GPG needs to be installed
+  signatures. This is not a standalone library; GPG needs to be installed
   on the system. On Windows you need GPG4Win or similar, on other systems
   use the GPGME library.
 
@@ -26,6 +26,8 @@ Other resources:
 
 
 ## Hello World
+
+The Debian backports archives on CRAN are signed with the key of Johannes Ranke (CRAN Debian archive) <jranke@uni-bremen.de> with key fingerprint __6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480__.
 
 Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release) file, which contains checksums for all files in the repository:
 

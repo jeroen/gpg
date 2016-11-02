@@ -13,9 +13,11 @@ SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew).
     On Linux 'haveged' is recommended for generating entropy when using the GPG key generator.
 RoxygenNote: 5.0.1.9000
 Roxygen: list(markdown = TRUE)
-Imports: 
+Imports:
     curl
-Suggests: 
+Suggests:
     knitr, 
     rmarkdown
 VignetteBuilder: knitr
+URL: https://github.com/jeroenooms/gpg
+BugReports: https://github.com/jeroenooms/gpg/issues
