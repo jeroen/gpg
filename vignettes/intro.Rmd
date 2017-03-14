@@ -27,7 +27,7 @@ gpg_list_keys <- function(...){
 ```
 
 
-**DISCLAIMER**: Author is not an expert in cryptography (he is not an expert in anything really). Use this stuff at your own risk. If you find bugs or inaccuracies, please create an issue or PR on the [github repository](https://github.com/jeroenooms/gpg).  
+**DISCLAIMER**: Author is not an expert in cryptography (he is not an expert in anything really). Use this stuff at your own risk. If you find bugs or inaccuracies, please create an issue or PR on the [github repository](https://github.com/jeroen/gpg).  
 
 ## GPG basics
 
@@ -37,7 +37,7 @@ The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular ope
 
 Like most modern crypto systems, GPG makes use of public key methods. You can easily generate a personal keypair which consists of a private key and corresponding public key. 
 
-![pubkey](https://jeroenooms.github.io/figures/pubkey-crypto/publickey-comic-m.png)
+![pubkey](https://jeroen.github.io/figures/pubkey-crypto/publickey-comic-m.png)
 
 Your **private key** is to be kept secret and needed to **sign** or **decrypt** messages. The corresponding **public key** should be made available to anyone that needs to **verify** your signature, or **encrypt** messages which can only be decrypted by you.
 
@@ -49,7 +49,7 @@ The complexity in public key systems derives from authenticating public keys. If
 
 The major difference between GPG and PKI systems (such as HTTPS) is how we authenticate public keys. HTTPS is based on a system with Certificate Authorities (CA). Anyone can create a keypair for any domain/personal name, however we only trust public keys which have been signed by an official CA. This CA is typically a commercial vendor which verifies your identity (e.g. via a copy of your passport) and then uses their own keypair to sign a certificate containing your public key and your personal name / email / domain.
 
-![trust](https://jeroenooms.github.io/figures/pubkey-crypto/trust-m.png)
+![trust](https://jeroen.github.io/figures/pubkey-crypto/trust-m.png)
 
 GPG uses a different system which does not distinguish between peers and authorities. In GPG, anyone can sign another persons key. The GPG user determines which peers they choose to trust in their personal keyring. For new peers, the GPG software helps you figure out which of your current peers has verified the identity of the new peer, perhaps indirectly via a third or fourth peer, and so on: a "web of trust".
 

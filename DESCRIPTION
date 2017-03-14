@@ -2,7 +2,7 @@ Package: gpg
 Type: Package
 Title: GNU Privacy Guard for R
 Version: 0.4
-Authors@R: person("Jeroen", "Ooms", email = "jeroen.ooms@stat.ucla.edu", role = c("aut", "cre"))
+Authors@R: person("Jeroen", "Ooms", email = "jeroen@berkeley.edu", role = c("aut", "cre"))
 Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic methods.
     Includes utilities for public key encryption, creating and verifying digital signatures,
     and managing your local keyring. Note that some functionality depends on the version of 
@@ -19,5 +19,5 @@ Suggests:
     knitr, 
     rmarkdown
 VignetteBuilder: knitr
-URL: https://github.com/jeroenooms/gpg
-BugReports: https://github.com/jeroenooms/gpg/issues
+URL: https://github.com/jeroen/gpg
+BugReports: https://github.com/jeroen/gpg/issues
