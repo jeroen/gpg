@@ -1,3 +1,6 @@
+0.5
+  - Extract autobrew script to separate repository
+
 0.4
   - Always try to use native pinentry first before fallbacks
   - Add gpg_list_signatures() function
