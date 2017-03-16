@@ -36,28 +36,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
     PKG_LIBS="-L$BREWDIR/opt/$PKG_BREW_NAME/lib $PKG_LIBS"
   else
-    echo "Auto-brewing $PKG_BREW_NAME..."
-    BREWDIR="/tmp/homebrew"
-    rm -Rf $BREWDIR
-    mkdir -p $BREWDIR
-    mkdir -p inst/bin
-    curl -fsSL https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C $BREWDIR
-    HOMEBREW_CACHE="/tmp" $BREWDIR/bin/brew install --force-bottle \
-      gnupg gpgme libassuan libgpg-error 2>&1 | perl -pe 's/Warning/Note/gi'
-    PKG_CFLAGS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --cflags)
-    PKG_LIBS=$($BREWDIR/opt/$PKG_BREW_NAME/bin/gpgme-config --libs)
-
-    # Ship a standalone 'gpg'
-    cp -f $BREWDIR/opt/gnupg/bin/gpg1 inst/bin/gpg
-
-    # Build and ship a standalone pinentry
-    rm -f $BREWDIR/Cellar/libassuan/*/lib/*.dylib
-    rm -f $BREWDIR/Cellar/libgpg-error/*/lib/*.dylib
-    HOMEBREW_CACHE="/tmp" $BREWDIR/bin/brew reinstall pinentry --build-from-source
-    cp -f $BREWDIR/opt/pinentry/bin/pinentry inst/bin/pinentry
-
-    # Just to be sure
-    rm -f $BREWDIR/Cellar/*/*/lib/*.dylib
+    curl -OL https://jeroen.github.io/autobrew/gpgme.sh
+    source gpgme.sh
   fi
 fi
 
