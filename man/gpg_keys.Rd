@@ -44,4 +44,3 @@ you are using. Also see \link{gpg_keygen} for generating a new key.
 Other gpg: \code{\link{gpg_encrypt}},
   \code{\link{gpg_keygen}}, \code{\link{gpg_sign}}
 }
-

@@ -41,4 +41,3 @@ other software using GnuPG.
 gpg_version()
 gpg_info()
 }
-

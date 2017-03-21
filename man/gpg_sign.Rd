@@ -42,4 +42,3 @@ gpg_verify(sig, msg, error = FALSE)
 Other gpg: \code{\link{gpg_encrypt}},
   \code{\link{gpg_keygen}}, \code{\link{gpg_keys}}
 }
-

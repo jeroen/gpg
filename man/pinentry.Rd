@@ -18,4 +18,3 @@ only works in a terminal. Therefore the IDE can provide a custom password entry
 widget by setting the \code{askpass} option. If no such option is specified
 we default to \code{\link{readline}}.
 }
-

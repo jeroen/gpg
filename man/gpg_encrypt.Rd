@@ -28,4 +28,3 @@ Optionally the message can be signed using the private key of the sender.
 Other gpg: \code{\link{gpg_keygen}},
   \code{\link{gpg_keys}}, \code{\link{gpg_sign}}
 }
-
