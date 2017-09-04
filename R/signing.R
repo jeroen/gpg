@@ -32,6 +32,7 @@ gpg_verify <- function(signature, data = NULL, error = TRUE){
       stop("Verification failed because pubkeys not found in keyring: ",
         paste(unknown_keys, collapse = ", "), call. = FALSE)
     }
+  }
   out
 }
 
