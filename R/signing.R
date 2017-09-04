@@ -24,11 +24,15 @@ gpg_verify <- function(signature, data = NULL, error = TRUE){
   out <- .Call(R_gpgme_verify, sig, data)
   out <- data.frame(out, stringsAsFactors = FALSE)
   if(isTRUE(error) && !any(out$success)){
+    # NB: out$fingerprint corresponds to gpg_list_keys()$id,
+    # not gpg_list_keys()$fingerprint.
     fp_failed <- out$fingerprint[!(out$success)]
-    stop("Verification failed. None of the pubkeys not found in keyring: ", paste(fp_failed, collapse = ", "), call. = FALSE)
-  } else {
-    out
-  }
+    unknown_keys <- setdiff(fp_failed, gpg_list_keys()$id)
+    if (length(unknown_keys) > 0) {
+      stop("Verification failed because pubkeys not found in keyring: ",
+        paste(unknown_keys, collapse = ", "), call. = FALSE)
+    }
+  out
 }
 
 #' @useDynLib gpg R_gpg_sign
