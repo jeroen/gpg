@@ -1,5 +1,6 @@
 language: r
 cache: packages
+latex: false
 
 matrix:
   include:
@@ -15,17 +16,14 @@ matrix:
       env:
         - CHECK_OLD_GPGME=1
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode8.3
       brew_packages: gpgme
-      latex: false
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode8.3
       disable_homebrew: true
-      latex: false
     - os: osx
-      osx_image: beta-xcode6.1
+      osx_image: xcode6.3
       disable_homebrew: true
-      latex: false
 
 addons:
   apt:
