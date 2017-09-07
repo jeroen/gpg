@@ -18,7 +18,7 @@ matrix:
     - os: osx
       osx_image: xcode8.3
       brew_packages: gpgme
-      before_install: brew upgrade
+      before_install: sudo chown -R $(whoami) /usr/local && brew upgrade
     - os: osx
       osx_image: xcode8.3
       disable_homebrew: true
