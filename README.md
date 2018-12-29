@@ -4,7 +4,6 @@
 
 [![Build Status](https://travis-ci.org/jeroen/gpg.svg?branch=master)](https://travis-ci.org/jeroen/gpg)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jeroen/gpg?branch=master&svg=true)](https://ci.appveyor.com/project/jeroen/gpg)
-[![Coverage Status](https://codecov.io/github/jeroen/gpg/coverage.svg?branch=master)](https://codecov.io/github/jeroen/gpg?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gpg)](http://cran.r-project.org/package=gpg)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/gpg)](http://cran.r-project.org/web/packages/gpg/index.html)
 [![Github Stars](https://img.shields.io/github/stars/jeroen/gpg.svg?style=social&label=Github)](https://github.com/jeroen/gpg)
