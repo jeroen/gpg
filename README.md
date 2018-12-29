@@ -1,6 +1,6 @@
 # gpg
 
-##### *GNU Privacy Guard for R*
+> *GNU Privacy Guard for R*
 
 [![Build Status](https://travis-ci.org/jeroen/gpg.svg?branch=master)](https://travis-ci.org/jeroen/gpg)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jeroen/gpg?branch=master&svg=true)](https://ci.appveyor.com/project/jeroen/gpg)
@@ -8,10 +8,10 @@
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/gpg)](http://cran.r-project.org/web/packages/gpg/index.html)
 [![Github Stars](https://img.shields.io/github/stars/jeroen/gpg.svg?style=social&label=Github)](https://github.com/jeroen/gpg)
 
-> Bindings to GPG for creating and verifying OpenGPG (RFC4880)
-  signatures. This is not a standalone library; GPG needs to be installed
-  on the system. On Windows you need GPG4Win or similar, on other systems
-  use the GPGME library.
+Bindings to GPG for creating and verifying OpenGPG (RFC4880)
+signatures. This is not a standalone library; GPG needs to be installed
+on the system. On Windows you need GPG4Win or similar, on other systems
+use the GPGME library.
 
 ## Documentation
 
