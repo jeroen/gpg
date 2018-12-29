@@ -1,15 +1,17 @@
-PKG_LIBS= -L../windows/gpgme-1.7.0/lib${R_ARCH} \
+VERSION = 1.12.0
+RWINLIB = ../windows/gpgme-$(VERSION)
+PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH} \
 	-lgpgme -lassuan -lgpg-error -lws2_32
 
-PKG_CPPFLAGS= -I../windows/gpgme-1.7.0/include \
+PKG_CPPFLAGS= -I$(RWINLIB)/include \
 	-DHAVE_GPGME_IO_READWRITE
 
 all: clean winlibs
 
 winlibs:
-	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R" $(VERSION)
 	mkdir -p ../inst/bin
-	cp -f ../windows/gpgme-1.7.0/bin/* ../inst/bin/
+	cp -f $(RWINLIB)/bin/* ../inst/bin/
 
 clean:
 	rm -f $(SHLIB) $(OBJECTS)

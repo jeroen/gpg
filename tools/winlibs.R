@@ -1,7 +1,8 @@
 # Download GPGME
-if(!file.exists("../windows/gpgme-1.7.0/include/gpgme.h")){
+VERSION <- commandArgs(TRUE)
+if(!file.exists(sprintf("../windows/gpgme-%s/include/gpgme.h", VERSION))){
   if(getRversion() < "3.3.0") setInternet2()
-  download.file("https://github.com/rwinlib/gpgme/archive/v1.7.0.zip", "lib.zip", quiet = TRUE)
+  download.file(sprintf("https://github.com/rwinlib/gpgme/archive/v%s.zip", VERSION), "lib.zip", quiet = TRUE)
   dir.create("../windows", showWarnings = FALSE)
   unzip("lib.zip", exdir = "../windows")
   unlink("lib.zip")
