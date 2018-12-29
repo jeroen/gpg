@@ -26,13 +26,14 @@ gpg_encrypt <- function(data, receiver, signer = NULL){
 #' @rdname gpg_encrypt
 #' @param verify automatically checks that all signatures (if any) can be verified and
 #' raises an error otherwise
+#' @param as_text convert output to text. Set to FALSE if you expect binary data.
 #' @useDynLib gpg R_gpgme_decrypt R_gpgme_signed_decrypt
-gpg_decrypt <- function(data, verify = TRUE){
+gpg_decrypt <- function(data, verify = TRUE, as_text = TRUE){
   data <- file_or_raw(data)
   if(isTRUE(verify)){
-    .Call(R_gpgme_signed_decrypt, data)
+    .Call(R_gpgme_signed_decrypt, data, as_text)
   } else {
-    .Call(R_gpgme_decrypt, data)
+    .Call(R_gpgme_decrypt, data, as_text)
   }
 }
 

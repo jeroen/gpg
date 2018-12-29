@@ -18,12 +18,12 @@ SEXP R_gpgme_encrypt(SEXP data, SEXP id) {
   return data_to_string(output);
 }
 
-SEXP R_gpgme_decrypt(SEXP data) {
+SEXP R_gpgme_decrypt(SEXP data, SEXP as_text) {
   gpgme_data_t output, input;
   bail(gpgme_data_new_from_mem(&input, (const char*) RAW(data), LENGTH(data), 0), "creating input buffer");
   bail(gpgme_data_new(&output), "creating output buffer");
   bail(gpgme_op_decrypt(ctx, input, output), "decrypt message");
-  return data_to_string(output);
+  return Rf_asLogical(as_text) ? data_to_string(output) : data_to_raw(output);
 }
 
 SEXP R_gpgme_signed_encrypt(SEXP data, SEXP receiver, SEXP sender) {
@@ -51,12 +51,13 @@ SEXP R_gpgme_signed_encrypt(SEXP data, SEXP receiver, SEXP sender) {
   return data_to_string(output);
 }
 
-SEXP R_gpgme_signed_decrypt(SEXP data) {
+SEXP R_gpgme_signed_decrypt(SEXP data, SEXP as_text) {
   gpgme_data_t output, input;
   bail(gpgme_data_new_from_mem(&input, (const char*) RAW(data), LENGTH(data), 0), "creating input buffer");
   bail(gpgme_data_new(&output), "creating output buffer");
   bail(gpgme_op_decrypt_verify(ctx, input, output), "verify signatures and decrypt message");
-  SEXP out = PROTECT(data_to_string(output));
+  SEXP out = Rf_asLogical(as_text) ? data_to_string(output) : data_to_raw(output);
+  PROTECT(out);
 
   //check signatures
   gpgme_verify_result_t result = gpgme_op_verify_result(ctx);
@@ -81,3 +82,11 @@ SEXP data_to_string(gpgme_data_t buf){
   return out;
 }
 
+SEXP data_to_raw(gpgme_data_t buf){
+  size_t len;
+  char * sig = gpgme_data_release_and_get_mem(buf, &len);
+  SEXP out = allocVector(RAWSXP, len);
+  memcpy(RAW(out), sig, len);
+  gpgme_free(sig);
+  return out;
+}

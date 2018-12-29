@@ -7,7 +7,8 @@
 \alias{gpg_options}
 \title{Manage the GPG engine}
 \usage{
-gpg_restart(home = NULL, path = NULL, debug = "none", silent = FALSE)
+gpg_restart(home = NULL, path = NULL, debug = "none",
+  silent = FALSE)
 
 gpg_version(silent = FALSE)
 

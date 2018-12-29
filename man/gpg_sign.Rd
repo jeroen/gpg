@@ -4,7 +4,6 @@
 \alias{gpg_sign}
 \alias{gpg_verify}
 \alias{gpg}
-\alias{gpg_sign}
 \title{PGP Signatures}
 \usage{
 gpg_verify(signature, data = NULL, error = TRUE)
@@ -42,3 +41,4 @@ gpg_verify(sig, msg, error = FALSE)
 Other gpg: \code{\link{gpg_encrypt}},
   \code{\link{gpg_keygen}}, \code{\link{gpg_keys}}
 }
+\concept{gpg}

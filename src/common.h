@@ -10,6 +10,7 @@
 gpgme_ctx_t ctx;
 gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_info, int prev_was_bad, int fd);
 SEXP data_to_string(gpgme_data_t buf);
+SEXP data_to_raw(gpgme_data_t buf);
 
 struct keylist {
   gpgme_key_t key;

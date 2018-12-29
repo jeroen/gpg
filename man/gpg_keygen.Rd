@@ -26,3 +26,4 @@ GPG manual section on
 Other gpg: \code{\link{gpg_encrypt}},
   \code{\link{gpg_keys}}, \code{\link{gpg_sign}}
 }
+\concept{gpg}

@@ -1,3 +1,6 @@
+0.6
+  - Add as_text parameter to decrypt to support raw output
+
 0.5
   - Extract autobrew script to separate repository
 

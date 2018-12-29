@@ -7,7 +7,7 @@
 \usage{
 gpg_encrypt(data, receiver, signer = NULL)
 
-gpg_decrypt(data, verify = TRUE)
+gpg_decrypt(data, verify = TRUE, as_text = TRUE)
 }
 \arguments{
 \item{data}{path or raw vector with data to encrypt / decrypt}
@@ -19,6 +19,8 @@ the message}
 
 \item{verify}{automatically checks that all signatures (if any) can be verified and
 raises an error otherwise}
+
+\item{as_text}{convert output to text. Set to FALSE if you expect binary data.}
 }
 \description{
 Encrypt or decrypt a message using the public key from the \code{receiver}.
@@ -28,3 +30,4 @@ Optionally the message can be signed using the private key of the sender.
 Other gpg: \code{\link{gpg_keygen}},
   \code{\link{gpg_keys}}, \code{\link{gpg_sign}}
 }
+\concept{gpg}
