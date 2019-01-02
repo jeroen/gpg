@@ -32,7 +32,13 @@ SEXP R_gpg_delete(SEXP id, SEXP secret){
   gpgme_key_t key;
   const char * idstr = CHAR(STRING_ELT(id, 0));
   bail(gpgme_get_key(ctx, idstr, &key, 0), "find key");
-  gpgme_error_t err = gpgme_op_delete(ctx, key, asLogical(secret));
+#if GPGME_VERSION_NUMBER >= 0x010901
+  //Force is needed with gpg2 to prevent asking for confirmation
+  int flags = (Rf_asLogical(secret) * GPGME_DELETE_ALLOW_SECRET) | GPGME_DELETE_FORCE;
+  gpgme_error_t err = gpgme_op_delete_ext(ctx, key, flags);
+#else
+  gpgme_error_t err = gpgme_op_delete(ctx, key, Rf_asLogical(secret));
+#endif
   if(gpg_err_code (err) == GPG_ERR_CONFLICT){
     Rf_warningcall(R_NilValue, "Did not delete %s. Set secret = TRUE to delete private keys", idstr);
     return mkString("");
