@@ -1,6 +1,8 @@
 0.6
+  - MacOS: update to gpgme 1.12.0 with gnupg 1.4.23
   - Windows: update to gpgme 1.11.1 with gnupg 1.4.23
   - Add as_text parameter to decrypt to support raw output
+  - Do not ask for user confirmation in gpg_delete(), fixes #3
 
 0.5
   - Extract autobrew script to separate repository

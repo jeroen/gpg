@@ -5,13 +5,13 @@ fortran: false
 
 matrix:
   include:
-    - os: linux
-      dist: precise
+    - dist: precise
       env:
         - CHECK_OLD_GPGME=1
-    - os: linux
+    - dist: trusty
       env:
         - CHECK_OLD_GPGME=1
+    - dist: xenial
     - os: osx
       brew_packages: gpgme
     - os: osx
