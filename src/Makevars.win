@@ -1,5 +1,4 @@
-#VERSION = 1.12.0
-VERSION = 1.7.0
+VERSION = 1.11.1
 RWINLIB = ../windows/gpgme-$(VERSION)
 PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH} \
 	-lgpgme -lassuan -lgpg-error -lws2_32

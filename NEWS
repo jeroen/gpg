@@ -1,4 +1,5 @@
 0.6
+  - Windows: update to gpgme 1.11.1 with gnupg 1.4.23
   - Add as_text parameter to decrypt to support raw output
 
 0.5
