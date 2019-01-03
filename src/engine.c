@@ -54,12 +54,13 @@ gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_
 
 SEXP R_engine_info(){
   gpgme_engine_info_t info = gpgme_ctx_get_engine_info (ctx);
-  return Rf_list4(
-    make_string(info->file_name),
-    make_string(info->version),
-    make_string(info->home_dir),
-    make_string(gpgme_check_version (NULL))
-  );
+  SEXP out = PROTECT(Rf_allocVector(VECSXP, 4));
+  SET_VECTOR_ELT(out, 0, make_string(info->file_name));
+  SET_VECTOR_ELT(out, 1, make_string(info->version));
+  SET_VECTOR_ELT(out, 2, make_string(info->home_dir));
+  SET_VECTOR_ELT(out, 3, make_string(gpgme_check_version (NULL)));
+  UNPROTECT(1);
+  return out;
 }
 
 SEXP R_gpg_restart(SEXP home, SEXP path, SEXP pwfun, SEXP debug) {

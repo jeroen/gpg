@@ -66,7 +66,9 @@ SEXP R_gpgme_signed_decrypt(SEXP data, SEXP as_text) {
     if(signer->status)
       Rf_errorcall(R_NilValue, "Failed to verify signature for key %s: %s\n",
                    signer->fpr, gpgme_strerror(signer->status));
-    setAttrib(out, install("signer"), mkString(signer->fpr));
+    SEXP symbol = PROTECT(install("signer"));
+    setAttrib(out, symbol, mkString(signer->fpr));
+    UNPROTECT(1);
   }
   UNPROTECT(1);
   return out;
