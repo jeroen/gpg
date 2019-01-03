@@ -34,7 +34,7 @@ gpg_import <- function(file){
 #' @param search string with name or email address to match the key info.
 gpg_recv <- function(id, search = NULL, keyserver = NULL){
   if(is.null(keyserver))
-    keyserver <- c("https://pgp.mit.edu", "https://keyserver.ubuntu.com",
+    keyserver <- c("https://keyserver.ubuntu.com", "https://pgp.mit.edu",
                    "http://keys.gnupg.net", "http://pgp.surfnet.nl")
   keyserver <- sub("hkp://", "http://", keyserver, fixed = TRUE)
   keyserver <- sub("/$", "", keyserver)
