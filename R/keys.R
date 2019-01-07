@@ -39,6 +39,7 @@ gpg_recv <- function(id, search = NULL, keyserver = NULL){
   keyserver <- sub("hkp://", "http://", keyserver, fixed = TRUE)
   keyserver <- sub("/$", "", keyserver)
   search <- if(!length(search) && length(id)){
+    id <- gsub(' ', '', id, fixed = TRUE)
     id <- paste0("0x", sub("^0x", "", id));
     if(!grepl("^0x[0-9a-fA-F]+$", id))
       stop("ID is not valid hexadecimal string. Use 'search' to find keys by name.", call. = FALSE)

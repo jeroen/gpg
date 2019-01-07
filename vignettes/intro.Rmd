@@ -239,23 +239,23 @@ GPG uses public key encryption. You can use someone's public key to encrypt a me
 
 ### Encrypt a message
 
-For example we want to send an email [Glenn Greenwald](https://theintercept.com/staff/glenn-greenwald/) containing top secret information that may not be snooped by our ISP or government. His homepage at the intercept shows his GPG key in long form.
+For example we want to send an email [Betsy Reed](https://theintercept.com/staff/betsyreed/) containing top secret information that may not be snooped by our ISP or government. Her homepage at the intercept shows her GPG key ID in long form.
 
 ```{r message=FALSE}
-glenn <- '734A3680A438DD45AF6F5B99A4A928C769CD6E44'
-gpg_recv(glenn)
+besty <- '2B51 C18C 7FB8 5D2F 9ECC DB44 9214 F5D0 A5D8 C204'
+gpg_recv(besty)
 writeLines("TTIP is super evil!", "secret.txt")
-msg <- gpg_encrypt("secret.txt", receiver = glenn)
+msg <- gpg_encrypt("secret.txt", receiver = besty)
 writeLines(msg, "msg.gpg")
 unlink("secret.txt")
 cat(msg)
 ```
 
-You can safely send this message over any channel (email, twitter, etc). Nobody in the world (not even ourselves) will be able to decipher this message, except for Glenn Greenwald.
+You can safely send this message over any channel (email, twitter, etc). Nobody in the world (not even ourselves) will be able to decipher this message, except for Betsy Reed.
 
 ### Decrypt a message
 
-Decrypting a message is even easier, you don't have to specify a key. GPG will automatically pick the correct private key from your keyring, and error if you don't have it. For example we will not be able to decrypt the message we created above for Glenn Greenwald.
+Decrypting a message is even easier, you don't have to specify a key. GPG will automatically pick the correct private key from your keyring, and error if you don't have it. For example we will not be able to decrypt the message we created above for Betsy Reed.
 
 ```{r, error=TRUE, message=FALSE}
 # This will error, we do not have this private key
@@ -279,14 +279,14 @@ gpg_decrypt("msg.gpg")
 
 ## Authenticated Encryption
 
-So we showed how to encrypt a message so that it can only be read by the receiver. But how does Glenn Greenwald verify the sender of this information? Perhaps someone is trying to leak fake documents? 
+So we showed how to encrypt a message so that it can only be read by the receiver. But how does Betsy Reed verify the sender of this information? Perhaps someone is trying to leak fake documents? 
 
 ### Sign and Encrypt
 
 In signed encryption, also known as authenticated encryption, uses combined encryption and signing. The public key of the receiver is used to encrypt the message, and the private key of the sender to sign the message. This way the message is both confidential and the integrity of the sender can be checked and verified, only by the receiver.
 
 ```{r}
-msg <- gpg_encrypt("secret.txt", receiver = glenn, signer = mykey)
+msg <- gpg_encrypt("secret.txt", receiver = besty, signer = mykey)
 writeLines(msg, "msg.gpg")
 cat(msg)
 ```
