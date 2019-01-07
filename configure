@@ -7,7 +7,7 @@
 
 # Library settings
 PKG_CONFIG_NAME="gpgme"
-PKG_DEB_NAME="libgpgme11-dev"
+PKG_DEB_NAME="libgpgme-dev / libgpgme11-dev"
 PKG_RPM_NAME="gpgme-devel"
 PKG_CSW_NAME="gpgme_dev"
 PKG_BREW_NAME="gpgme"

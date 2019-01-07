@@ -10,7 +10,7 @@ Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic 
     GnuPG that is installed on the system. On Windows this package can be used together with
     'GPG4Win' which provides a GUI for managing keys and entering passphrases.
 License: MIT + file LICENSE
-SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew). 
+SystemRequirements: GPGME: libgpgme-dev / libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew). 
     On Linux 'haveged' is recommended for generating entropy when using the GPG key generator.
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
