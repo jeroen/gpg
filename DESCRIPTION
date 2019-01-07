@@ -1,7 +1,7 @@
 Package: gpg
 Type: Package
 Title: GNU Privacy Guard for R
-Version: 1.0
+Version: 1.0.9000
 Authors@R: person("Jeroen", "Ooms", email = "jeroen@berkeley.edu", 
     comment = c(ORCID = "0000-0002-4035-0289"), role = c("aut", "cre"))
 Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic methods.
@@ -15,7 +15,8 @@ SystemRequirements: GPGME: libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew).
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 Imports:
-    curl
+    curl,
+    askpass
 Suggests:
     knitr, 
     rmarkdown

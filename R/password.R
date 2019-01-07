@@ -10,22 +10,12 @@
 #' @export
 #' @param prompt the string printed when prompting the user for input.
 pinentry <- function(prompt = "Enter your GPG passphrase:"){
-  if(is_unix() && has_pinentry()){
-    tryCatch({
+  if(is_unix() && isatty() && has_pinentry()){
+    try({
       return(pinentry_exec(prompt))
-    }, error = identity)
+    })
   }
-  if(is.function(FUN <- getOption("askpass"))){
-    return(FUN(prompt))
-  }
-  if(interactive()){
-    return(readline(prompt))
-  }
-  if(is_windows()){
-    stop("Passphrase required but no suitable pinentry program found. Try installing GPG4Win.")
-  } else {
-    stop("Passphrase required but no suitable pinentry program found. Need to configure gpg-agent.")
-  }
+  askpass::askpass(prompt = prompt)
 }
 
 is_cmd_build <- function(){
