@@ -37,7 +37,8 @@ has_pinentry <- function(){
 # in POSIX, "/dev/tty" means current CTTY
 pinentry_exec <- function(str){
   input <- c(paste("SETPROMPT", str), "GETPIN")
-  res <- system2("pinentry", paste("-T", '/dev/tty'), input = input, stdout = TRUE)
+  tty <- system2("tty", stdout = TRUE)
+  res <- system2("pinentry", paste("-T", tty), input = input, stdout = TRUE)
   errors <- res[grepl("^ERR ", res)]
   if(length(errors))
     stop(sub("^ERR", "Pinentry error", errors[1]), call. = FALSE)
