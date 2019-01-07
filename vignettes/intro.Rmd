@@ -239,23 +239,23 @@ GPG uses public key encryption. You can use someone's public key to encrypt a me
 
 ### Encrypt a message
 
-For example we want to send an email [Betsy Reed](https://theintercept.com/staff/betsyreed/) containing top secret information that may not be snooped by our ISP or government. Her homepage at the intercept shows her GPG key ID in long form.
+For example we want to send an email [Jeroen](https://launchpad.net/~opencpu) containing top secret information that may not be snooped by our ISP or email provider. First we import Jeroen's public key using the ID as listed e.g. [here](https://launchpad.net/~opencpu):
 
 ```{r message=FALSE}
-betsy <- '2B51 C18C 7FB8 5D2F 9ECC DB44 9214 F5D0 A5D8 C204'
-gpg_recv(betsy)
-writeLines("TTIP is super evil!", "secret.txt")
-msg <- gpg_encrypt("secret.txt", receiver = betsy)
+jeroen <- '16C019F96112961CEB4F38B76094FC5BDA955A42'
+gpg_recv(jeroen)
+writeLines("Pizza delivery is on it's way!", "secret.txt")
+msg <- gpg_encrypt("secret.txt", receiver = jeroen)
 writeLines(msg, "msg.gpg")
 unlink("secret.txt")
 cat(msg)
 ```
 
-You can safely send this message over any channel (email, twitter, etc). Nobody in the world (not even ourselves) will be able to decipher this message, except for Betsy Reed.
+Now you can safely send this message over any channel (email, twitter, etc). Nobody in the world besides Jeroen will be able to decipher this message (not even you).
 
 ### Decrypt a message
 
-Decrypting a message is even easier, you don't have to specify a key. GPG will automatically pick the correct private key from your keyring, and error if you don't have it. For example we will not be able to decrypt the message we created above for Betsy Reed.
+Decrypting a message is just as easy. GPG will automatically find the correct private key from your keyring, or raise an error if you don't have it. For example we will not be able to decrypt the message we created above for Jeroen
 
 ```{r, error=TRUE, message=FALSE}
 # This will error, we do not have this private key
@@ -279,14 +279,14 @@ gpg_decrypt("msg.gpg")
 
 ## Authenticated Encryption
 
-So we showed how to encrypt a message so that it can only be read by the receiver. But how does Betsy Reed verify the sender of this information? Perhaps someone is trying to leak fake documents? 
+So we showed how to encrypt a message so that it can only be read by the receiver. But how does Jeroen verify the sender identity?
 
 ### Sign and Encrypt
 
 In signed encryption, also known as authenticated encryption, uses combined encryption and signing. The public key of the receiver is used to encrypt the message, and the private key of the sender to sign the message. This way the message is both confidential and the integrity of the sender can be checked and verified, only by the receiver.
 
 ```{r}
-msg <- gpg_encrypt("secret.txt", receiver = betsy, signer = mykey)
+msg <- gpg_encrypt("secret.txt", receiver = jeroen, signer = mykey)
 writeLines(msg, "msg.gpg")
 cat(msg)
 ```
