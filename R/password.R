@@ -38,7 +38,7 @@ has_pinentry <- function(){
 pinentry_exec <- function(str){
   input <- c(paste("SETPROMPT", str), "GETPIN")
   tty <- system2("tty", stdout = TRUE)
-  res <- system2("pinentry", paste("-T", tty), input = input, stdout = TRUE)
+  res <- system2("pinentry", paste("-T", tty, '-C', 'UTF-8'), input = input, stdout = TRUE)
   errors <- res[grepl("^ERR ", res)]
   if(length(errors))
     stop(sub("^ERR", "Pinentry error", errors[1]), call. = FALSE)
