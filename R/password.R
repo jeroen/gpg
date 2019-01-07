@@ -10,7 +10,7 @@
 #' @export
 #' @param prompt the string printed when prompting the user for input.
 pinentry <- function(prompt = "Enter your GPG passphrase:"){
-  if(is_unix() && isatty() && has_pinentry()){
+  if(is_unix() && isatty(stdin()) && has_pinentry()){
     try({
       return(pinentry_exec(prompt))
     })
