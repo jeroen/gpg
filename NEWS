@@ -1,3 +1,6 @@
+1.2
+  - Fixed broken vignette example due to broken URL
+
 1.1
   - Restore password entry, use askpass() package
   - Fix vignette: Glenn Greenwald's example key has expired

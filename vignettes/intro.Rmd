@@ -206,7 +206,7 @@ Let's import his key so that we can verify the [Release](https://cran.r-project.
 
 ```{r, message=FALSE}
 # take out the spaces
-johannes <- "6212B7B7931C4BB16280BA1306F90DE5381BA480"
+johannes <- "E19F 5F87 1288 99B1 92B1  A2C2 AD5F 960A 256A 04AF"
 gpg_recv(johannes)
 ```
 
@@ -221,8 +221,8 @@ Now lets verify the release files:
 ```{r}
 # Verify the file
 library(curl)
-curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release', 'Release')
-curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release.gpg', 'Release.gpg')
+curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release', 'Release')
+curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release.gpg','Release.gpg')
 gpg_verify('Release.gpg', 'Release')
 ```
 

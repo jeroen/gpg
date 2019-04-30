@@ -66,7 +66,7 @@ if [ $R_CONFIG_ERROR ]; then
   echo " * brew: $PKG_BREW_NAME (OSX)"
   echo " * csw: $PKG_CSW_NAME (Solaris)"
   echo "If $PKG_CONFIG_NAME is already installed, check that 'gpgme-config' is in your"
-  echo "PATH. If pgpgme-config is unavailable, set INCLUDE_DIR and LIB_DIR"
+  echo "PATH. If gpgme-config is unavailable, set INCLUDE_DIR and LIB_DIR"
   echo "manually via configure variable:"
   echo "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'"
   echo "--------------------------------------------------------------------"
