@@ -206,7 +206,7 @@ Let's import his key so that we can verify the [Release](https://cran.r-project.
 
 ```{r, message=FALSE}
 # take out the spaces
-johannes <- "E19F 5F87 1288 99B1 92B1  A2C2 AD5F 960A 256A 04AF"
+johannes <- "E19F5F87128899B192B1A2C2AD5F960A256A04AF"
 gpg_recv(johannes)
 ```
 
