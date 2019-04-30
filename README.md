@@ -28,7 +28,7 @@ Other resources:
 
 The Debian backports archives on CRAN are signed with the key of Johannes Ranke (CRAN Debian archive) <jranke@uni-bremen.de> with key fingerprint __6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480__.
 
-Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release) file, which contains checksums for all files in the repository:
+Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/buster-cran35/Release) file, which contains checksums for all files in the repository:
 
 ```r
 # Take out the spaces
@@ -37,8 +37,8 @@ gpg_recv(johannes)
 
 # Verify the file
 library(curl)
-curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release', 'Release')
-curl_download('https://cran.r-project.org/bin/linux/debian/jessie-cran3/Release.gpg', 'Release.gpg')
+curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release', 'Release')
+curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release.gpg', 'Release.gpg')
 gpg_verify('Release', 'Release.gpg')
 ```
 
