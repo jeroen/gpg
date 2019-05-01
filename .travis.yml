@@ -19,22 +19,10 @@ matrix:
     - os: osx
       osx_image: xcode7.3
       disable_homebrew: true
-      before_script: sed -i.bak 's/-isysroot /-I/g' $(R RHOME)/etc/Makeconf
+      before_install: sed -i.bak 's/-isysroot /-I/g' $(R RHOME)/etc/Makeconf
 
 addons:
   apt:
     packages:
       - libgpgme11-dev
       - haveged
-
-warnings_are_errors: true
-#r_check_revdep: true
-
-notifications:
-  email:
-    on_success: change
-    on_failure: change
-
-# Prevents Travis timeout for building gpg
-before_install:
-  - (while true; do echo 'Ping? Pong!'; sleep 500; done) &
