@@ -1,3 +1,6 @@
+1.2.1
+  - Workaround for Debian num-numeric version
+
 1.2
   - Fixed broken vignette example due to broken URL
 

@@ -89,3 +89,8 @@ mytrimws <- function(x){
   mysub("[ \t\r\n]+$", mysub("^[ \t\r\n]+", x))
 }
 
+# Workaround for debian "1.13.1-unknown"
+parse_version <- function(x){
+  x <- sub("(.*)-.*", "\\1", x)
+  as.numeric_version(x)
+}
