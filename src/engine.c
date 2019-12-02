@@ -2,6 +2,8 @@
 #include <locale.h>
 #include <unistd.h>
 
+gpgme_ctx_t ctx;
+
 void bail(gpgme_error_t err, const char * msg){
   // Override error messages because GPGME errors are pretty poor
   if(err){
