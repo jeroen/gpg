@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-# Anticonf (tm) script by Jeroen Ooms (2019)
+# Anticonf (tm) script by Jeroen Ooms (2020)
 # This script will query 'pkg-config' for the required cflags and ldflags.
 # If pkg-config is unavailable or does not find the library, try setting
 # INCLUDE_DIR and LIB_DIR manually via e.g:
@@ -16,9 +15,9 @@ PKG_LIBS="-lgpgme"
 PKG_LIBS_STATIC="-lgpgme -lgpg-error -lassuan"
 
 # Use pkg-config if available
-if [ $(command -v gpgme-config) ]; then
-  PKGCONFIG_CFLAGS=$(gpgme-config --cflags)
-  PKGCONFIG_LIBS=$(gpgme-config --libs)
+if [ `command -v gpgme-config` ]; then
+  PKGCONFIG_CFLAGS=`gpgme-config --cflags`
+  PKGCONFIG_LIBS=`gpgme-config --libs`
 fi
 
 # Note that cflags may be empty in case of success
@@ -30,14 +29,14 @@ elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
   echo "Found gpgme-config cflags and libs!"
   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
   PKG_LIBS=${PKGCONFIG_LIBS}
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-  if [ $(command -v brew) ]; then
-    BREWDIR=$(brew --prefix)
+elif [ `uname` = "Darwin" ]; then
+  if [ `command -v brew` ]; then
+    BREWDIR=`brew --prefix`
     PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
     PKG_LIBS="-L$BREWDIR/opt/$PKG_BREW_NAME/lib $PKG_LIBS"
   else
-    curl -sfL "https://jeroen.github.io/autobrew/$PKG_BREW_NAME" > autobrew
-    source autobrew
+    curl -sfL "https://autobrew.github.io/scripts/gpgme" > autobrew
+    . autobrew
   fi
 fi
 
@@ -50,16 +49,16 @@ echo "Using PKG_CFLAGS=$PKG_CFLAGS"
 echo "Using PKG_LIBS=$PKG_LIBS"
 
 # Find compiler
-CC=$(${R_HOME}/bin/R CMD config CC)
-CFLAGS=$(${R_HOME}/bin/R CMD config CFLAGS)
-CPPFLAGS=$(${R_HOME}/bin/R CMD config CPPFLAGS)
+CC=`${R_HOME}/bin/R CMD config CC`
+CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
+CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
 
 # Test configuration
-echo "#include $PKG_TEST_HEADER" | ${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E -xc - >/dev/null 2>&1 || R_CONFIG_ERROR=1;
+echo "#include $PKG_TEST_HEADER" | ${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E -xc - >/dev/null 2>configure.log
 
 # Customize the error
-if [ $R_CONFIG_ERROR ]; then
-  echo "------------------------- ANTICONF ERROR ---------------------------"
+if [ $? -ne 0 ]; then
+  echo "--------------------------- [ANTICONF] --------------------------------"
   echo "Configuration failed because $PKG_CONFIG_NAME was not found. Try installing:"
   echo " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)"
   echo " * rpm: $PKG_RPM_NAME (Fedora, CentOS, RHEL)"
@@ -69,8 +68,10 @@ if [ $R_CONFIG_ERROR ]; then
   echo "PATH. If gpgme-config is unavailable, set INCLUDE_DIR and LIB_DIR"
   echo "manually via configure variable:"
   echo "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'"
+  echo "-------------------------- [ERROR MESSAGE] ---------------------------"
+  cat configure.log
   echo "--------------------------------------------------------------------"
-  exit 1;
+  exit 1
 fi
 
 # Write to Makevars

@@ -11,3 +11,4 @@
 ^appveyor\.yml$
 ^inst/bin$
 ^README.md$
+^configure.log$
