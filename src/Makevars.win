@@ -1,6 +1,6 @@
 VERSION = 1.16.0
 RWINLIB = ../windows/gpgme-$(VERSION)
-PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH} \
+PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH}${CRT} \
 	-lgpgme -lassuan -lgpg-error -lws2_32
 
 PKG_CPPFLAGS= -I$(RWINLIB)/include \
