@@ -12,3 +12,4 @@
 ^inst/bin$
 ^README.md$
 ^configure.log$
+^\.github$

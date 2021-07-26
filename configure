@@ -30,7 +30,7 @@ elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
   PKG_CFLAGS=${PKGCONFIG_CFLAGS}
   PKG_LIBS=${PKGCONFIG_LIBS}
 elif [ `uname` = "Darwin" ]; then
-  if [ `command -v brew` ]; then
+  if [ -z "$FORCE_AUTOBREW" ] && [ `command -v brew` ]; then
     BREWDIR=`brew --prefix`
     PKG_CFLAGS="-I$BREWDIR/opt/$PKG_BREW_NAME/include"
     PKG_LIBS="-L$BREWDIR/opt/$PKG_BREW_NAME/lib $PKG_LIBS"
