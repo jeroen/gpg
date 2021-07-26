@@ -1,5 +1,5 @@
-1.3.0
-  - Windows: update binaries to gpgme 1.16.0
+1.2.3
+  - Windows: add gpgme 1.16.0 ucrt libs
 
 1.2.2
   - Fix build with -fno-common (gcc 10)
