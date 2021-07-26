@@ -93,7 +93,7 @@ gpg_list_keys()
 
 ### Import from keyserver
 
-Use the `gpg_recv` function to download a given key and all available signatures for this key from a keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/README.html) from CRAN:
+Use the `gpg_recv` function to download a given key and all available signatures for this key from a keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/) from CRAN:
 
 ```{r}
 gpg_recv(id ="51716619E084DAB9")
