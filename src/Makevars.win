@@ -1,3 +1,4 @@
+# NB: somehow gpgme 1.16.0 results in timeouts on winbuilder
 VERSION = 1.11.1
 RWINLIB = ../windows/gpgme-$(VERSION)
 PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH}${CRT} \
