@@ -18,8 +18,8 @@ Imports:
     curl,
     askpass
 Suggests:
-    knitr, 
+    knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://jeroen.cran.dev/gpg/ (docs) https://github.com/jeroen/gpg (dev)
+URL: https://github.com/jeroen/gpg
 BugReports: https://github.com/jeroen/gpg/issues
