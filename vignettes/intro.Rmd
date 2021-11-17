@@ -200,13 +200,13 @@ unlink(c("sig.gpg", "clearsig.gpg"))
 Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org/bin/linux/debian/) says the following:
 
 
-*The Debian backports archives on CRAN are signed with the key of Johannes Ranke (CRAN Debian archive) <jranke@uni-bremen.de> with key fingerprint __6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480__*
+*Since 16th of November 2021, the buster40 and bullseye40 repositories are signed with a new key with the key ID 0xB8F25A8A73EACF41, fingerprint 95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7 and user ID Johannes Ranke <johannes.ranke@jrwb.de>.*
 
 Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/buster-cran35/Release) file, which contains checksums for all files in the repository:
 
 ```{r, message=FALSE}
 # take out the spaces
-johannes <- "E19F5F87128899B192B1A2C2AD5F960A256A04AF"
+johannes <- "0xB8F25A8A73EACF41"
 gpg_recv(johannes)
 ```
 
@@ -221,8 +221,8 @@ Now lets verify the release files:
 ```{r}
 # Verify the file
 library(curl)
-curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release', 'Release')
-curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release.gpg','Release.gpg')
+curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release', 'Release')
+curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release.gpg','Release.gpg')
 gpg_verify('Release.gpg', 'Release')
 ```
 

@@ -1,3 +1,6 @@
+1.2.4
+  - Update vignette example with new GPG key of Johannes Ranke
+
 1.2.3
   - Windows: add gpgme 1.16.0 ucrt libs
 
