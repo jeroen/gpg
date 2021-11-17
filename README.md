@@ -57,7 +57,7 @@ Installation from source on Linux or OSX requires [`GPGME`](https://www.gnupg.or
 sudo apt-get install -y libgpgme11-dev
 ```
 
-On __Fedora__ and __CentOS__ we need [gpgme-devel](https://apps.fedoraproject.org/packages/gpgme-devel):
+On __Fedora__ and __CentOS__ we need [gpgme-devel](https://src.fedoraproject.org/rpms/gpgme):
 
 ```
 sudo yum install gpgme-devel
@@ -69,7 +69,7 @@ On __OS-X__ use [gpgme](https://github.com/Homebrew/homebrew-core/blob/master/Fo
 brew install gpgme
 ```
 
-On __Solaris 10__ we can have [gpgme_dev](https://www.opencsw.org/packages/CSWgpgme-dev) from [OpenCSW](https://www.opencsw.org/):
+On __Solaris 10__ we can have [gpgme_dev](https://www.opencsw.org/packages/CSWgpgme-dev/) from [OpenCSW](https://www.opencsw.org/):
 ```
 pkgadd -d http://get.opencsw.org/now
 /opt/csw/bin/pkgutil -U
