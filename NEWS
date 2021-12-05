@@ -1,3 +1,6 @@
+1.2.5
+  - Use 'default' capabilities (sign/encrypt/cert/auth) in gpg_keygen()
+
 1.2.4
   - Update vignette example with new GPG key of Johannes Ranke
 

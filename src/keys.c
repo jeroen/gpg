@@ -17,7 +17,7 @@ SEXP R_gpg_keygen(SEXP params){
 // NEW method, requires GPGME 1.7 and GnuPG 2.1
 SEXP R_gpg_keygen_new(SEXP userid){
 #if GPGME_VERSION_NUMBER >= 0x010700
-  unsigned int flags = GPGME_CREATE_SIGN | GPGME_CREATE_ENCR | GPGME_CREATE_NOPASSWD | GPGME_CREATE_FORCE;
+  unsigned int flags = GPGME_CREATE_NOPASSWD | GPGME_CREATE_FORCE;
   bail(gpgme_op_createkey(ctx, CHAR(STRING_ELT(userid, 0)), "default", 0, 0, NULL, flags), "create key");
   gpgme_genkey_result_t res = gpgme_op_genkey_result(ctx);
   gpgme_key_t key;
@@ -118,7 +118,6 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
     SET_STRING_ELT(keyid, i, make_char(key->subkeys->keyid));
     SET_STRING_ELT(fpr, i, make_char(key->subkeys->fpr));
     SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_name(key->subkeys->pubkey_algo)));
-
     if(key->issuer_name)
       SET_STRING_ELT(fpr, i, make_char(key->issuer_name));
     if(key->uids && key->uids->name)
