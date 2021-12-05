@@ -21,6 +21,8 @@ knitr::opts_chunk$set(comment = "")
 library(gpg)
 options(width = 120, max.print = 100)
 
+is_ci <- nchar(Sys.getenv("CI")) > 0
+
 gpg_list_keys <- function(...){
   gpg::gpg_list_keys(...)[c("id", "name", "email")]
 }
@@ -70,7 +72,7 @@ str(gpg_info())
 
 Use `gpg_restart` to switch to another home directory, e.g. for a client which uses its own configuration and keyrings. For this example we store keys in a temporary directory.
 
-```{r}
+```{r, eval = !is_ci}
 gpg_restart(home = tempdir())
 ```
 
