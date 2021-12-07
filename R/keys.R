@@ -28,7 +28,6 @@ gpg_import <- function(file){
 KEYSERVER <- c(
   "https://keyserver.ubuntu.com",
   "https://pgp.mit.edu",
-  "http://keys.gnupg.net",
   "http://pgp.surfnet.nl",
   "https://keys.openpgp.org"
 )
