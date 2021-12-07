@@ -25,6 +25,20 @@ gpg_import <- function(file){
   stats::setNames(out, c("found", "imported", "secrets", "signatures", "revoked"))
 }
 
+KEYSERVER <- c(
+  "https://keyserver.ubuntu.com",
+  "https://pgp.mit.edu",
+  "http://keys.gnupg.net",
+  "http://pgp.surfnet.nl",
+  "https://keys.openpgp.org"
+)
+
+prepare_keyserver <- function(keyserver) {
+  keyserver <- sub("hkp://", "http://", keyserver, fixed = TRUE)
+  keyserver <- sub("/$", "", keyserver)
+  keyserver
+}
+
 #' @export
 #' @rdname gpg_keys
 #' @param keyserver address of http keyserver. Default searches several common
@@ -33,11 +47,8 @@ gpg_import <- function(file){
 #' can specify a `search` string.
 #' @param search string with name or email address to match the key info.
 gpg_recv <- function(id, search = NULL, keyserver = NULL){
-  if(is.null(keyserver))
-    keyserver <- c("https://keyserver.ubuntu.com", "https://pgp.mit.edu",
-                   "http://keys.gnupg.net", "http://pgp.surfnet.nl")
-  keyserver <- sub("hkp://", "http://", keyserver, fixed = TRUE)
-  keyserver <- sub("/$", "", keyserver)
+  if(is.null(keyserver)) keyserver <- KEYSERVER
+  keyserver <- prepare_keyserver(keyserver)
   search <- if(!length(search) && length(id)){
     id <- gsub(' ', '', id, fixed = TRUE)
     id <- paste0("0x", sub("^0x", "", id));
