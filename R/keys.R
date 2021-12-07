@@ -6,6 +6,11 @@
 #'
 #' @useDynLib gpg R_gpg_import
 #' @param file path to the key file or raw vector with key data
+#' @param keyserver address of http keyserver. Default searches several common
+#' servers (MIT, Ubuntu, GnuPG)
+#' @param id unique ID of the pubkey to import (starts with `0x`). Alternatively you
+#' can specify a `search` string.
+#' @param search string with name or email address to match the key info.
 #' @export
 #' @family gpg
 #' @name gpg_keys
@@ -40,11 +45,6 @@ prepare_keyserver <- function(keyserver) {
 
 #' @export
 #' @rdname gpg_keys
-#' @param keyserver address of http keyserver. Default searches several common
-#' servers (MIT, Ubuntu, GnuPG)
-#' @param id unique ID of the pubkey to import (starts with `0x`). Alternatively you
-#' can specify a `search` string.
-#' @param search string with name or email address to match the key info.
 gpg_recv <- function(id, search = NULL, keyserver = NULL){
   if(is.null(keyserver)) keyserver <- KEYSERVER
   keyserver <- prepare_keyserver(keyserver)
@@ -59,6 +59,19 @@ gpg_recv <- function(id, search = NULL, keyserver = NULL){
   }
   data <- download_key(search, keyserver)
   gpg_import(data)
+}
+
+#' @export
+#' @rdname gpg_keys
+#' @examples
+#' # Submit key to a specific key server.
+#' gpg_send("87CC261267801A17", "https://keys.openpgp.org")
+#' # Submit key to many key servers.
+#' gpg_send("87CC261267801A17")
+gpg_send <- function(id, keyserver = NULL){
+  if(is.null(keyserver)) keyserver <- KEYSERVER
+  keyserver <- prepare_keyserver(keyserver)
+  upload_key(id, keyserver)
 }
 
 #' @useDynLib gpg R_gpg_delete
@@ -114,5 +127,31 @@ download_key <- function(id, servers){
     })
   }
   stop("Failed to find/download public key: ", id, call. = FALSE)
+}
+
+upload_key <- function(id, servers) {
+  key <- gpg::gpg_export(id)
+  # Trim trailing whitespace.
+  key <- sub("[[:space:]]+$", "", key)
+  # URL encode the key.
+  key = URLencode(key, reserved = TRUE)
+  # Replace space with "+".
+  key = gsub("%20", "+", key)
+
+  body <- paste0("keytext=", key)
+
+  for(keyserver in servers) {
+    message("Uploading ", id, " to ", keyserver, ".")
+    tryCatch({
+      res <- httr::POST(
+        url = paste0(keyserver, "/pks/add"),
+        httr::add_headers('Content-Type' = 'application/x-www-form-urlencoded'),
+        body = body
+      )
+      message("Success.")
+    }, error = function(e){
+      message(e$message)
+    })
+  }
 }
 

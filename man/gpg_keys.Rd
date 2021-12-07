@@ -4,6 +4,7 @@
 \alias{gpg_keys}
 \alias{gpg_import}
 \alias{gpg_recv}
+\alias{gpg_send}
 \alias{gpg_delete}
 \alias{gpg_export}
 \alias{gpg_list_keys}
@@ -13,6 +14,8 @@
 gpg_import(file)
 
 gpg_recv(id, search = NULL, keyserver = NULL)
+
+gpg_send(id, keyserver = NULL)
 
 gpg_delete(id, secret = FALSE)
 
@@ -25,7 +28,7 @@ gpg_list_signatures(id)
 \arguments{
 \item{file}{path to the key file or raw vector with key data}
 
-\item{id}{unique ID of the pubkey to import (starts with \code{0x}). Alternatively you
+\item{id}{unique ID of the pubkey to import (starts with \verb{0x}). Alternatively you
 can specify a \code{search} string.}
 
 \item{search}{string with name or email address to match the key info.}
@@ -40,8 +43,16 @@ Signing or encrypting with GPG require that the keys are stored in your
 personal keyring. Use \link{gpg_version} to see which keyring (home dir)
 you are using. Also see \link{gpg_keygen} for generating a new key.
 }
+\examples{
+# Submit key to a specific key server.
+gpg_send("87CC261267801A17", "https://keys.openpgp.org")
+# Submit key to many key servers.
+gpg_send("87CC261267801A17")
+}
 \seealso{
-Other gpg: \code{\link{gpg_encrypt}},
-  \code{\link{gpg_keygen}}, \code{\link{gpg_sign}}
+Other gpg: 
+\code{\link{gpg_encrypt}()},
+\code{\link{gpg_keygen}()},
+\code{\link{gpg_sign}()}
 }
 \concept{gpg}
