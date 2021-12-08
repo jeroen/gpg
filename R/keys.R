@@ -134,7 +134,7 @@ upload_key <- function(id, servers) {
   # Trim trailing whitespace.
   key <- sub("[[:space:]]+$", "", key)
   # URL encode the key.
-  key = URLencode(key, reserved = TRUE)
+  key = curl::curl_escape(key)
   # Replace space with "+".
   key = gsub("%20", "+", key)
 
@@ -145,11 +145,12 @@ upload_key <- function(id, servers) {
   for(keyserver in servers) {
     message("Uploading ", id, " to ", keyserver, ".")
     tryCatch({
-      res <- httr::POST(
-        url = paste0(keyserver, "/pks/add"),
-        httr::add_headers('Content-Type' = 'application/x-www-form-urlencoded'),
-        body = body
+      h <- curl::new_handle(timeout = 10)
+      curl::handle_setform(
+        h,
+        keytext = key
       )
+      req <- curl::curl_fetch_memory(paste0(keyserver, "/pks/add"), handle = h)
       message("Success.")
       uploaded <- TRUE
     }, error = function(e){
