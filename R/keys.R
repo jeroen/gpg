@@ -126,7 +126,7 @@ download_key <- function(id, servers){
       message(e$message)
     })
   }
-  stop("Failed to find/download public key: ", id, call. = FALSE)
+  stop("Failed to find/download public key: ", id, ".", call. = FALSE)
 }
 
 upload_key <- function(id, servers) {
@@ -140,6 +140,8 @@ upload_key <- function(id, servers) {
 
   body <- paste0("keytext=", key)
 
+  uploaded <- FALSE
+
   for(keyserver in servers) {
     message("Uploading ", id, " to ", keyserver, ".")
     tryCatch({
@@ -149,9 +151,11 @@ upload_key <- function(id, servers) {
         body = body
       )
       message("Success.")
+      uploaded <- TRUE
     }, error = function(e){
       message(e$message)
     })
   }
+  if (!uploaded) stop("Failed to send key ", id, ".", call. = FALSE)
 }
 
