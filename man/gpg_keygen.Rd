@@ -23,7 +23,9 @@ GPG manual section on
 \href{https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html}{Unattended key generation}.
 }
 \seealso{
-Other gpg: \code{\link{gpg_encrypt}},
-  \code{\link{gpg_keys}}, \code{\link{gpg_sign}}
+Other gpg: 
+\code{\link{gpg_encrypt}()},
+\code{\link{gpg_keys}},
+\code{\link{gpg_sign}()}
 }
 \concept{gpg}

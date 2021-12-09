@@ -131,32 +131,23 @@ download_key <- function(id, servers){
 
 upload_key <- function(id, servers) {
   key <- gpg::gpg_export(id)
-  # Trim trailing whitespace.
-  key <- sub("[[:space:]]+$", "", key)
-  # URL encode the key.
-  key = curl::curl_escape(key)
-  # Replace space with "+".
-  key = gsub("%20", "+", key)
-
-  body <- paste0("keytext=", key)
-
+  postdata <- paste0('keytext=', curl::curl_escape(key))
   uploaded <- FALSE
-
   for(keyserver in servers) {
-    message("Uploading ", id, " to ", keyserver, ".")
     tryCatch({
-      h <- curl::new_handle(timeout = 10)
-      curl::handle_setform(
-        h,
-        keytext = key
-      )
-      req <- curl::curl_fetch_memory(paste0(keyserver, "/pks/add"), handle = h)
-      message("Success.")
-      uploaded <- TRUE
+      h <- curl::new_handle(timeout = 10, copypostfields =  postdata)
+      curl::handle_setheaders(h, "Content-Type" = "application/x-www-form-urlencoded")
+      url <- paste0(keyserver, '/pks/add')
+      req <- curl::curl_fetch_memory(url, handle = h)
+      if(req$status == 200) {
+        message(sprintf("Successfully sent key %s to %s", id, url))
+        uploaded <- TRUE
+      } else {
+        message(sprintf("Failure uploading %s to %s (http %d)", id, url, req$status_code))
+      }
     }, error = function(e){
       message(e$message)
     })
   }
   if (!uploaded) stop("Failed to send key ", id, ".", call. = FALSE)
 }
-

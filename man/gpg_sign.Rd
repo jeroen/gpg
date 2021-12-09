@@ -38,7 +38,9 @@ download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
 gpg_verify(sig, msg, error = FALSE)
 }
 \seealso{
-Other gpg: \code{\link{gpg_encrypt}},
-  \code{\link{gpg_keygen}}, \code{\link{gpg_keys}}
+Other gpg: 
+\code{\link{gpg_encrypt}()},
+\code{\link{gpg_keygen}()},
+\code{\link{gpg_keys}}
 }
 \concept{gpg}
