@@ -2,11 +2,9 @@
 
 > *GNU Privacy Guard for R*
 
-[![Build Status](https://travis-ci.org/jeroen/gpg.svg?branch=master)](https://travis-ci.org/jeroen/gpg)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jeroen/gpg?branch=master&svg=true)](https://ci.appveyor.com/project/jeroen/gpg)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/gpg)](http://cran.r-project.org/package=gpg)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/gpg)](http://cran.r-project.org/web/packages/gpg/index.html)
-[![Github Stars](https://img.shields.io/github/stars/jeroen/gpg.svg?style=social&label=Github)](https://github.com/jeroen/gpg)
 
 Bindings to GPG for creating and verifying OpenGPG (RFC4880)
 signatures. This is not a standalone library; GPG needs to be installed
@@ -26,22 +24,35 @@ Other resources:
 
 ## Hello World
 
-The Debian backports archives on CRAN are signed with the key of Johannes Ranke (CRAN Debian archive) <jranke@uni-bremen.de> with key fingerprint __6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480__.
+Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org/bin/linux/debian/) says the following:
 
-Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/buster-cran35/Release) file, which contains checksums for all files in the repository:
+*Since 16th of November 2021, the buster40 and bullseye40 repositories are signed with a new key with the key ID 0xB8F25A8A73EACF41, fingerprint 95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7 and user ID Johannes Ranke <johannes.ranke@jrwb.de>.*
 
-```r
-# Take out the spaces
-johannes <- gsub(" ", "", "6212 B7B7 931C 4BB1 6280  BA13 06F9 0DE5 381B A480")
+We import this key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release) file, which contains checksums for all files in the repository:
+
+```{r, message=FALSE}
+# take out the spaces
+johannes <- "0xB8F25A8A73EACF41"
 gpg_recv(johannes)
-
-# Verify the file
-library(curl)
-curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release', 'Release')
-curl_download('https://cran.r-project.org/bin/linux/debian/buster-cran35/Release.gpg', 'Release.gpg')
-gpg_verify('Release', 'Release.gpg')
 ```
 
+If you don't trust the CRAN homepage, you could check who has signed this key. You'd need to import the corresponding peer keys for more information.
+
+```{r}
+gpg_list_signatures(johannes)
+```
+
+Now lets verify the release files:
+
+```{r}
+# Verify the file
+library(curl)
+curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release', 'Release')
+curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release.gpg','Release.gpg')
+gpg_verify('Release.gpg', 'Release')
+```
+
+Looking good! We can trust the checksums in the `Release` file to be legitimate.
 
 ## Installation
 

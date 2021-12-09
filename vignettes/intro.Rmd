@@ -204,7 +204,7 @@ Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org
 
 *Since 16th of November 2021, the buster40 and bullseye40 repositories are signed with a new key with the key ID 0xB8F25A8A73EACF41, fingerprint 95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7 and user ID Johannes Ranke <johannes.ranke@jrwb.de>.*
 
-Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/buster-cran35/Release) file, which contains checksums for all files in the repository:
+Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release) file, which contains checksums for all files in the repository:
 
 ```{r, message=FALSE}
 # take out the spaces
