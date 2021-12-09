@@ -1,4 +1,4 @@
-# Anticonf (tm) script by Jeroen Ooms (2020)
+# Anticonf (tm) script by Jeroen Ooms (2021)
 # This script will query 'pkg-config' for the required cflags and ldflags.
 # If pkg-config is unavailable or does not find the library, try setting
 # INCLUDE_DIR and LIB_DIR manually via e.g:
@@ -6,9 +6,8 @@
 
 # Library settings
 PKG_CONFIG_NAME="gpgme"
-PKG_DEB_NAME="libgpgme-dev / libgpgme11-dev"
+PKG_DEB_NAME="libgpgme-dev"
 PKG_RPM_NAME="gpgme-devel"
-PKG_CSW_NAME="gpgme_dev"
 PKG_BREW_NAME="gpgme"
 PKG_TEST_HEADER="<gpgme.h>"
 PKG_LIBS="-lgpgme"
@@ -64,7 +63,6 @@ if [ $? -ne 0 ]; then
   echo " * deb: $PKG_DEB_NAME (Debian, Ubuntu, etc)"
   echo " * rpm: $PKG_RPM_NAME (Fedora, CentOS, RHEL)"
   echo " * brew: $PKG_BREW_NAME (OSX)"
-  echo " * csw: $PKG_CSW_NAME (Solaris)"
   echo "If $PKG_CONFIG_NAME is already installed, check that 'gpgme-config' is in your"
   echo "PATH. If gpgme-config is unavailable, set INCLUDE_DIR and LIB_DIR"
   echo "manually via configure variable:"

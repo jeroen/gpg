@@ -30,7 +30,7 @@ Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org
 
 We import this key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release) file, which contains checksums for all files in the repository:
 
-```{r, message=FALSE}
+```r
 # take out the spaces
 johannes <- "0xB8F25A8A73EACF41"
 gpg_recv(johannes)
@@ -38,20 +38,23 @@ gpg_recv(johannes)
 
 If you don't trust the CRAN homepage, you could check who has signed this key. You'd need to import the corresponding peer keys for more information.
 
-```{r}
+```r
 gpg_list_signatures(johannes)
 ```
 
 Now lets verify the release files:
 
-```{r}
+```r
 # Verify the file
 library(curl)
 curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release', 'Release')
 curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release.gpg','Release.gpg')
 gpg_verify('Release.gpg', 'Release')
 ```
-
+```
+                id           timestamp           name                  email success
+1 DC78B2DDEABC47B7 2021-11-16 11:17:18 Johannes Ranke johannes.ranke@jrwb.de    TRUE
+```
 Looking good! We can trust the checksums in the `Release` file to be legitimate.
 
 ## Installation
@@ -62,10 +65,10 @@ Binary packages for __OS-X__ or __Windows__ can be installed directly from CRAN:
 install.packages("gpg")
 ```
 
-Installation from source on Linux or OSX requires [`GPGME`](https://www.gnupg.org/(es)/related_software/gpgme/index.html). On __Debian__ or __Ubuntu__ install [libgpgme11-dev](https://packages.debian.org/testing/libgpgme11-dev) directly from Universe:
+Installation from source on Linux or OSX requires [`GPGME`](https://www.gnupg.org/(es)/related_software/gpgme/index.html). On __Debian__ or __Ubuntu__ install [libgpgme-dev](https://packages.debian.org/testing/libgpgme-dev) directly from Universe:
 
 ```
-sudo apt-get install -y libgpgme11-dev
+sudo apt-get install -y libgpgme-dev
 ```
 
 On __Fedora__ and __CentOS__ we need [gpgme-devel](https://src.fedoraproject.org/rpms/gpgme):
@@ -79,11 +82,3 @@ On __OS-X__ use [gpgme](https://github.com/Homebrew/homebrew-core/blob/master/Fo
 ```
 brew install gpgme
 ```
-
-On __Solaris 10__ we can have [gpgme_dev](https://www.opencsw.org/packages/CSWgpgme-dev/) from [OpenCSW](https://www.opencsw.org/):
-```
-pkgadd -d http://get.opencsw.org/now
-/opt/csw/bin/pkgutil -U
-/opt/csw/bin/pkgutil -y -i gpgme_dev 
-```
-
