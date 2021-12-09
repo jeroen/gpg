@@ -4,13 +4,14 @@ Title: GNU Privacy Guard for R
 Version: 1.2.6
 Authors@R: person("Jeroen", "Ooms", email = "jeroen@berkeley.edu", 
     comment = c(ORCID = "0000-0002-4035-0289"), role = c("aut", "cre"))
-Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic methods.
-    Includes utilities for public key encryption, creating and verifying digital signatures,
-    and managing your local keyring. Note that some functionality depends on the version of 
-    GnuPG that is installed on the system. On Windows this package can be used together with
-    'GPG4Win' which provides a GUI for managing keys and entering passphrases.
+Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic 
+    methods. Includes utilities for public key encryption, creating and verifying
+    digital signatures, and managing your local keyring. Some functionality 
+    depends on the version of GnuPG that is installed on the system. On Windows
+    this package can be used together with 'GPG4Win' which provides a GUI for 
+    managing keys and entering passphrases.
 License: MIT + file LICENSE
-SystemRequirements: GPGME: libgpgme-dev / libgpgme11-dev (deb), gpgme-devel (rpm) gpgme (brew). 
+SystemRequirements: GPGME: libgpgme-dev (deb), gpgme-devel (rpm) gpgme (brew). 
     On Linux 'haveged' is recommended for generating entropy when using the GPG key generator.
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
