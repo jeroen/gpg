@@ -11,5 +11,5 @@
 
 .onAttach <- function(lib, pkg){
   engine <- gpg_info()
-  packageStartupMessage("Found GPG ", engine$version, ". Using keyring: ", engine$home)
+  packageStartupMessage("Found GPG ", engine$version, " (gpgme ", engine$gpgme,"). Using keyring: ", engine$home)
 }
