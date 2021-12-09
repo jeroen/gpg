@@ -6,8 +6,8 @@
 #'
 #' @useDynLib gpg R_gpg_import
 #' @param file path to the key file or raw vector with key data
-#' @param keyserver address of http keyserver. Default searches several common
-#' servers (MIT, Ubuntu, GnuPG)
+#' @param keyserver address of http keyserver. Default behavior is to try several
+#' commonly used servers (MIT, Ubuntu, GnuPG, Surfnet)
 #' @param id unique ID of the pubkey to import (starts with `0x`). Alternatively you
 #' can specify a `search` string.
 #' @param search string with name or email address to match the key info.

@@ -33,8 +33,8 @@ can specify a \code{search} string.}
 
 \item{search}{string with name or email address to match the key info.}
 
-\item{keyserver}{address of http keyserver. Default searches several common
-servers (MIT, Ubuntu, GnuPG)}
+\item{keyserver}{address of http keyserver. Default behavior is to try several
+commonly used servers (MIT, Ubuntu, GnuPG, Surfnet)}
 
 \item{secret}{set to \code{TRUE} to list/export/delete private (secret) keys}
 }
