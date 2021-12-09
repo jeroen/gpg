@@ -6,6 +6,11 @@
 #'
 #' @useDynLib gpg R_gpg_import
 #' @param file path to the key file or raw vector with key data
+#' @param keyserver address of http keyserver. Default searches several common
+#' servers (MIT, Ubuntu, GnuPG)
+#' @param id unique ID of the pubkey to import (starts with `0x`). Alternatively you
+#' can specify a `search` string.
+#' @param search string with name or email address to match the key info.
 #' @export
 #' @family gpg
 #' @name gpg_keys
@@ -25,19 +30,24 @@ gpg_import <- function(file){
   stats::setNames(out, c("found", "imported", "secrets", "signatures", "revoked"))
 }
 
-#' @export
-#' @rdname gpg_keys
-#' @param keyserver address of http keyserver. Default searches several common
-#' servers (MIT, Ubuntu, GnuPG)
-#' @param id unique ID of the pubkey to import (starts with `0x`). Alternatively you
-#' can specify a `search` string.
-#' @param search string with name or email address to match the key info.
-gpg_recv <- function(id, search = NULL, keyserver = NULL){
-  if(is.null(keyserver))
-    keyserver <- c("https://keyserver.ubuntu.com", "https://pgp.mit.edu",
-                   "http://keys.gnupg.net", "http://pgp.surfnet.nl")
+KEYSERVER <- c(
+  "https://keyserver.ubuntu.com",
+  "https://pgp.mit.edu",
+  "http://pgp.surfnet.nl",
+  "https://keys.openpgp.org"
+)
+
+prepare_keyserver <- function(keyserver) {
   keyserver <- sub("hkp://", "http://", keyserver, fixed = TRUE)
   keyserver <- sub("/$", "", keyserver)
+  keyserver
+}
+
+#' @export
+#' @rdname gpg_keys
+gpg_recv <- function(id, search = NULL, keyserver = NULL){
+  if(is.null(keyserver)) keyserver <- KEYSERVER
+  keyserver <- prepare_keyserver(keyserver)
   search <- if(!length(search) && length(id)){
     id <- gsub(' ', '', id, fixed = TRUE)
     id <- paste0("0x", sub("^0x", "", id));
@@ -49,6 +59,19 @@ gpg_recv <- function(id, search = NULL, keyserver = NULL){
   }
   data <- download_key(search, keyserver)
   gpg_import(data)
+}
+
+#' @export
+#' @rdname gpg_keys
+#' @examples
+#' # Submit key to a specific key server.
+#' gpg_send("87CC261267801A17", "https://keys.openpgp.org")
+#' # Submit key to many key servers.
+#' gpg_send("87CC261267801A17")
+gpg_send <- function(id, keyserver = NULL){
+  if(is.null(keyserver)) keyserver <- KEYSERVER
+  keyserver <- prepare_keyserver(keyserver)
+  upload_key(id, keyserver)
 }
 
 #' @useDynLib gpg R_gpg_delete
@@ -103,6 +126,37 @@ download_key <- function(id, servers){
       message(e$message)
     })
   }
-  stop("Failed to find/download public key: ", id, call. = FALSE)
+  stop("Failed to find/download public key: ", id, ".", call. = FALSE)
+}
+
+upload_key <- function(id, servers) {
+  key <- gpg::gpg_export(id)
+  # Trim trailing whitespace.
+  key <- sub("[[:space:]]+$", "", key)
+  # URL encode the key.
+  key = curl::curl_escape(key)
+  # Replace space with "+".
+  key = gsub("%20", "+", key)
+
+  body <- paste0("keytext=", key)
+
+  uploaded <- FALSE
+
+  for(keyserver in servers) {
+    message("Uploading ", id, " to ", keyserver, ".")
+    tryCatch({
+      h <- curl::new_handle(timeout = 10)
+      curl::handle_setform(
+        h,
+        keytext = key
+      )
+      req <- curl::curl_fetch_memory(paste0(keyserver, "/pks/add"), handle = h)
+      message("Success.")
+      uploaded <- TRUE
+    }, error = function(e){
+      message(e$message)
+    })
+  }
+  if (!uploaded) stop("Failed to send key ", id, ".", call. = FALSE)
 }
 
