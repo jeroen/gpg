@@ -1,7 +1,3 @@
-suppressPackageStartupMessages({
-  library(stringi)
-})
-
 # Generate random string.
 #
 rnd_string <- function(n = 24) {
