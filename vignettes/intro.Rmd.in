@@ -16,7 +16,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(comment = "")
+library(gpg)
+options(width = 120, max.print = 100)
 
+is_ci <- nchar(Sys.getenv("CI")) > 0
+
+gpg_list_keys <- function(...){
+  gpg::gpg_list_keys(...)[c("id", "name", "email")]
+}
+```
 
 
 **DISCLAIMER**: Author is not an expert in cryptography (he is not an expert in anything really). Use this stuff at your own risk. If you find bugs or inaccuracies, please create an issue or PR on the [github repository](https://github.com/jeroen/gpg).  
@@ -56,80 +66,30 @@ GPG keyservers do not need HTTPS. One should only trust GPG keys on basis of GPG
 
 It is important to know which version of GPG you are running and where your home dir is. Your home directory contains your configuration and the keyrings. GPG defaults to your system keyring, which is the same as the `gpg` command line utility and system package manager use.
 
-
-```r
+```{r}
 str(gpg_info())
-```
-
-```
-List of 5
- $ gpgconf: chr "/usr/local/bin/gpgconf"
- $ gpg    : chr "/usr/local/Cellar/gnupg/2.3.6/bin/gpg"
- $ version:Class 'numeric_version'  hidden list of 1
-  ..$ : int [1:3] 2 3 6
- $ home   : chr "/Users/jeroen/.gnupg"
- $ gpgme  :Class 'numeric_version'  hidden list of 1
-  ..$ : int [1:3] 1 16 0
 ```
 
 Use `gpg_restart` to switch to another home directory, e.g. for a client which uses its own configuration and keyrings. For this example we store keys in a temporary directory.
 
-
-```r
+```{r, eval = !is_ci}
 gpg_restart(home = tempdir())
-```
-
-```
-gpg (GnuPG) 2.3.6
-libgcrypt 1.10.1
-Copyright (C) 2021 Free Software Foundation, Inc.
-License GNU GPL-3.0-or-later <https://gnu.org/licenses/gpl.html>
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Home: /Users/jeroen/.gnupg
-Supported algorithms:
-Pubkey: RSA, ELG, DSA, ECDH, ECDSA, EDDSA
-Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
-        CAMELLIA128, CAMELLIA192, CAMELLIA256
-AEAD: EAX, OCB
-Hash: SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
-Compression: Uncompressed, ZIP, ZLIB, BZIP2
 ```
 
 
 Use `gpg_list_keys()` to see the current contents of your keyring. It is empty to start with:
 
-
-```r
+```{r}
 gpg_list_keys()
-```
-
-```
-[1] id    name  email
-<0 rows> (or 0-length row.names)
 ```
 
 ### Generate keys
 
 Use `gpg_keygen()` to generate a new public private keypair:
 
-
-```r
+```{r, warning=FALSE}
 (mykey <- gpg_keygen(name = "Jerry", email = "jerry@gmail.com"))
-```
-
-```
-[1] "4873903B49318AEE"
-```
-
-```r
 gpg_list_keys()
-```
-
-```
-                id  name           email
-1 4873903B49318AEE Jerry jerry@gmail.com
 ```
 
 
@@ -137,107 +97,31 @@ gpg_list_keys()
 
 Use the `gpg_recv` function to download a given key and all available signatures for this key from a keyserver. For example let's import the public key from Michael Rutter which is used to [sign the Ubuntu r-base packages](https://cran.r-project.org/bin/linux/ubuntu/) from CRAN:
 
-
-```r
+```{r}
 gpg_recv(id ="51716619E084DAB9")
-```
-
-```
-Searching: https://keyserver.ubuntu.com
-```
-
-```
-     found   imported    secrets signatures    revoked 
-         1          1          0          0          0 
-```
-
-```r
 (keyring <- gpg_list_keys())
-```
-
-```
-                id           name              email
-1 4873903B49318AEE          Jerry    jerry@gmail.com
-2 51716619E084DAB9 Michael Rutter marutter@gmail.com
 ```
 
 Note that for imported keys, we do not have the private key:
 
-
-```r
+```{r}
 (secring <- gpg_list_keys(secret = TRUE))
-```
-
-```
-                id  name           email
-1 4873903B49318AEE Jerry jerry@gmail.com
 ```
 
 ### Import from file
 
 The `gpg_import` function reads an armored GPG key from a file or URL:
 
-
-```r
+```{r}
 gpg_import("https://stallman.org/rms-pubkey.txt")
-```
-
-```
-     found   imported    secrets signatures    revoked 
-         1          1          0          0          0 
 ```
 
 However this file does not contain any signatures for this key. If we import it from a keyserver we also get the signatures:
 
-
-```r
+```{r}
 (rms_id <- gpg_list_keys("rms")$id)
-```
-
-```
-[1] "2C6464AF2A8E4C02"
-```
-
-```r
 gpg_recv(rms_id)
-```
-
-```
-Searching: https://keyserver.ubuntu.com
-```
-
-```
-     found   imported    secrets signatures    revoked 
-         1          0          0        213          0 
-```
-
-```r
 gpg_list_signatures(rms_id)
-```
-
-```
-                 id           timestamp             name       email success
-1  2C6464AF2A8E4C02 2013-07-20 18:32:38 Richard Stallman rms@gnu.org    TRUE
-2  624DC565135EA668 2013-07-20 18:37:45                                FALSE
-3  F05DDAE40371FCE5 2013-09-15 23:18:46                                FALSE
-4  231696C3EAE0078A 2013-09-24 23:15:58                                FALSE
-5  7B585B30807C2A87 2013-09-28 22:59:04                                FALSE
-6  7CEF29847562C516 2013-09-29 04:59:53                                FALSE
-7  520E0C8369B003EF 2013-08-20 12:31:55                                FALSE
-8  D56E1B4C135D47A1 2013-08-29 13:36:03                                FALSE
-9  31CC32CEF78F3EE4 2013-08-29 13:37:52                                FALSE
-10 9439E86389D0AF41 2013-08-29 13:55:01                                FALSE
-11 C5CFD08B22247CDF 2013-09-24 15:00:05                                FALSE
-12 20B7283AFE254C69 2013-09-28 22:44:02                                FALSE
-13 A866D7CCAE087291 2013-09-29 17:59:25                                FALSE
-14 6D33FBF5B5E4C71A 2013-09-30 15:52:36                                FALSE
-15 8916CADF8ACD372A 2013-10-02 13:17:17                                FALSE
-16 8E549D02234CC324 2013-10-03 09:36:24                                FALSE
-17 D605848ED7E69871 2013-10-04 11:03:23                                FALSE
-18 758EAEC123F62336 2013-10-13 00:53:08                                FALSE
-19 7B585B30807C2A87 2013-10-18 21:27:08                                FALSE
-20 E4A6D8A25310523C 2013-10-23 02:53:11                                FALSE
- [ reached 'max' / getOption("max.print") -- omitted 199 rows ]
 ```
 
 The signature only contains the key ID of the signer. You would need to download the corresponding pubkeys to actually verify these signatures.
@@ -246,75 +130,25 @@ The signature only contains the key ID of the signer. You would need to download
 
 To export our newly created public key:
 
-
-```r
+```{r}
 str <- gpg_export(id = mykey)
 cat(str)
 ```
 
-```
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mDMEYoyt6BYJKwYBBAHaRw8BAQdA1aJPM7jRZaeBjSc2cQUdCYqPFDkgLXdz1lGi
-tC374W20F0plcnJ5IDxqZXJyeUBnbWFpbC5jb20+iJkEExYKAEEWIQTy+YvjkBKI
-9JifzIhIc5A7STGK7gUCYoyt6AIbAwUJA8JnAAULCQgHAgIiAgYVCgkICwIEFgID
-AQIeBwIXgAAKCRBIc5A7STGK7m2fAQDX5icCjlIX4iG++wVPXr57iYbDP/IXsdqS
-WkuHehW5swD6A6ssiExyElxsOxnNHtSusth6azr1R8KtKMoQVrQZyQm4OARijK3o
-EgorBgEEAZdVAQUBAQdASYepxXBcFtDZNAXtWqvaU/Q0/6Ie4fggT5fU0D23bVQD
-AQgHiHgEGBYKACAWIQTy+YvjkBKI9JifzIhIc5A7STGK7gUCYoyt6AIbDAAKCRBI
-c5A7STGK7pdCAQDVBfEz8dRzxmpNySDEr1OHCstkj4ka/kj/skDFZw3gbQEAt9l+
-GlEhWLq6CmOkaLnfsqeIZe/HFMaP7W9fAha0xAo=
-=KRml
------END PGP PUBLIC KEY BLOCK-----
-```
-
 If you also own the private key you can export this as well:
 
-
-```r
+```{r}
 str <- gpg_export(id = mykey, secret = TRUE)
 cat(str)
-```
-
-```
------BEGIN PGP PRIVATE KEY BLOCK-----
-
-lFgEYoyt6BYJKwYBBAHaRw8BAQdA1aJPM7jRZaeBjSc2cQUdCYqPFDkgLXdz1lGi
-tC374W0AAQCDUd2YMbw49Asfh0xCidRcKwdyhRGVbX7/NQD7RgJDfA1LtBdKZXJy
-eSA8amVycnlAZ21haWwuY29tPoiZBBMWCgBBFiEE8vmL45ASiPSYn8yISHOQO0kx
-iu4FAmKMregCGwMFCQPCZwAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ
-SHOQO0kxiu5tnwEA1+YnAo5SF+IhvvsFT16+e4mGwz/yF7HaklpLh3oVubMA+gOr
-LIhMchJcbDsZzR7UrrLYems69UfCrSjKEFa0GckJnF0EYoyt6BIKKwYBBAGXVQEF
-AQEHQEmHqcVwXBbQ2TQF7Vqr2lP0NP+iHuH4IE+X1NA9t21UAwEIBwAA/0W2MldJ
-mgyIeOE5Ynq0If10SNPtBlCuAdmxEzYTow24DwmIeAQYFgoAIBYhBPL5i+OQEoj0
-mJ/MiEhzkDtJMYruBQJijK3oAhsMAAoJEEhzkDtJMYrul0IBANUF8TPx1HPGak3J
-IMSvU4cKy2SPiRr+SP+yQMVnDeBtAQC32X4aUSFYuroKY6Roud+yp4hl78cUxo/t
-b18CFrTECg==
-=77cU
------END PGP PRIVATE KEY BLOCK-----
 ```
 
 ### Delete a key
 
 Delete a key from its ID or fingerprint. Let's delete the RMS key:
 
-
-```r
+```{r}
 gpg_delete('2C6464AF2A8E4C02')
-```
-
-```
-[1] "2C6464AF2A8E4C02"
-```
-
-```r
 gpg_list_keys()
-```
-
-```
-                id           name              email
-1 4873903B49318AEE          Jerry    jerry@gmail.com
-2 51716619E084DAB9 Michael Rutter marutter@gmail.com
 ```
 
 
@@ -328,8 +162,7 @@ GPG signatures are widely used by Linux package managers such as `apt` to verify
 
 Let's use the private key we generated earlier to sign a file:
 
-
-```r
+```{r, message=FALSE}
 myfile <- tempfile()
 writeLines("This is a signed message", con = myfile)
 sig <- gpg_sign(myfile)
@@ -337,67 +170,32 @@ writeLines(sig, "sig.gpg")
 cat(sig)
 ```
 
-```
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTy+YvjkBKI9JifzIhIc5A7STGK7gUCYoyt6gAKCRBIc5A7STGK
-7thMAP9W4h8p8whnhPVPn+9CPNJDRC6t7WsLpLay7EQMbJ9xJgD/W7/X094mCfag
-K2SLC+k9N/HueL0YfgtUuDFAp63d8gw=
-=9pnc
------END PGP SIGNATURE-----
-```
-
 You can also create a signed message which includes the data itself by setting `mode` to `normal` or `clear`, which is useful for email:
 
-
-```r
+```{r}
 clearsig <- gpg_sign(myfile, mode = "clear")
 writeLines(clearsig, "clearsig.gpg")
 cat(clearsig)
-```
-
-```
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
-
-This is a signed message
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQTy+YvjkBKI9JifzIhIc5A7STGK7gUCYoyt6gAKCRBIc5A7STGK
-7ozyAP0c/Aaakyx4VSxVgP4iULVd1x/AbNqRCjSlXfaL9TgHUQEA2mUP3Ek8/hoX
-d57V6yfOg7ywdzuOSqHscvhqqBVX0AE=
-=ODvd
------END PGP SIGNATURE-----
 ```
 
 ### Verify a signature
 
 The `gpg_verify` function will see if a signature is valid for any of the keys in the keyring:
 
-
-```r
+```{r}
 gpg_verify("sig.gpg", data = myfile)
-```
-
-```
-                               fingerprint           timestamp   hash pubkey success
-1 F2F98BE3901288F4989FCC884873903B49318AEE 2022-05-24 12:05:30 SHA512  EdDSA    TRUE
 ```
 
 If the signature is in `clear` or `normal` mode, the signature file contains both the message and signature: 
 
-
-```r
+```{r}
 gpg_verify("clearsig.gpg")
 ```
 
+
+```{r echo=FALSE}
+unlink(c("sig.gpg", "clearsig.gpg"))
 ```
-                               fingerprint           timestamp   hash pubkey success
-1 F2F98BE3901288F4989FCC884873903B49318AEE 2022-05-24 12:05:30 SHA512  EdDSA    TRUE
-```
-
-
-
 
 ### Debian example
 
@@ -408,56 +206,34 @@ Let's verify a Debian file. The [Debian page on CRAN](https://cran.r-project.org
 
 Let's import his key so that we can verify the [Release](https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release) file, which contains checksums for all files in the repository:
 
-
-```r
+```{r, message=FALSE}
 # take out the spaces
 johannes <- "0xB8F25A8A73EACF41"
 gpg_recv(johannes)
 ```
 
-```
-     found   imported    secrets signatures    revoked 
-         1          1          0          0          0 
-```
-
 If you don't trust the CRAN homepage, you could check who has signed this key. You'd need to import the corresponding peer keys for more information.
 
-
-```r
+```{r}
 gpg_list_signatures(johannes)
-```
-
-```
-                id           timestamp           name                  email success
-1 DC78B2DDEABC47B7 2021-11-16 11:17:18 Johannes Ranke johannes.ranke@jrwb.de    TRUE
 ```
 
 Now lets verify the release files:
 
-
-```r
+```{r}
 # Verify the file
 library(curl)
-```
-
-```
-Using libcurl 7.64.1 with LibreSSL/2.8.3
-```
-
-```r
 curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release', 'Release')
 curl_download('https://cran.r-project.org/bin/linux/debian/bullseye-cran40/Release.gpg','Release.gpg')
 gpg_verify('Release.gpg', 'Release')
 ```
 
-```
-                               fingerprint           timestamp   hash pubkey success
-1 7BA040A510E4E66ED3743EC1B8F25A8A73EACF41 2022-04-26 06:51:50 SHA512    RSA    TRUE
-```
-
 Looking good! We can trust the checksums in the `Release` file to be legitimate.
 
-
+```{r, echo = FALSE}
+unlink('Release')
+unlink('Release.gpg')
+```
 
 ## Anonymous Encryption
 
@@ -467,38 +243,14 @@ GPG uses public key encryption. You can use someone's public key to encrypt a me
 
 For example we want to send an email [Jeroen](https://launchpad.net/~opencpu) containing top secret information that may not be snooped by our ISP or email provider. First we import Jeroen's public key using the ID as listed e.g. [here](https://launchpad.net/~opencpu):
 
-
-```r
+```{r message=FALSE}
 jeroen <- '16C019F96112961CEB4F38B76094FC5BDA955A42'
 gpg_recv(jeroen)
-```
-
-```
-     found   imported    secrets signatures    revoked 
-         1          1          0          0          0 
-```
-
-```r
 writeLines("Pizza delivery is on it's way!", "secret.txt")
 msg <- gpg_encrypt("secret.txt", receiver = jeroen)
 writeLines(msg, "msg.gpg")
 unlink("secret.txt")
 cat(msg)
-```
-
-```
------BEGIN PGP MESSAGE-----
-
-hQEMA4BQ/mdnc2saAQf/S7x4bnWPte7ryuJLg0Sf320qDoqurY++pIXBqXH8pxjs
-6ZVux0B+QD04Oc9MmmxrqNs7srv4pExBDTFIq7kLR9jVaP4I7VbBqL33JrwqvmmE
-jeoQRYvyB33KKoLSE9G8aNyxe9JAAjYxmx9zWGaDhDPV790sJS9hMGpRzTv14N8r
-Wq5XeDjPR7mIWC484LgYv/U4B8CIweVXli4YkmiBAuZTRVv7SDLnmyjXGh+ssfTU
-wY+b0WJ4AYL+r+6vmHDaCK5qysfabhIDVqWY7dh3V88B2i9mmYn3JH3yl0orUR5T
-39iPiBTcacGKN5/GYweZ1Dh2JLch4vWuHN7Xnc32nNJaARxqLyDv4sH1MxFEWkp3
-uJn9YN/49AJXU+8rEX84eYlCqatKDf8QnPB99vVa1X2/YLa/eksA1XphrdOT9/yR
-2y8KGoPA+4QDSB+1laU3QzPF1kv2r2oe5mZv
-=xbeq
------END PGP MESSAGE-----
 ```
 
 Now you can safely send this message over any channel (email, twitter, etc). Nobody in the world besides Jeroen will be able to decipher this message (not even you).
@@ -507,46 +259,24 @@ Now you can safely send this message over any channel (email, twitter, etc). Nob
 
 Decrypting a message is just as easy. GPG will automatically find the correct private key from your keyring, or raise an error if you don't have it. For example we will not be able to decrypt the message we created above for Jeroen
 
-
-```r
+```{r, error=TRUE, message=FALSE}
 # This will error, we do not have this private key
 gpg_decrypt("msg.gpg")
 ```
 
-```
-Error: GnuPG verify signatures and decrypt message error: No secret key
-```
-
 To demonstrate decryption, we encrypt a message using our own keypair (for which we own the private key).
 
-
-```r
+```{r}
 writeLines("This is a test!", "secret.txt")
 msg <- gpg_encrypt("secret.txt", receiver = mykey)
 writeLines(msg, "msg.gpg")
 cat(msg)
 ```
 
-```
------BEGIN PGP MESSAGE-----
-
-hF4DskhirNAetCQSAQdAlZa9W98XMeSWUJmyAr0rvSJjnOb+BgAnUWxXhoKO2lAw
-7VaxBMQkUGiuqAcX/Aut/yYXa+FVQcRQwHBhEyDrQE/vO7nqtAFzIpatNt6qmQ/i
-1FQBCQIQBAlqsccwm9Ezbz5gAx/ZuI3jz8Ee3Atjm9otwZTnGNQ2dkQRsmjumJO6
-mMqxy53U8cSc0jRXlbYocbYgSHltvFobo0ncz6Zf6r1147Ghkw0=
-=jc2h
------END PGP MESSAGE-----
-```
-
 Decryption is simple, given that we own the secret key for the message:
 
-
-```r
+```{r, message=FALSE}
 gpg_decrypt("msg.gpg")
-```
-
-```
-[1] "This is a test!\n"
 ```
 
 ## Authenticated Encryption
@@ -557,28 +287,10 @@ So we showed how to encrypt a message so that it can only be read by the receive
 
 In signed encryption, also known as authenticated encryption, uses combined encryption and signing. The public key of the receiver is used to encrypt the message, and the private key of the sender to sign the message. This way the message is both confidential and the integrity of the sender can be checked and verified, only by the receiver.
 
-
-```r
+```{r}
 msg <- gpg_encrypt("secret.txt", receiver = jeroen, signer = mykey)
 writeLines(msg, "msg.gpg")
 cat(msg)
-```
-
-```
------BEGIN PGP MESSAGE-----
-
-hQEMA4BQ/mdnc2saAQf/ffPggKj7G/tA0Qox/kYiXFfJyjYl3kRJDD68Hi0SMWyA
-JLE/3EHBAAIQlwoY08/TjnosTJ1+I3YmqgA952ru27C7p+vrw1lBqXnACjVhFwZ6
-S761fPXNQoTzuPHwMxjwIzIZTYqR/Ruj6jNXw/CHBgnYCErblZ+AQcdGLm3ufrvQ
-SHnaXFID43nhZbB2U4k0s3lG17Imxbz0ulrKvTMZHEkMDIkI2uy/vYz/LxccfMwn
-72j06DqBfoNFqeAUjCgHprKoXCk9VEfeDrjqeTsWUuifqhK8RmDpqHJpQ0arkiQ5
-7n7k9IEXhDLmfgEtQ27UE2W8775OYdtPL2mw1n7UQtLABgGng9ZQFZ4+EvdT9uF+
-/mZUc2cETuDha645ZPtn5kkN4SUpofqJk4SOXVZh/5IpwFVpXjXebXDewrTLb4jR
-SiXKAYocJTLzKakXiv3iPMXYxPrV454/TBKqgf6oTLWagKfMTuzK2wzqSApRvpxP
-VPyzauU6uQiGqcM0ZQb6WkglBr93vUxBlC3pqyDwvmnQVBPIi+3iCm/RAlKn3RQx
-iDu14fAIhygSpCRyUG5OTKGcI41cgrpTavhEFWS1puR5Y3B/lMVruQ==
-=beBb
------END PGP MESSAGE-----
 ```
 
 ### Decrypt and Verify
@@ -587,20 +299,16 @@ If the encrypted message contains a signature, it will automatically be verified
 
 For purpose of illustrating authenticated decryption, we encrypt and sign using our own key (which usually does not make sense):
 
-
-```r
+```{r, message=FALSE}
 msg <- gpg_encrypt("secret.txt", receiver = mykey, signer = mykey)
 writeLines(msg, "msg.gpg")
 gpg_decrypt("msg.gpg")
 ```
 
-```
-[1] "This is a test!\n"
-attr(,"signer")
-[1] "F2F98BE3901288F4989FCC884873903B49318AEE"
-```
-
 The signer fingerprint (if any) will be added as an attribute to the decrypted message.
 
 
-
+```{r, echo = FALSE}
+unlink("msg.gpg")
+unlink("secret.txt")
+```

@@ -1,3 +1,6 @@
+1.2.7
+  - Make package pass checks offline
+
 1.2.6
   - New function gpg_send() to submit a key to a keyserver
 
