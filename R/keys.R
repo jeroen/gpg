@@ -64,10 +64,12 @@ gpg_recv <- function(id, search = NULL, keyserver = NULL){
 #' @export
 #' @rdname gpg_keys
 #' @examples
+#' \donttest{
 #' # Submit key to a specific key server.
 #' gpg_send("87CC261267801A17", "https://keys.openpgp.org")
 #' # Submit key to many key servers.
 #' gpg_send("87CC261267801A17")
+#' }
 gpg_send <- function(id, keyserver = NULL){
   if(is.null(keyserver)) keyserver <- KEYSERVER
   keyserver <- prepare_keyserver(keyserver)

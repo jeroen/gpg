@@ -30,12 +30,14 @@ Default \code{detach} only returns the signature itself.}
 Utilities to create and verify PGP signatures.
 }
 \examples{
+\donttest{
 # This requires you have the Debian master key in your keyring
 msg <- tempfile()
 sig <- tempfile()
 download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
 gpg_verify(sig, msg, error = FALSE)
+}
 }
 \seealso{
 Other gpg: 

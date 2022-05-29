@@ -11,12 +11,15 @@
 #' @param signature path or raw vector for the gpg signature (contains the \code{PGP SIGNATURE} block)
 #' @param error raise an error if verification fails because you do not have the
 #' signer public key in your keyring.
-#' @examples # This requires you have the Debian master key in your keyring
+#' @examples
+#' \donttest{
+#' # This requires you have the Debian master key in your keyring
 #' msg <- tempfile()
 #' sig <- tempfile()
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
 #' download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
 #' gpg_verify(sig, msg, error = FALSE)
+#' }
 gpg_verify <- function(signature, data = NULL, error = TRUE){
   sig <- file_or_raw(signature)
   if(!is.null(data))
