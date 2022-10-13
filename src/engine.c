@@ -54,7 +54,7 @@ gpgme_error_t pwprompt(void *hook, const char *uid_hint, const char *passphrase_
   return 0;
 }
 
-SEXP R_engine_info(){
+SEXP R_engine_info(void){
   gpgme_engine_info_t info = gpgme_ctx_get_engine_info (ctx);
   SEXP out = PROTECT(Rf_allocVector(VECSXP, 4));
   SET_VECTOR_ELT(out, 0, make_string(info->file_name));
@@ -108,7 +108,7 @@ SEXP R_gpg_restart(SEXP home, SEXP path, SEXP pwfun, SEXP debug) {
 }
 
 //gpgme_get_dirinfo was introduced in GPGME 1.5.0
-SEXP R_dir_info(){
+SEXP R_dir_info(void){
   SEXP out = PROTECT(allocVector(VECSXP, 4));
 #if GPGME_VERSION_NUMBER >= 0x010500
   SET_VECTOR_ELT(out, 0, make_string(gpgme_get_dirinfo("homedir")));
