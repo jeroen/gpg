@@ -23,7 +23,7 @@ vignette: >
 
 ## GPG basics
 
-The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular open source OpenPGP ([RFC4880](https://tools.ietf.org/html/rfc4880)) implementation. The system is widely trusted for securing integrity and confidentiality of internet communications through various cryptographic methods. GPG is used in [Debian](https://wiki.debian.org/SecureApt) and [Redhat](https://access.redhat.com/security/team/key) to verify downloads from package managers (apt, yum) and people like Edward Snowden and [Glenn Greenwald](https://theintercept.com/staff/glenn-greenwald/) use it to encrypt confidential emails.
+The *GNU Privacy Guard*, also known as *GnuPG* or simply *GPG*, is a popular open source OpenPGP ([RFC4880](https://www.rfc-editor.org/rfc/rfc4880)) implementation. The system is widely trusted for securing integrity and confidentiality of internet communications through various cryptographic methods. GPG is used in [Debian](https://wiki.debian.org/SecureApt) and [Redhat](https://access.redhat.com/security/team/key) to verify downloads from package managers (apt, yum) and people like Edward Snowden and [Glenn Greenwald](https://theintercept.com/staff/glenn-greenwald/) use it to encrypt confidential emails.
 
 ### Public key crypto
 
