@@ -44,6 +44,10 @@ if [ "$CHECK_OLD_GPGME" ]; then
   PKG_CFLAGS="$PKG_CFLAGS -DCHECK_OLD_GPGME"
 fi
 
+if [ `uname -m` = "armv7l" ]; then
+  PKG_CFLAGS="$PKG_CFLAGS -D_FILE_OFFSET_BITS=64"
+fi
+
 # For debugging
 echo "Using PKG_CFLAGS=$PKG_CFLAGS"
 echo "Using PKG_LIBS=$PKG_LIBS"
