@@ -12,12 +12,12 @@
 #' @param error raise an error if verification fails because you do not have the
 #' signer public key in your keyring.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # This requires you have the Debian master key in your keyring
 #' msg <- tempfile()
 #' sig <- tempfile()
-#' download.file("http://http.us.debian.org/debian/dists/jessie/Release", msg)
-#' download.file("http://http.us.debian.org/debian/dists/jessie/Release.gpg", sig)
+#' download.file("http://http.us.debian.org/debian/dists/stable/Release", msg)
+#' download.file("http://http.us.debian.org/debian/dists/stable/Release.gpg", sig)
 #' gpg_verify(sig, msg, error = FALSE)
 #' }
 gpg_verify <- function(signature, data = NULL, error = TRUE){

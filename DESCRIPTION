@@ -13,7 +13,7 @@ Description: Bindings to GnuPG for working with OpenGPG (RFC4880) cryptographic
 License: MIT + file LICENSE
 SystemRequirements: GPGME: libgpgme-dev (deb), gpgme-devel (rpm) gpgme (brew). 
     On Linux 'haveged' is recommended for generating entropy when using the GPG key generator.
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Imports:
     curl,
