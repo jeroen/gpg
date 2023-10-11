@@ -1,3 +1,0 @@
-CRT=-ucrt
-include Makevars.win
-VERSION = 1.16.0

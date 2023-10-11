@@ -1,11 +1,9 @@
-# NB: somehow gpgme 1.16.0 results in timeouts on winbuilder
+ifeq (,$(shell pkgconf --version 2>/dev/null))
 VERSION = 1.11.1
 RWINLIB = ../windows/gpgme-$(VERSION)
 PKG_LIBS = -L$(RWINLIB)/lib${R_ARCH}${CRT} \
 	-lgpgme -lassuan -lgpg-error -lws2_32
-
-PKG_CPPFLAGS= -I$(RWINLIB)/include \
-	-DHAVE_GPGME_IO_READWRITE
+PKG_CPPFLAGS= -I$(RWINLIB)/include -DHAVE_GPGME_IO_READWRITE
 
 all: clean winlibs
 
@@ -16,3 +14,8 @@ winlibs:
 
 clean:
 	rm -f $(SHLIB) $(OBJECTS)
+
+else
+  PKG_LIBS=$(shell pkg-config --libs gpgme)
+  PKG_CPPFLAGS=-DHAVE_GPGME_IO_READWRITE
+endif
