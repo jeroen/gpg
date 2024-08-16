@@ -78,7 +78,7 @@ SEXP data_to_string(gpgme_data_t buf){
   size_t len;
   char * sig = gpgme_data_release_and_get_mem(buf, &len);
   SEXP out = PROTECT(allocVector(STRSXP, 1));
-  SET_STRING_ELT(out, 0, mkCharLenCE(sig, len, CE_UTF8));
+  SET_STRING_ELT(out, 0, mkCharLenCE(sig, (int) len, CE_UTF8));
   UNPROTECT(1);
   gpgme_free(sig);
   return out;

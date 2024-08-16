@@ -25,7 +25,7 @@ SEXP make_keysig(gpgme_key_sig_t sig){
   for(int i = 0; i < n; i++) {
     INTEGER(rowname)[i] = i+1;
     SET_STRING_ELT(id, i, make_char(cur2->_keyid));
-    INTEGER(timestamp)[i] = cur2->timestamp;
+    INTEGER(timestamp)[i] = (int) cur2->timestamp;
     SET_STRING_ELT(name, i, make_char(cur2->name));
     SET_STRING_ELT(email, i, make_char(cur2->email));
     LOGICAL(status)[i] = cur2->status == GPG_ERR_NO_ERROR;

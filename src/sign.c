@@ -29,7 +29,7 @@ SEXP make_signatures(gpgme_signature_t sig){
 
   for(int i = 0; i < n; i++) {
     SET_STRING_ELT(fpr, i, make_char(cur2->fpr));
-    INTEGER(timestamp)[i] = cur2->timestamp;
+    INTEGER(timestamp)[i] = (int) cur2->timestamp;
     SET_STRING_ELT(hash, i, make_char(gpgme_hash_algo_name(cur2->hash_algo)));
     SET_STRING_ELT(algo, i, make_char(gpgme_pubkey_algo_name(cur2->pubkey_algo)));
     LOGICAL(status)[i] = cur2->status == GPG_ERR_NO_ERROR;

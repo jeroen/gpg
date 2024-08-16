@@ -125,8 +125,8 @@ SEXP R_gpg_keylist(SEXP filter, SEXP secret_only, SEXP local) {
     if(key->uids && key->uids->email)
       SET_STRING_ELT(email, i, make_char(key->uids->email));
 
-    INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? key->subkeys->timestamp : NA_INTEGER;
-    INTEGER(expires)[i] = (key->subkeys->expires > 0) ? key->subkeys->expires : NA_INTEGER;
+    INTEGER(timestamp)[i] = (key->subkeys->timestamp > 0) ? (int) key->subkeys->timestamp : NA_INTEGER;
+    INTEGER(expires)[i] = (key->subkeys->expires > 0) ? (int) key->subkeys->expires : NA_INTEGER;
 
     keys = head;
     head = head->next;
