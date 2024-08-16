@@ -4,7 +4,7 @@
 #include <gpgme.h>
 
 #define make_string(x) ScalarString(make_char(x))
-#define make_char(x) x ? Rf_mkChar(x) : NA_STRING
+#define make_char(x) (x != NULL ? Rf_mkChar(x) : NA_STRING)
 #define ALT(x,y) (x != NULL ? x : y)
 
 extern gpgme_ctx_t ctx;
