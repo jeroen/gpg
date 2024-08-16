@@ -44,4 +44,5 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
-        args: c("--no-manual", "--as-cran", "--run-dontrun", "--run-donttest")
+        with:
+          args: c("--no-manual", "--as-cran", "--run-dontrun", "--run-donttest")
