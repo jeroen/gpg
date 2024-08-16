@@ -1,3 +1,9 @@
-CRT=-ucrt
-include Makevars.win
-VERSION = 1.16.0
+PKG_LIBS = $(shell pkg-config --libs gpgme)
+PKG_CFLAGS = $(shell pkg-config --cflags gpgme)
+
+# Fallback for older rtools
+ifeq (,$(PKG_LIBS))
+  CRT=-ucrt
+  include Makevars.win
+  VERSION = 1.16.0
+endif
