@@ -1,3 +1,7 @@
+1.3.0
+  - Remove version tests per CRAN request
+  - Update maintainer email
+
 1.2.9
   - Fix some tests
   - MacOS: upgrade to gpgme 1.20, universal gpg1 binaries
