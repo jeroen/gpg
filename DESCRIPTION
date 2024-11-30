@@ -19,9 +19,11 @@ Imports:
     curl,
     askpass
 Suggests:
+    testthat (>= 3.0.0),
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 URL: https://github.com/jeroen/gpg
 BugReports: https://github.com/jeroen/gpg/issues
 Encoding: UTF-8
+Config/testthat/edition: 3
