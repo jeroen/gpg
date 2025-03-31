@@ -1,3 +1,20 @@
-CRT=-ucrt
-include Makevars.win
-VERSION = 1.16.0
+PKG_CONFIG ?= $(BINPREF)pkg-config
+PKG_LIBS := $(shell $(PKG_CONFIG) --libs gpgme)
+
+ifneq ($(GPGME_LIBS),)
+PKG_CPPFLAGS = $(shell $(PKG_CONFIG) --libs gpgme) -DHAVE_GPGME_IO_READWRITE
+RTOOLSDIR = $(shell $(PKG_CONFIG) --variable=prefix gpgme)
+else
+PKG_LIBS = -lgpgme -lgpg-error -lws2_32 -lassuan -lws2_32 -lgpg-error -lws2_32
+PKG_CPPFLAGS = -DHAVE_GPGME_IO_READWRITE
+RTOOLSDIR = $(R_TOOLS_SOFT)
+endif
+
+$(SHLIB): gpgwin
+
+gpgwin:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/gpgwin.R"
+	mkdir -p ../inst/bin
+	cp -f bin/* ../inst/bin/
+	cp -f $(RTOOLSDIR)/libexec/gpgme-w32spawn.exe ../inst/bin/
+	@rm -Rf bin
