@@ -1,3 +1,6 @@
+1.4.0
+  - Windows: use gpgme from Rtools on R >= 4.2.0
+
 1.3.0
   - Remove version tests per CRAN request
   - Update maintainer email
